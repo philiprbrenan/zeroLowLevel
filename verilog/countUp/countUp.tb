@@ -1,0 +1,26 @@
+//-----------------------------------------------------------------------------
+// Count up
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module countUp_tb();                                                            // Run test programs
+
+  reg clk = 0;                                                                  // Clock
+  reg[7:0] out;                                                                 // Counter
+  reg[7:0] i;                                                                   // Each tests
+
+  countUp r                                                                     // Counter
+   (.clk(clk),
+    .out(out)
+   );
+
+  initial begin                                                                 // Test the counter
+    for(i = 0; i < 10; ++i) begin
+      clk = 1;
+      $display("T111 %d", out);
+      #1
+      clk = 0;
+      $display("T222 %d", out);
+      #1;
+    end
+  end
+endmodule
