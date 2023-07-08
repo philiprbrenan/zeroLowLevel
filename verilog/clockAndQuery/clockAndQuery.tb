@@ -1,0 +1,46 @@
+//-----------------------------------------------------------------------------
+// Advance the clock and query the results experiment
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module ClockAndQueryTB();                                                       // Circular buffer test bench
+  parameter integer NSize = 6;                                                  // log2(Size of circular buffer)
+  parameter integer TestValue = 9;                                              // Pretend value of memory
+  reg clock = 0;                                                                // Clock
+  reg reset = 0;                                                                // Reset ip to 0
+  reg inw = 0;                                                                  // Address to read sent one bit at a time
+  reg out;                                                                      // Content of the addressed memory one bit at a time
+  reg[NSize:0] address = TestValue;                                             // Address to send
+  reg[NSize:0] memory  = 0;                                                     // Data retrieved
+
+  integer i, j;                                                                 // Loop control
+
+  `include "tests.sv"                                                           // Test routines
+
+  ClockAndQuery                                                                 // Clock and query
+   c
+   (.clock(clock),
+    .reset(reset),
+    .inw(inw),
+    .out(out)
+   );
+
+  defparam c.NSize = NSize;                                                     // Change the default size of Clock and Query
+
+  initial begin                                                                 // Test the circular buffer
+    reset <= 1; address <= TestValue; memory <= 0; clock <= 0;
+
+    for  (j = 0; j <= NSize; ++j) begin                                         // Number of tests
+      for(i = 0; i <  NSize; ++i) begin                                         // Transfer address to read
+        inw <= address[i];
+        #1 clock <= 1; #1 clock <= 0; reset <= 0;
+        memory[i % NSize] <= out;
+        //$display("11 Memory=%2d j=%2d i=%2d out=%2d", memory, j, i % NSize, out);
+      end
+
+      if (j) ok(memory == 11, "check");
+      //$display("22 Memory=%2d j=%2d i=%2d out=%2d", memory, j, i % NSize, out);
+      #1 clock <= 1; #1 clock <= 0;                                               // Retrieve data
+    end
+    checkAllTestsPassed(NSize);
+  end
+endmodule
