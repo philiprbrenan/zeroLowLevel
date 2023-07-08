@@ -1,0 +1,29 @@
+//-----------------------------------------------------------------------------
+// Clock divider
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module CLockDividerTB();                                                        // Clock divider test bench
+  parameter integer NSize = 3;                                                  // log2(Size of circular buffer)
+  reg clock;                                                                    // Clock which drives both input and output
+  reg[NSize-1:0] out;                                                           // Output channel
+
+  `include "tests.sv"                                                           // Test routines
+
+  ClockDivider                                                                  // Create a circular buffer
+   c
+   (.clock(clock),
+    .out(out)
+   );
+
+  defparam c.NSize  = NSize;                                                    // Change the default size of the circular buffer
+  integer i, N;
+
+  initial begin                                                                 // Test the circular buffer
+    N = (1<<NSize)*(1<<NSize);
+    for(i = 0; i < N; ++i) begin
+      #1 clock <= 1; #1 clock <= 0; ok(out == (i+1) % (1<<NSize), "aaa");
+      //$display("AAAA %4d  %4d  %4d", i, (i+1) % (1<<NSize), out);
+    end
+    checkAllTestsPassed(64);
+  end
+endmodule
