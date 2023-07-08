@@ -1,0 +1,33 @@
+module fpga_tb();
+  parameter integer MEM_SIZE = 16;
+  parameter integer DATA_WIDTH = 8;
+  reg clk;
+  reg write;
+  reg [MEM_SIZE-1:0] address;
+  reg [DATA_WIDTH-1:0] in;
+  reg [DATA_WIDTH-1:0] out;
+
+  fpga m(
+    .clk(clk),
+    .write(write),
+    .address(address),
+    .in(in),
+    .out(out)
+  );
+
+  defparam m.MEM_SIZE = MEM_SIZE;
+  defparam m.DATA_WIDTH = DATA_WIDTH;
+
+  `include "tests.sv"
+
+  initial begin
+    clk = 0;
+    write = 0;
+    address = 1;
+    #1 clk = 1;
+    #1 clk = 0;
+    ok(out == 22, "aaa");
+
+    checkAllTestsPassed(1);
+  end
+endmodule
