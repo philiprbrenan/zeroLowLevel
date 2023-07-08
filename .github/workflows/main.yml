@@ -1,0 +1,63 @@
+# Test 2023-07-08 at 23:11:37
+
+name: Test
+
+on:
+  push:
+    paths:
+      - '**.pm'
+      - '**pushToGitHub.pl'
+      - '**.yml'
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Ubuntu update
+      run:  sudo apt update
+
+    - name: Verilog
+      run:  sudo apt -y install iverilog
+
+    - name: Verilog Version
+      run:  iverilog -V
+
+    - name: Emulator
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib lib/Zero/Emulator.pm
+
+    - name: BubbleSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/bubbleSort.pl
+
+    - name: InsertionSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/insertionSort.pl
+
+    - name: QuickSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/quickSort.pl
+
+    - name: QuickSort Parallel
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/quickSortParallel.pl
+
+    - name: SelectionSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/selectionSort.pl
+
+    - name: TestEmulator
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/testEmulator.pl
+
+    - name: BTree
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib lib/Zero/BTree.pm
+
+    - name: TestBTree - last as it is longest
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/testBTree.pl
