@@ -1,0 +1,34 @@
+module readWrite_tb();
+  reg clk;
+  reg reset;
+  reg finished;
+  reg success;
+
+  readWrite rw(
+    .clk(clk),
+    .reset(reset),
+    .finished(finished),
+    .success(success)
+  );
+
+  `include "tests.sv"
+
+  integer steps;
+
+  initial begin
+    steps = 0;
+    clk   = 0;
+    reset = 1;
+    #1 clk = 1;
+    #1 clk = 0; reset = 0;
+    while(!finished && steps < 100) begin
+      #1 clk = 1;
+      #1 clk = 0;
+      steps = steps + 1;
+    end
+
+    ok(success, "aaa");
+
+    checkAllTestsPassed(1);
+  end
+endmodule
