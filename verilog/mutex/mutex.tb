@@ -1,0 +1,66 @@
+//-----------------------------------------------------------------------------
+// Mutex test bench
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module MutexTB();                                                               // Mutex test bench
+  parameter integer NIn  = 8;                                                   // Number of input pins
+  parameter integer NOut = 3;                                                   // Number of highest pin
+  parameter integer NTestsExpected = 2;                                         // Number of test passes expected
+
+  reg          clock;                                                           // Clock which drives both input and output
+  reg [NIn :0] in;                                                              // Input pins
+  wire         outValid;                                                        // Output is valid if true
+  wire[NOut:0] out;                                                             // Output channel
+
+  integer testsPassed;                                                          // Tests passed
+  integer testsFailed;                                                          // Tests failed
+
+  task ok(integer signed test, string name);                                    // Check a single test result
+    begin
+      if (test == 1) begin
+        testsPassed++;
+      end
+      else begin
+        $display("Assertion %s FAILED", name);
+        testsFailed++;
+      end
+    end
+  endtask
+
+  Mutex m                                                                       // Create a mutex
+   (.clock(clock),
+    .in(in),
+    .outValid(outValid),
+    .out(out)
+   );
+
+  //defparam c.NBuffer = NBuffer;                                               // Change the default size of the circular buffer
+  //defparam c.NWidth  = NWidth;                                                // Width of control elements
+
+  initial begin                                                                 // Test the circular buffer
+    testsPassed = 0; testsFailed = 0;
+    in = 0;
+    in[1] = 1;
+    in[3] = 1;
+    #1 clock = 1; #1 clock <= 0;
+    ok(outValid == 1, "aaa");
+    ok(out      == 3, "bbb");
+    #1
+
+    if (testsPassed > 0 && testsFailed > 0) begin                               // Summarize test results
+       $display("Passed %1d tests, FAILED %1d tests out of %d tests", testsPassed, testsFailed, NTestsExpected);
+    end
+    else if (testsFailed > 0) begin
+       $display("FAILED %1d tests out of %1d tests", testsFailed, NTestsExpected);
+    end
+    else if (testsPassed > 0 && testsPassed != NTestsExpected) begin
+       $display("Passed %1d tests out of %1d tests with no failures ", testsPassed, NTestsExpected);
+    end
+    else if (testsPassed == NTestsExpected) begin                               // Testing summary
+       $display("All %1d tests passed successfully", NTestsExpected);
+    end
+    else begin
+       $display("No tests run passed: %1d, failed: %1d, expected %1d", testsPassed, testsFailed, NTestsExpected);
+    end
+  end
+endmodule
