@@ -1,0 +1,75 @@
+//-----------------------------------------------------------------------------
+// Circular buffer test bench
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module CircularBufferTB();                                                      // Circular buffer test bench
+  parameter integer NSize          =  3;                                        // log2(Size of circular buffer)
+  parameter integer NWidth         =  7;                                        // log2(Size of buffer element)
+  parameter integer NTestsExpected = 16;                                        // Number of test passes expected
+  reg clock;                                                                    // Clock which drives both input and output
+  reg reset;                                                                    // Reset the buffer
+  reg[1:0]      action;                                                         // 0 - do nothing, 1 - insert, 2 - input, 3 - output
+  reg[NWidth:0] in;                                                             // Input channel
+  reg[NSize :0] inRemainder;                                                    // Remaining free space in buffer
+  reg[NWidth:0] out;                                                            // Output channel
+  reg[NSize :0] outRemainder;                                                   // Data available in buffer. This field plus inRemainder equals the size of the buffer
+
+  `include "tests.sv"                                                           // Test routines
+
+  CircularBuffer                                                                // Create a circular buffer
+   c
+   (.clock(clock),
+    .action(action),
+    .in(in),
+    .inRemainder(inRemainder),
+    .out(out),
+    .outRemainder(outRemainder)
+   );
+
+  defparam c.NSize  = NSize;                                                    // Change the default size of the circular buffer
+  defparam c.NWidth = NWidth;                                                   // Width of control elements
+
+  initial begin                                                                 // Test the circular buffer
+    testsPassed = 0; testsFailed = 0;
+    #1 action <= 1; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;               // Initial reset
+//$display("AAAA inRemainder=%d,  outRemainder=%d", inRemainder, outRemainder); $finish;
+    ok(inRemainder  === (1<<NSize),   "aaa");
+    ok(outRemainder === 0,            "bbb");
+
+    #1 in <= 99; action <= 2; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;     // Load 99
+    #1
+//$display("CCCC %d",  inRemainder);
+//$display("DDDD %d", outRemainder);
+    ok(inRemainder  === (1<<NSize)-1, "ccc");
+    ok(outRemainder === 1,         "ddd");
+  //$finish;
+    #1 in <= 88; action <= 2; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;     // Load 88
+//$display("EEEE %d",  inRemainder);
+//$display("FFFF %d", outRemainder);
+    ok(inRemainder  === (1<<NSize)-2, "eee");
+    ok(outRemainder === 2,         "fff");
+    #1 action <= 3; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;               // Read 99
+//$display("GGGG %d",  out);
+//$display("HHHH %d",  inRemainder);
+//$display("IIII %d", outRemainder);
+    ok(out          === 99,        "ggg");
+    ok(inRemainder  === (1<<NSize)-1, "hhh");
+    ok(outRemainder === 1,         "iii");
+//$finish;
+    #1 in <= 77; action <= 2; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;     // Load 77
+    ok(inRemainder  === (1<<NSize)-2, "jjj");
+    ok(outRemainder === 2,         "kkk");
+
+    #1 in <= 66; action <= 2; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;     // Load 66
+    ok(inRemainder  === (1<<NSize)-3, "lll");
+    ok(outRemainder === 3,         "mmm");
+
+    #1 action <= 3; #1 clock <= 1; #1 clock <= 0; #1 action <= 0;               // Read 88
+    ok(out          === 88,        "nnn");
+    ok(inRemainder  === (1<<NSize)-2, "ooo");
+    ok(outRemainder === 2,         "ppp");
+    #1
+
+    checkAllTestsPassed(NTestsExpected);
+  end
+endmodule
