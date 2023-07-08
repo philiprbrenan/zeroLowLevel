@@ -1,0 +1,33 @@
+//-----------------------------------------------------------------------------
+// Test fpga
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module fpga_tb();                                                               // Test fpga
+  reg clock = 0;                                                                // Execute the next instruction
+  reg run   = 0;                                                                // Execute the next instruction
+  reg finished;                                                                 // Goes high when the program has finished
+  reg success;                                                                  // Goes high on finish if all the tests passed
+
+  `include "tests.sv"                                                           // Test routines
+
+  fpga f                                                                        // Fpga
+   (.clock    (clock   ),
+    .run      (run),
+    .finished (finished),
+    .success  (success )
+   );
+
+  integer steps = 0;
+
+  initial begin                                                                 // Test the fpga
+    clock = 0; #1 clock = 1;
+    clock = 0; #1 clock = 1;
+    for(steps = 0; steps < 2; ++steps) begin
+      clock = 0; run = 1; #1 clock = 1;
+    end
+    #1
+    ok(success == 1, "aaa");
+    checkAllTestsPassed(1);
+  end
+
+endmodule
