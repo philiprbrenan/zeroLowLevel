@@ -1,0 +1,35 @@
+//-----------------------------------------------------------------------------
+// Test fpga
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module fpga_tb();                                                               // Test fpga
+  reg clock;                                                                    // Driving clock
+  reg reset;                                                                    // Reset to start of program
+  reg finished;                                                                 // Goes high when the program has finished
+  reg success;                                                                  // Indicates success or failure at finish
+
+  `include "tests.sv"                                                           // Test routines
+
+  fpga f                                                                        // Fpga
+   (.clock    (clock),
+    .reset    (reset),
+    .finished (finished),
+    .success  (success )
+   );
+
+  initial begin                                                                 // Test the fpga
+       clock = 0;
+    #1 reset = 1;
+    #1 clock = 1;
+    #1 reset = 0;
+    #1 clock = 0;
+    while(!finished) begin;
+      #1 clock = 1;
+      #1 clock = 0;
+    end
+    ok(finished == 1, "Finished");
+    ok(success  == 1, "Success");
+    checkAllTestsPassed(2);
+    $finish();
+  end
+endmodule
