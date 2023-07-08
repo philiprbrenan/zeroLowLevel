@@ -1,0 +1,24 @@
+//-----------------------------------------------------------------------------
+// Resolve conflicting updates
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module conflictingUpdates_tb();                                                            // Run test programs
+  reg   clock1 = 0;
+  reg   clock2 = 0;
+  reg[1:0] in;
+  reg[1:0] ip;
+
+  conflictingUpdates r (.clock1(clock1), .clock2(clock2), .in(in), .ipw(ip));
+
+  integer i = 0;
+
+  initial begin
+    for(i = 0; i < 10; ++ i) begin
+      #1 clock1 = 1; clock2 = 1;
+      #1 clock1 = 0; clock2 = 0;
+         in = i;
+      $display("CCCC %2d", ip);
+    end
+    $finish();
+  end
+endmodule
