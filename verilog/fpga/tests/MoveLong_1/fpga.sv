@@ -13,11 +13,29 @@ module fpga                                                                     
   parameter integer NArea   =       16;                                         // Size of each area on the heap
   parameter integer NArrays =        2;                                         // Maximum number of arrays
   parameter integer NHeap   =       32;                                         // Amount of heap memory
-  parameter integer NLocal  =        4;                                         // Size of local memory
+  parameter integer NLocal  =       10;                                         // Size of local memory
   parameter integer NOut    =        0;                                         // Size of output area
+
+  heapMemory heap(                                                              // Create heap memory
+    .clk    (heapClock),
+    .write  (heapWrite),
+    .address(heapAddress),
+    .in     (heapIn),
+    .out    (heapOut)
+  );
+
+  defparam heap.MEM_SIZE   = NHeap;                                             // Size of heap
+  defparam heap.DATA_WIDTH = MemoryElementWidth;
+
+  reg                         heapClock;                                        // Heap ports
+  reg                         heapWrite;
+  reg[NHeap-1:0]              heapAddress;
+  reg[MemoryElementWidth-1:0] heapIn;
+  reg[MemoryElementWidth-1:0] heapOut;
+
   parameter integer NIn     =        0;                                         // Size of input area
   reg [MemoryElementWidth-1:0]   arraySizes[NArrays-1:0];                       // Size of each array
-  reg [MemoryElementWidth-1:0]      heapMem[NHeap-1  :0];                       // Heap memory
+//reg [MemoryElementWidth-1:0]      heapMem[NHeap-1  :0];                       // Heap memory
   reg [MemoryElementWidth-1:0]     localMem[NLocal-1 :0];                       // Local memory
   reg [MemoryElementWidth-1:0]       outMem[NOut-1   :0];                       // Out channel
   reg [MemoryElementWidth-1:0]        inMem[NIn-1    :0];                       // In channel
@@ -110,7 +128,7 @@ if (0) begin
   $display("AAAA %4d %4d mov", steps, ip);
 end
               localMem[2] = 0;
-              updateArrayLength(2, 0, 0);
+              updateArrayLength(2, 0, 0);                                   // We should do this in the heap memory module
               ip = 4;
         end
 
@@ -127,7 +145,7 @@ end
 if (0) begin
   $display("AAAA %4d %4d jGe", steps, ip);
 end
-              ip = localMem[2] >= 10 ? 12 : 6;
+              ip = localMem[2] >= 10 ? 16 : 6;
         end
 
           6 :
@@ -135,50 +153,92 @@ end
 if (0) begin
   $display("AAAA %4d %4d mov", steps, ip);
 end
-              heapMem[localMem[0]*16 + localMem[2]] = localMem[2];
-              updateArrayLength(1, localMem[0], localMem[2]);
+              localMem[4] = localMem[2];
+              updateArrayLength(2, 0, 0);                                   // We should do this in the heap memory module
               ip = 7;
         end
 
           7 :
+        begin                                                                   // movWrite1
+if (0) begin
+  $display("AAAA %4d %4d movWrite1", steps, ip);
+end
+              heapAddress = localMem[0]*16 + localMem[2];                                                 // Address of the item we wish to read from heap memory
+              heapIn      = localMem[4];                                                 // Data to write
+              heapWrite   = 1;                                                  // Request a write
+              heapClock   = 1;                                                  // Start write
+              ip = 8;                                                          // Next instruction
+        end
+
+          8 :
+        begin                                                                   // step
+if (0) begin
+  $display("AAAA %4d %4d step", steps, ip);
+end
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 9;                                                          // Next instruction
+        end
+
+          9 :
         begin                                                                   // add
 if (0) begin
   $display("AAAA %4d %4d add", steps, ip);
 end
               localMem[3] = localMem[2] + 100;
               updateArrayLength(2, 0, 0);
-              ip = 8;
-        end
-
-          8 :
-        begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
-              heapMem[localMem[1]*16 + localMem[2]] = localMem[3];
-              updateArrayLength(1, localMem[1], localMem[2]);
-              ip = 9;
-        end
-
-          9 :
-        begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
               ip = 10;
         end
 
          10 :
+        begin                                                                   // mov
+if (0) begin
+  $display("AAAA %4d %4d mov", steps, ip);
+end
+              localMem[5] = localMem[3];
+              updateArrayLength(2, 0, 0);                                   // We should do this in the heap memory module
+              ip = 11;
+        end
+
+         11 :
+        begin                                                                   // movWrite1
+if (0) begin
+  $display("AAAA %4d %4d movWrite1", steps, ip);
+end
+              heapAddress = localMem[1]*16 + localMem[2];                                                 // Address of the item we wish to read from heap memory
+              heapIn      = localMem[5];                                                 // Data to write
+              heapWrite   = 1;                                                  // Request a write
+              heapClock   = 1;                                                  // Start write
+              ip = 12;                                                          // Next instruction
+        end
+
+         12 :
+        begin                                                                   // step
+if (0) begin
+  $display("AAAA %4d %4d step", steps, ip);
+end
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 13;                                                          // Next instruction
+        end
+
+         13 :
+        begin                                                                   // label
+if (0) begin
+  $display("AAAA %4d %4d label", steps, ip);
+end
+              ip = 14;
+        end
+
+         14 :
         begin                                                                   // add
 if (0) begin
   $display("AAAA %4d %4d add", steps, ip);
 end
               localMem[2] = localMem[2] + 1;
               updateArrayLength(2, 0, 0);
-              ip = 11;
+              ip = 15;
         end
 
-         11 :
+         15 :
         begin                                                                   // jmp
 if (0) begin
   $display("AAAA %4d %4d jmp", steps, ip);
@@ -186,26 +246,68 @@ end
               ip = 4;
         end
 
-         12 :
+         16 :
         begin                                                                   // label
 if (0) begin
   $display("AAAA %4d %4d label", steps, ip);
 end
-              ip = 13;
+              ip = 17;
         end
 
-         13 :
+         17 :
+        begin                                                                   // movRead1
+if (0) begin
+  $display("AAAA %4d %4d movRead1", steps, ip);
+end
+              heapAddress = localMem[0]*16 + 4;                                                 // Address of the item we wish to read from heap memory
+              heapWrite = 0;                                                    // Request a read, not a write
+              heapClock = 1;                                                    // Start read
+              ip = 18;                                                          // Next instruction
+        end
+
+         18 :
+        begin                                                                   // movRead2
+if (0) begin
+  $display("AAAA %4d %4d movRead2", steps, ip);
+end
+              localMem[6] = heapOut;                                                     // Data retrieved from heap memory
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 19;                                                          // Next instruction
+        end
+
+         19 :
         begin                                                                   // moveLong
 if (0) begin
   $display("AAAA %4d %4d moveLong", steps, ip);
 end
               for(i = 0; i < NArea; i = i + 1) begin                            // Copy from source to target
                 if (i < 3) begin
-                  heapMem[NArea * localMem[1] + 2 + i] = heapMem[NArea * localMem[0] + 4 + i];
-                  updateArrayLength(1, localMem[1], 2 + i);
+                  heapMem[NArea * 0 + 0 + i] = heapMem[NArea * 0 + 0 + i];
+                  updateArrayLength(2, 0, 0 + i);
                 end
               end
-              ip = 14;
+              ip = 20;
+        end
+
+         20 :
+        begin                                                                   // movWrite1
+if (0) begin
+  $display("AAAA %4d %4d movWrite1", steps, ip);
+end
+              heapAddress = localMem[1]*16 + 2;                                                 // Address of the item we wish to read from heap memory
+              heapIn      = localMem[7];                                                 // Data to write
+              heapWrite   = 1;                                                  // Request a write
+              heapClock   = 1;                                                  // Start write
+              ip = 21;                                                          // Next instruction
+        end
+
+         21 :
+        begin                                                                   // step
+if (0) begin
+  $display("AAAA %4d %4d step", steps, ip);
+end
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 22;                                                          // Next instruction
         end
       endcase
       if (0) begin
@@ -214,8 +316,29 @@ end
         for(i = 0; i < 200; i = i + 1) $write("%2d", arraySizes[i]); $display("");
       end
       success  = 1;
-      finished = steps >     89;
+      finished = steps >    133;
     end
   end
 
+endmodule
+
+module heapMemory
+ (input wire clk,
+  input wire write,
+  input wire [MEM_SIZE-1:0] address,
+  input wire [DATA_WIDTH-1:0] in,
+  output reg [DATA_WIDTH-1:0] out);
+
+  parameter integer MEM_SIZE   = 12;
+  parameter integer DATA_WIDTH = 12;
+
+  reg [DATA_WIDTH-1:0] memory [2**MEM_SIZE:0];
+
+  always @(posedge clk) begin
+    if (write) begin
+      memory[address] = in;
+      out = in;
+    end
+    else out = memory[address];
+  end
 endmodule
