@@ -15,9 +15,27 @@ module fpga                                                                     
   parameter integer NHeap   =        4;                                         // Amount of heap memory
   parameter integer NLocal  =        3;                                         // Size of local memory
   parameter integer NOut    =        2;                                         // Size of output area
+
+  heapMemory heap(                                                              // Create heap memory
+    .clk    (heapClock),
+    .write  (heapWrite),
+    .address(heapAddress),
+    .in     (heapIn),
+    .out    (heapOut)
+  );
+
+  defparam heap.MEM_SIZE   = NHeap;                                             // Size of heap
+  defparam heap.DATA_WIDTH = MemoryElementWidth;
+
+  reg                         heapClock;                                        // Heap ports
+  reg                         heapWrite;
+  reg[NHeap-1:0]              heapAddress;
+  reg[MemoryElementWidth-1:0] heapIn;
+  reg[MemoryElementWidth-1:0] heapOut;
+
   parameter integer NIn     =        0;                                         // Size of input area
   reg [MemoryElementWidth-1:0]   arraySizes[NArrays-1:0];                       // Size of each array
-  reg [MemoryElementWidth-1:0]      heapMem[NHeap-1  :0];                       // Heap memory
+//reg [MemoryElementWidth-1:0]      heapMem[NHeap-1  :0];                       // Heap memory
   reg [MemoryElementWidth-1:0]     localMem[NLocal-1 :0];                       // Local memory
   reg [MemoryElementWidth-1:0]       outMem[NOut-1   :0];                       // Out channel
   reg [MemoryElementWidth-1:0]        inMem[NIn-1    :0];                       // In channel
@@ -89,53 +107,71 @@ end
         end
 
           2 :
+        begin                                                                   // step
+if (0) begin
+  $display("AAAA %4d %4d step", steps, ip);
+end
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 3;                                                          // Next instruction
+        end
+
+          3 :
         begin                                                                   // push
 if (0) begin
   $display("AAAA %4d %4d push", steps, ip);
 end
               heapMem[localMem[0] * NArea + arraySizes[localMem[0]]] = 2;
               arraySizes[localMem[0]]    = arraySizes[localMem[0]] + 1;
-              ip = 3;
+              ip = 4;
         end
 
-          3 :
+          4 :
+        begin                                                                   // step
+if (0) begin
+  $display("AAAA %4d %4d step", steps, ip);
+end
+              heapClock = 0;                                                    // Ready for next operation
+              ip = 5;                                                          // Next instruction
+        end
+
+          5 :
         begin                                                                   // pop
 if (0) begin
   $display("AAAA %4d %4d pop", steps, ip);
 end
               arraySizes[localMem[0]] = arraySizes[localMem[0]] - 1;
               localMem[1] = heapMem[localMem[0] * NArea + arraySizes[localMem[0]]];
-              ip = 4;
+              ip = 6;
         end
 
-          4 :
+          6 :
         begin                                                                   // pop
 if (0) begin
   $display("AAAA %4d %4d pop", steps, ip);
 end
               arraySizes[localMem[0]] = arraySizes[localMem[0]] - 1;
               localMem[2] = heapMem[localMem[0] * NArea + arraySizes[localMem[0]]];
-              ip = 5;
+              ip = 7;
         end
 
-          5 :
+          7 :
         begin                                                                   // out
 if (0) begin
   $display("AAAA %4d %4d out", steps, ip);
 end
               outMem[outMemPos] = localMem[1];
               outMemPos = outMemPos + 1;
-              ip = 6;
+              ip = 8;
         end
 
-          6 :
+          8 :
         begin                                                                   // out
 if (0) begin
   $display("AAAA %4d %4d out", steps, ip);
 end
               outMem[outMemPos] = localMem[2];
               outMemPos = outMemPos + 1;
-              ip = 7;
+              ip = 9;
         end
       endcase
       if (0) begin
@@ -146,8 +182,29 @@ end
       success  = 1;
       success  = success && outMem[0] == 2;
       success  = success && outMem[1] == 1;
-      finished = steps >      8;
+      finished = steps >     10;
     end
   end
 
+endmodule
+
+module heapMemory
+ (input wire clk,
+  input wire write,
+  input wire [MEM_SIZE-1:0] address,
+  input wire [DATA_WIDTH-1:0] in,
+  output reg [DATA_WIDTH-1:0] out);
+
+  parameter integer MEM_SIZE   = 12;
+  parameter integer DATA_WIDTH = 12;
+
+  reg [DATA_WIDTH-1:0] memory [2**MEM_SIZE:0];
+
+  always @(posedge clk) begin
+    if (write) begin
+      memory[address] = in;
+      out = in;
+    end
+    else out = memory[address];
+  end
 endmodule
