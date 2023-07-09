@@ -13,6 +13,7 @@ module MemoryTB();                                                              
   reg [INDEX_BITS -1:0] index;                                                  // Index within array
   reg [DATA_BITS  -1:0] in;                                                     // Input data
   reg [DATA_BITS  -1:0] out;                                                    // Output data
+  reg [31           :0] error;                                                  // Error code
 
   `include "tests.sv"                                                           // Test routines
 
@@ -22,7 +23,8 @@ module MemoryTB();                                                              
     .array(array),
     .index(index),
     .in(in),
-    .out(out)
+    .out(out),
+    .error(error)
    );
 
   task step();
@@ -119,7 +121,7 @@ module MemoryTB();                                                              
 
     array = a2; in = 2; action = m.Resize;     step();
                         action = m.Size;       step();  ok(out ==  2,     "Resize1");
-//  array = a2; in =22; action = m.Resize;     step();                          // Too big so no update
+    array = a2; in =22; action = m.Resize;     step();  ok(error == 10000144, "Resize 22");
                         action = m.Size;       step();  ok(out ==  2,     "Resize2");
 
     array = a1;         action = m.Free;       step();
@@ -142,8 +144,14 @@ module MemoryTB();                                                              
                 in = 3; action = m.Xor;        step();  ok(out ==  1,     "Xor");
                         action = m.NotLogical; step();  ok(out ==  0,     "NL0");
                         action = m.NotLogical; step();  ok(out ==  1,     "NL1");
+
+    array = 3; index = 0; action = m.Read; step(); ok(error == 10000020,  "Read error1");
+    array =a2; index = 7; action = m.Read; step(); ok(error == 10000022,  "Read error2");
+    array = 3;            action = m.Push; step(); ok(error == 10000120,  "Push error");
+    array = 3;            action = m.Pop;  step(); ok(error == 10000130,  "Pop error");
+//$display("AAAA %d", error);
 //dump();
 
-    checkAllTestsPassed(56);
+    checkAllTestsPassed(61);
   end
 endmodule
