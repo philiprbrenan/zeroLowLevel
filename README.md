@@ -1,5 +1,5 @@
 # [Zero assembler programming language](https://github.com/philiprbrenan/zero) 
-![Test](https://github.com/philiprbrenan/zero/workflows/Test/badge.svg)
+![Test](https://github.com/philiprbrenan/zeroLowLevel/workflows/Test/badge.svg)
 
 A minimal [assembler](https://en.wikipedia.org/wiki/Assembly_language#Assembler) and [emulator](https://en.wikipedia.org/wiki/Emulator) for the [Zero assembler programming language](https://github.com/philiprbrenan/zero) &#9410; just sufficiently capable
 of implementing the [B-Tree](https://en.wikipedia.org/wiki/B-tree) algorithm.
@@ -9,7 +9,7 @@ Open the __Actions__ [tab](https://en.wikipedia.org/wiki/Tab_key) to see the [co
 ## Installation
 
 Install the [Zero assembler programming language](https://github.com/philiprbrenan/zero) by downloading this repo and then following the [steps](http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__steps) shown in this
-[validating action](https://github.com/philiprbrenan/zero/blob/main/.github/workflows/main.yml)
+[validating action](https://github.com/philiprbrenan/zeroLowLevel/blob/main/.github/workflows/main.yml)
 
 ## Application
 
