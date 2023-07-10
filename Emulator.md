@@ -4142,29 +4142,49 @@ Compile to verilog
 
 ### Output fields
 
+#### LArea
+
+Log 2 number of elements in an array but at least 2 - this gives us the index width
+
+#### LArrays
+
+Log 2 number of arrays but at least 4 arrays - this gives us the address width
+
+#### LData
+
+The number of data bits
+
 #### NArea
 
-The size of an array in the heap area
+Number of elements in an array
 
 #### NArrays
 
-The number of heap arrays need
+Number of arrays
 
-#### WLocal
+#### NIn
 
-Size of local area
+Input queue length
+
+#### NLocal
+
+Number of local variables
+
+#### NOut
+
+Size of output channel
 
 #### code
 
-Generated code
+Verilog code
 
 #### constraints
 
-Constraints file
+Constraints file content
 
 #### testBench
 
-Test bench for generated code
+Test bench code
 
 ## Zero::Emulator Definition
 
