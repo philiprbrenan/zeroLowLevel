@@ -92,7 +92,7 @@ module Memory
     end
   endtask
 
-  always @(posedge clock) begin
+  always @(posedge clock, negedge clock) begin                                  // Each transition
     case(action)                                                                // Decode request
       Reset: begin                                                              // Reset
         freedArraysTop = 0;                                                     // Free all arrays
