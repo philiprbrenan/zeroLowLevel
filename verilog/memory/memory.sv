@@ -85,6 +85,13 @@ module Memory
     end
   endtask
 
+  task dump();                                                                  // Dump some memory
+    begin
+      $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
+      for(i = 0; i < ARRAY_LENGTH; ++i) $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+    end
+  endtask
+
   always @(posedge clock) begin
     case(action)                                                                // Decode request
       Reset: begin                                                              // Reset
@@ -242,8 +249,7 @@ $display("Need Memory array down");
       end
 
       Dump: begin                                                               // Dump
-        $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
-        for(i = 0; i < ARRAY_LENGTH; ++i) $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+        dump();
       end
 
       Resize: begin                                                             // Resize
