@@ -29,19 +29,19 @@ module MemoryTB();                                                              
 
   task step();
     begin
-       #1 clock = 1; #1 clock = 0;
+       #1 clock = ~ clock;
     end
   endtask
 
   task allocateArray();
     begin
-       action = m.Alloc; #1 clock = 1; #1 clock = 0; array = out;
+       action = m.Alloc; step(); array = out;
     end
   endtask
 
   task dump();
     begin
-       action = m.Dump; #1 clock = 1; #1 clock = 0;
+       action = m.Dump; step();
     end
   endtask
 
