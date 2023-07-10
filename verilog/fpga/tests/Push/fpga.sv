@@ -38,7 +38,7 @@ module fpga                                                                     
   integer steps;                                                                // Number of steps executed so far
   integer i, j, k;                                                              // A useful counter
 
-  always @(posedge clock) begin                                                 // Each instruction
+  always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
       ip             = 0;
       steps          = 0;
@@ -63,46 +63,49 @@ if (0) begin
   $display("AAAA %4d %4d start", steps, ip);
 end
               heapClock = 0;                                                    // Ready for next operation
-              ip = 1;                                                          // Next instruction
+              ip = 1;
         end
 
           1 :
-        begin                                                                   // start1
+        begin                                                                   // start2
 if (0) begin
-  $display("AAAA %4d %4d start1", steps, ip);
+  $display("AAAA %4d %4d start2", steps, ip);
 end
               heapAction = heap.Reset;                                          // Ready for next operation
-              heapClock = 1;                                                    // Ready for next operation
-              ip = 2;                                                          // Next instruction
+              ip = 2;
+              heapClock = ~ heapClock;
         end
 
           2 :
-        begin                                                                   // step
-if (0) begin
-  $display("AAAA %4d %4d step", steps, ip);
-end
-              heapClock = 0;                                                    // Ready for next operation
-              ip = 3;                                                          // Next instruction
-        end
-
-          3 :
         begin                                                                   // array
 if (0) begin
   $display("AAAA %4d %4d array", steps, ip);
 end
               heapAction = heap.Alloc;
-              heapClock  = 1;
-              ip = 4;
+              ip = 3;
+              heapClock = ~ heapClock;
         end
 
-          4 :
+          3 :
         begin                                                                   // array2
 if (0) begin
   $display("AAAA %4d %4d array2", steps, ip);
 end
               localMem[0] = heapOut;
-              heapClock = 0;
+              ip = 4;
+              heapClock = ~ heapClock;
+        end
+
+          4 :
+        begin                                                                   // push
+if (0) begin
+  $display("AAAA %4d %4d push", steps, ip);
+end
+              heapAction = heap.Push;
+              heapIn     = 1;
+              heapArray  = localMem[0];
               ip = 5;
+              heapClock = ~ heapClock;
         end
 
           5 :
@@ -111,97 +114,67 @@ if (0) begin
   $display("AAAA %4d %4d push", steps, ip);
 end
               heapAction = heap.Push;
-              heapIn     = 1;
+              heapIn     = 2;
               heapArray  = localMem[0];
-              heapClock  = 1;
               ip = 6;
+              heapClock = ~ heapClock;
         end
 
           6 :
-        begin                                                                   // step
-if (0) begin
-  $display("AAAA %4d %4d step", steps, ip);
-end
-              heapClock = 0;                                                    // Ready for next operation
-              ip = 7;                                                          // Next instruction
-        end
-
-          7 :
-        begin                                                                   // push
-if (0) begin
-  $display("AAAA %4d %4d push", steps, ip);
-end
-              heapAction = heap.Push;
-              heapIn     = 2;
-              heapArray  = localMem[0];
-              heapClock  = 1;
-              ip = 8;
-        end
-
-          8 :
-        begin                                                                   // step
-if (0) begin
-  $display("AAAA %4d %4d step", steps, ip);
-end
-              heapClock = 0;                                                    // Ready for next operation
-              ip = 9;                                                          // Next instruction
-        end
-
-          9 :
         begin                                                                   // arraySize
 if (0) begin
   $display("AAAA %4d %4d arraySize", steps, ip);
 end
               heapAction = heap.Size;
               heapArray  = localMem[0];
-              heapClock  = 1;
-              ip = 10;
+              ip = 7;
+              heapClock = ~ heapClock;
         end
 
-         10 :
+          7 :
         begin                                                                   // arraySize2
 if (0) begin
   $display("AAAA %4d %4d arraySize2", steps, ip);
 end
               localMem[1] = heapOut;
-              heapClock  = 0;
-              ip = 11;
+              ip = 8;
+              heapClock = ~ heapClock;
         end
 
-         11 :
+          8 :
         begin                                                                   // label
 if (0) begin
   $display("AAAA %4d %4d label", steps, ip);
 end
-              ip = 12;
+              ip = 9;
         end
 
-         12 :
+          9 :
         begin                                                                   // mov
 if (0) begin
   $display("AAAA %4d %4d mov", steps, ip);
 end
               localMem[2] = 0;
-              ip = 13;
+              ip = 10;
         end
 
-         13 :
+         10 :
         begin                                                                   // label
 if (0) begin
   $display("AAAA %4d %4d label", steps, ip);
 end
-              ip = 14;
+              ip = 11;
         end
 
-         14 :
+         11 :
         begin                                                                   // jGe
 if (0) begin
   $display("AAAA %4d %4d jGe", steps, ip);
 end
-              ip = localMem[2] >= localMem[1] ? 22 : 15;
+              ip = localMem[2] >= localMem[1] ? 19 : 12;
         end
 
-         15 :
+         12 :
         begin                                                                   // movRead1
 if (0) begin
   $display("AAAA %4d %4d movRead1", steps, ip);
@@ -209,37 +182,62 @@ end
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = localMem[2];                                                  // Address of the item we wish to read from heap memory
               heapAction = heap.Read;                                           // Request a read, not a write
-              heapClock  = 1;                                                   // Start read
-              ip = 16;                                                          // Next instruction
+              ip = 13;
+              heapClock = ~ heapClock;
         end
 
-         16 :
+         13 :
         begin                                                                   // movRead2
 if (0) begin
   $display("AAAA %4d %4d movRead2", steps, ip);
 end
               localMem[4] = heapOut;                                                     // Data retrieved from heap memory
-              heapClock = 0;                                                    // Ready for next operation
-              ip = 17;                                                          // Next instruction
+              ip = 14;
+              heapClock = ~ heapClock;
         end
 
-         17 :
+         14 :
         begin                                                                   // mov
 if (0) begin
   $display("AAAA %4d %4d mov", steps, ip);
 end
               localMem[3] = localMem[4];
-              ip = 18;
+              ip = 15;
         end
 
-         18 :
+         15 :
         begin                                                                   // out
 if (0) begin
   $display("AAAA %4d %4d out", steps, ip);
 end
               outMem[outMemPos] = localMem[3];
               outMemPos = outMemPos + 1;
-              ip = 19;
+              ip = 16;
+        end
+
+         16 :
+        begin                                                                   // label
+if (0) begin
+  $display("AAAA %4d %4d label", steps, ip);
+end
+              ip = 17;
+        end
+
+         17 :
+        begin                                                                   // add
+if (0) begin
+  $display("AAAA %4d %4d add", steps, ip);
+end
+              localMem[2] = localMem[2] + 1;
+              ip = 18;
+        end
+
+         18 :
+        begin                                                                   // jmp
+if (0) begin
+  $display("AAAA %4d %4d jmp", steps, ip);
+end
+              ip = 10;
         end
 
          19 :
@@ -248,31 +246,6 @@ if (0) begin
   $display("AAAA %4d %4d label", steps, ip);
 end
               ip = 20;
-        end
-
-         20 :
-        begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
-              localMem[2] = localMem[2] + 1;
-              ip = 21;
-        end
-
-         21 :
-        begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
-              ip = 13;
-        end
-
-         22 :
-        begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
-              ip = 23;
         end
       endcase
       if (0) begin
@@ -283,7 +256,7 @@ end
       success  = 1;
       success  = success && outMem[0] == 1;
       success  = success && outMem[1] == 2;
-      finished = steps >     35;
+      finished = steps >     32;
     end
   end
 
@@ -382,7 +355,7 @@ module Memory
     end
   endtask
 
-  always @(posedge clock) begin
+  always @(posedge clock, negedge clock) begin                                  // Each transition
     case(action)                                                                // Decode request
       Reset: begin                                                              // Reset
         freedArraysTop = 0;                                                     // Free all arrays
