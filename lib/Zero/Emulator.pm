@@ -432,10 +432,6 @@ sub Zero::Emulator::Assembly::lowLevelReplaceSource($$$)                        
    }
  }
 
-sub step()                                                                      # Create a step instruction
- {Instruction(action=>"step")
- }
-
 sub array2($)                                                                   # Array2 instruction
  {my ($target) = @_;                                                            # Target to store result in
   Instruction(action=>"array2", target=>$target)
@@ -490,7 +486,6 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
        },
       push=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap
-        push @l, step();                                                        # Step the clock
        },
      };
 
@@ -1988,7 +1983,7 @@ sub Zero::Emulator::Assembly::execute($%)                                       
     start=> sub                                                                 # Start execution of a program
      {},
 
-    start1=> sub                                                                # Start execution of a program
+    start2=> sub                                                                # Start execution of a program
      {},
 
     step=> sub                                                                  # Step the clock - never used in high level assembvler, but useful in low level assembler where we must often clock an operation through a device
@@ -2917,8 +2912,7 @@ sub Start($)                                                                    
   $version == 1 or confess "Version 1 is currently the only version available";
   Assembly();
   $assembly->instruction(action=>"start");
-  $assembly->instruction(action=>"start1");
-  $assembly->instruction(action=>"step");
+  $assembly->instruction(action=>"start2");
  }
 
 sub Subtract($$;$)                                                              #i Subtract the second source operand value from the first source operand value and store the result in the target area.
@@ -3214,29 +3208,31 @@ Return
 
 =cut
 
-  my sub confirmLhsRef($$$)                                                     # Confirm a left hand reference is to a constant or to a local variable and to nothing else
-   {my ($instruction, $ref, $type) = @_;                                        # Instruction, Reference in this instruction, the type of the reference
-    my $c = join "\n", $instruction->contextString;
-    $ref->arena == arenaLocal or confess "LHS $type reference must be a constant or a local variable in:\n$c";
-    $ref->dAddress < 2 or confess "LHS $type reference is too deep in:\n$c";
+  my sub nextInstruction($)                                                     # Move to next instruction
+   {my ($instruction) = @_;                                                     # Instruction
+    my $n = $instruction->number + 1;
+    <<END;
+              ip = $n;
+END
+   }
+
+  my sub transitionHeapClock()                                                  # Transition heap clock
+   {<<END;
+              heapClock = ~ heapClock;
+END
    }
 
   my $gen =                                                                     # Code generation for each instruction
    {add=> sub                                                                   # Add
      {my ($i) = @_;                                                             # Instruction
-      #confirmLhsRef($i, $i->source,  "source");
-      #confirmLhsRef($i, $i->source2, "source2");
-      #confirmLhsRef($i, $i->target,  "target");
       my $A = $compile->deref($i->target)->Arena;
       my $z = $compile->deref($i->target)->targetLocationArea;
       my $a = $compile->deref($i->source )->Value;
       my $b = $compile->deref($i->source2)->Value;
       my $t = $compile->deref($i->target)->targetLocation;
       my $I = $compile->deref($i->target)->targetIndex;
-      my $n = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = $a + $b;
-              ip = $n;
 END
      },
 
@@ -3248,30 +3244,22 @@ END
       my $b = $compile->deref($i->source2)->Value;
       my $t = $compile->deref($i->target)->targetLocation;
       my $I = $compile->deref($i->target)->targetIndex;
-      my $n = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = $a - $b;
-              ip = $n;
 END
      },
 
     array=> sub                                                                 # Array
      {my ($i) = @_;                                                             # Instruction
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapAction = heap.Alloc;
-              heapClock  = 1;
-              ip = $n;
 END
      },
     array2=> sub                                                                # Array
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               $t = heapOut;
-              heapClock = 0;
-              ip = $n;
 END
      },
 
@@ -3279,23 +3267,17 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapAction = heap.Size;
               heapArray  = $s;
-              heapClock  = 1;
-              ip = $n;
 END
      },
 
     arraySize2=> sub                                                            # ArraySize
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               $t = heapOut;
-              heapClock  = 0;
-              ip = $n;
 END
      },
 
@@ -3305,13 +3287,10 @@ END
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target) ->targetLocation;
       my $n = $i->number + 1;
-      push @c, <<END;
-              j = 0; k = arraySizes[$a];
-              for(i = 0; i < NArea; i = i + 1) begin
-                if (i < k && heapMem[$a * NArea + i] < $s) j = j + 1;
-              end
-              $t = j;
-              ip = $n;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapIn     = $s;
+              heapAction = heap.Less;
+              heapArray  = $a;
 END
      },
 
@@ -3320,16 +3299,10 @@ END
       my $s = $compile->deref($i->source2)->Value;
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target)->targetLocation;
-      my $n = $i->number + 1;
-      push @c, <<END;
-              j = 0; k = arraySizes[$a];
-//\$display("AAAAA k=%d  source2=%d", k, $s);
-              for(i = 0; i < NArea; i = i + 1) begin
-//\$display("AAAAA i=%d  value=%d", i, heapMem[$a * NArea + i]);
-                if (i < k && heapMem[$a * NArea + i] > $s) j = j + 1;
-              end
-              $t = j;
-              ip = $n;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapIn     = $s;
+              heapAction = heap.Greater;
+              heapArray  = $a;
 END
      },
 
@@ -3338,13 +3311,10 @@ END
       my $s = $compile->deref($i->source2)->Value;
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target)->targetLocation;
-      my $n = $i->number + 1;
-      push @c, <<END;
-              $t = 0; k = arraySizes[$a];
-              for(i = 0; i < NArea; i = i + 1) begin
-                if (i < k && heapMem[$a * NArea + i] == $s) $t = i + 1;
-              end
-              ip = $n;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapIn     = $s;
+              heapAction = heap.Index;
+              heapArray  = $a;
 END
      },
 
@@ -3355,35 +3325,28 @@ END
     free=> sub                                                                  # Free array
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->Value;                             # Number of the array
-      my $n   = $i->number + 1;
-      push @c, <<END;
-                                 arraySizes[$t] = 0;
-              freedArrays[freedArraysTop] = $t;
-              freedArraysTop = freedArraysTop + 1;
-              ip = $n;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapAction = heap.Free;
+              heapArray  = $t;
 END
      },
 
     in=> sub                                                                    # In
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
-              if (inMemPos < NIn) begin
+      push @c, <<END.nextInstruction($i);
+              if (inMemPos < $NIn) begin
                 $t = inMem[inMemPos];
                 inMemPos = inMemPos + 1;
               end
-              ip = $n;
 END
      },
 
     inSize=> sub                                                                # InSize
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
-              $t = NIn - inMemPos;
-              ip = $n;
+      push @c, <<END.nextInstruction($i);
+              $t = $NIn - inMemPos;
 END
      },
 
@@ -3483,9 +3446,7 @@ END
 
     label=> sub                                                                 # label
      {my ($i) = @_;                                                             # Instruction
-      my $n   = $i->number + 1;
-      push @c, <<END;
-              ip = $n;
+      push @c, <<END.nextInstruction($i);
 END
      },
 
@@ -3496,10 +3457,8 @@ END
       #my $A   = $compile->deref($i->target)->Arena;
       #my $a   = $compile->deref($i->target)->targetLocationArea;
       #my $I   = $compile->deref($i->target)->targetIndex;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = $s;
-              ip = $n;
 END
      },
 
@@ -3507,24 +3466,18 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocationArea;
       my $I   = $compile->deref($i->target)->targetIndex;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapArray  = $t;                                                  // Address of the item we wish to read from heap memory
               heapIndex  = $I;                                                  // Address of the item we wish to read from heap memory
               heapAction = heap.Read;                                           // Request a read, not a write
-              heapClock  = 1;                                                   // Start read
-              ip = $n;                                                          // Next instruction
 END
      },
 
     movRead2=> sub                                                              # Mov finish read from heap memory.
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               $t = heapOut;                                                     // Data retrieved from heap memory
-              heapClock = 0;                                                    // Ready for next operation
-              ip = $n;                                                          // Next instruction
 END
      },
 
@@ -3532,41 +3485,24 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->Location;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapArray   = $t;                                                 // Address of the item we wish to read from heap memory
               heapIn      = $s;                                                 // Data to write
               heapWrite   = 1;                                                  // Request a write
-              heapClock   = 1;                                                  // Start write
-              ip = $n;                                                          // Next instruction
 END
      },
 
     start=> sub                                                                 # Start program execution
      {my ($i) = @_;                                                             # Instruction                                                                                                                                t
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               heapClock = 0;                                                    // Ready for next operation
-              ip = $n;                                                          // Next instruction
 END
      },
 
-    start1=> sub                                                                # Start program execution
+    start2=> sub                                                                # Start program execution
      {my ($i) = @_;                                                             # Instruction                                                                                                                                t
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapAction = heap.Reset;                                          // Ready for next operation
-              heapClock = 1;                                                    // Ready for next operation
-              ip = $n;                                                          // Next instruction
-END
-     },
-
-    step=> sub                                                                  # Lower the clock to complete a memory operation.  Obviously this should be done (if possible) as part of the next step in a bettr realization
-     {my ($i) = @_;                                                             # Instruction                                                                                                                                t
-      my $n   = $i->number + 1;
-      push @c, <<END;
-              heapClock = 0;                                                    // Ready for next operation
-              ip = $n;                                                          // Next instruction
 END
      },
 
@@ -3579,7 +3515,7 @@ END
       my $l   = $compile->deref($i->source2)->Value;
       my $A   = $compile->deref($i->target)->Arena;
       my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               for(i = 0; i < NArea; i = i + 1) begin                            // Copy from source to target
                 if (i < $l) begin
                   heapMem[NArea * $ta + $ti + i] = heapMem[NArea * $sa + $si + i];
@@ -3594,21 +3530,17 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = !$s;
-              ip = $n;
 END
      },
 
     out=> sub                                                                   # Out
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               outMem[outMemPos] = $s;
               outMemPos = outMemPos + 1;
-              ip = $n;
 END
      },
 
@@ -3616,11 +3548,9 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               arraySizes[$s] = arraySizes[$s] - 1;
               $t = heapMem[$s * NArea + arraySizes[$s]];
-              ip = $n;
 END
      },
 
@@ -3628,13 +3558,10 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->Value;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               heapAction = heap.Push;
               heapIn     = $s;
               heapArray  = $t;
-              heapClock  = 1;
-              ip = $n;
 END
      },
 
@@ -3642,10 +3569,11 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->Value;
-      my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
               arraySizes[$t] = $s;
-              ip = $n;
+              heapAction = heap.Resize;
+              heapIn     = $s;
+              heapArray  = $t;
 END
      },
 
@@ -3655,9 +3583,8 @@ END
       my $T   = $compile->deref($i->target)->targetValue;
       my $t   = $compile->deref($i->target)->targetLocation;
       my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = $T << $s;
-              ip = $n;
 END
      },
 
@@ -3667,7 +3594,7 @@ END
       my $T   = $compile->deref($i->target)->targetValue;
       my $t   = $compile->deref($i->target)->targetLocation;
       my $n   = $i->number + 1;
-      push @c, <<END;
+      push @c, <<END.nextInstruction($i);
               $t = $T >> $s;
               ip = $n;
 END
@@ -3678,20 +3605,11 @@ END
       my $s   = $compile->deref($i->source)->Value;                             # Value to shift in
       my $a   = $compile->deref($i->target)->targetLocationArea;                # Number of target array
       my $o   = $compile->deref($i->target)->targetIndex;                       # Position in target array to shift from
-      my $n   = $i->number + 1;
-      push @c, <<END;
-//\$display("AAAA %4d %4d shiftUp", steps, ip);
-              for(i = 0; i < NArea; i = i + 1) arrayShift[i] = heapMem[NArea * $a + i]; // Copy source array
-//\$display("BBBB pos=%d array=%d length=%d", $o, $a, arraySizes[$a]);
-              for(i = 0; i < NArea; i = i + 1) begin                            // Move original array up
-                if (i > $o && i <= arraySizes[$a]) begin
-                  heapMem[NArea * $a + i] = arrayShift[i-1];
-//\$display("CCCC index=%d value=%d", i, arrayShift[i-1]);
-                end
-              end
-              heapMem[NArea * $a + $o] = $s;                                    // Insert new value
-              arraySizes[$a] = arraySizes[$a] + 1;                              // Increase array size
-              ip = $n;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapAction = heap.Up;
+              heapIn     = $s;
+              heapArray  = $a;
+              heapIndex  = $o;
 END
      },
     tally=> \&skip,                                                             # Tally
@@ -3755,7 +3673,7 @@ END
   if (1)                                                                        # A case statement to select each instruction to be executed in order
    {push @c, <<END;
 
-  always @(posedge clock) begin                                                 // Each instruction
+  always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
       ip             = 0;
       steps          = 0;
