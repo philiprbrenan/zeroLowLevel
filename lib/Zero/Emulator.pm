@@ -12,6 +12,7 @@
 # Setting the array size on Mov means that we probably do not need all the resizes
 # Check wether iverilog supports multi dimensional arrays and if so can we use this in the string model ?
 # Area size must be a power of 2 to avoid multiplication **see containingPowerOfTwo
+# Track largest number encountered so we know how wide to make memory
 use v5.30;
 package Zero::Emulator;
 our $VERSION = 20230519;                                                        # Version
@@ -180,6 +181,12 @@ sub Zero::Emulator::Assembly::codeToString($)                                   
   for my $i(@code)
    {my $n = $i->number//-1;
     my $a = $i->action;
+
+    say STDERR "AAAAA";
+    say STDERR dump($i->{target});
+    say STDERR dump($i->{source});
+    say STDERR dump($i->{source2});
+
     my $t = $assembly->referenceToString($i->{target},  0);
     my $s = $assembly->referenceToString($i->{source},  1);
     my $S = $assembly->referenceToString($i->{source2}, 2);
@@ -305,7 +312,8 @@ sub Zero::Emulator::Assembly::referenceToString($$$)                            
   @_ == 3 or confess "Three parameters";
 
   return "" unless defined $r;
-  ref($r) =~ m(Reference) or confess "Must be a reference, not: ".dump($r);
+  return $r unless ref $r;
+                   ref($r) =~ m(Reference) or confess "Must be a reference, not: ".dump($r);
   return "" if $r->arena == arenaNull;                                          # Empty reference
 
   if ($operand == 0)
@@ -428,6 +436,16 @@ sub step()                                                                      
  {Instruction(action=>"step")
  }
 
+sub array2($)                                                                   # Array2 instruction
+ {my ($target) = @_;                                                            # Target to store result in
+  Instruction(action=>"array2", target=>$target)
+ }
+
+sub arraySize2($)                                                               # ArraySize2 instruction
+ {my ($target) = @_;                                                            # Target to store result in
+  Instruction(action=>"arraySize2", target=>$target)
+ }
+
 sub Zero::Emulator::Assembly::lowLevelReplaceTarget($$)                         #P Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga. The instruction under consideration is at the top of the supplied instruction list. Add the move instruction and modify the original instruction if the source field can be replaced
  {my ($assembly, $instructions) = @_;                                           # Assembly options, instructions
   return unless my $i = $$instructions[-1];
@@ -462,7 +480,15 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
     push @l, $i;
 
     my $translations =                                                          # Translation of some high level instructions into actions on memory
-     {push=> sub
+     {array=> sub
+       {push @l, array2($i->target);
+        $assembly->lowLevelReplaceTarget(\@l);                                  # Target might be in the heap
+       },
+      arraySize=> sub
+       {push @l, arraySize2($i->target);
+        $assembly->lowLevelReplaceTarget(\@l);                                  # Target might be in the heap
+       },
+      push=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap
         push @l, step();                                                        # Step the clock
        },
@@ -1565,6 +1591,9 @@ sub Zero::Emulator::Assembly::execute($%)                                       
       $a
      },
 
+    array2=> sub                                                                # Used in low level assembly but not high level
+     {},
+
     free=> sub                                                                  # Free the memory area named by the source operand
      {my $i = currentInstruction $exec;
       my $area = right $exec, $i->target;                                       # Area
@@ -1582,6 +1611,9 @@ sub Zero::Emulator::Assembly::execute($%)                                       
 
       assign($exec, $size, areaLength($exec, $area))                            # Size of area
      },
+
+    arraySize2=> sub                                                            # Used in the low level assembly, not the high level assembly
+     {},
 
     arrayIndex=> sub                                                            # Place the 1 based index of the second source operand in the array referenced by the first source operand in the target location
      {my $i = currentInstruction $exec;
@@ -1899,6 +1931,9 @@ sub Zero::Emulator::Assembly::execute($%)                                       
       pushArea($exec, $t, $S, $s);
      },
 
+    push2=> sub                                                                 # Used in low level assembly but not high level
+     {},
+
     shiftLeft=> sub                                                             # Shift left within an element
      {my $i = currentInstruction $exec;
       my $t = $exec->latestLeftTarget;
@@ -1949,6 +1984,12 @@ sub Zero::Emulator::Assembly::execute($%)                                       
       my $T = $exec->latestLeftTarget;
       assign($exec, $T, $v);
      },
+
+    start=> sub                                                                 # Start execution of a program
+     {},
+
+    start1=> sub                                                                # Start execution of a program
+     {},
 
     step=> sub                                                                  # Step the clock - never used in high level assembvler, but useful in low level assembler where we must often clock an operation through a device
      {},
@@ -2772,7 +2813,7 @@ sub Procedure($$)                                                               
 sub Push($$$)                                                                   #i Push the value in the current stack frame specified by the source operand onto the memory area identified by the target operand.
  {my ($target, $source, $source2) = @_;                                         # Memory area to push to, memory containing value to push
   @_ == 3 or confess "Three parameters";
-    my $n = $assembly->ArrayNameToNumber($source2);
+  my $n = $assembly->ArrayNameToNumber($source2);
   $assembly->instruction(action=>"push", xTarget($target), xSource($source), source2=>$n);
  }
 
@@ -2875,6 +2916,9 @@ sub Start($)                                                                    
  {my ($version) = @_;                                                           # Version desired - at the moment only 1
   $version == 1 or confess "Version 1 is currently the only version available";
   Assembly();
+  $assembly->instruction(action=>"start");
+  $assembly->instruction(action=>"start1");
+  $assembly->instruction(action=>"step");
  }
 
 sub Subtract($$;$)                                                              #i Subtract the second source operand value from the first source operand value and store the result in the target area.
@@ -2993,12 +3037,17 @@ sub CompileToVerilog(%)                                                         
  {my (%options) = @_;                                                           # Execution options
 
   genHash(q(Zero::CompileToVerilog),                                            # Compile to verilog
-    NArea=> 2**containingPowerOfTwo($options{NArea}   // 0),                    # The size of an array in the heap area
-    NArrays=>                       $options{NArrays} // 0,                     # The number of heap arrays need
-    WLocal=>                        $options{WLocal}  // 0,                     # Size of local area
-    code=>                          '',                                         # Generated code
-    testBench=>                     '',                                         # Test bench for generated code
-    constraints=>                   '',                                         # Constraints file
+    NArrays     => $options{NArrays},                                           # Number of arrays
+    LArrays     => $options{LArrays},                                           # Log 2 number of arrays but at least 4 arrays - this gives us the address width
+    NArea       => $options{NArea},                                             # Number of elements in an array
+    LArea       => $options{LArea},                                             # Log 2 number of elements in an array but at least 2 - this gives us the index width
+    LData       => $options{LData},                                             # The number of data bits
+    NIn         => $options{NIn},                                               # Input queue length
+    NOut        => $options{NOut},                                              # Size of output channel
+    NLocal      => $options{NLocal},                                            # Number of local variables
+    code        => undef,                                                       # Verilog code
+    testBench   => undef,                                                       # Test bench code
+    constraints => undef,                                                       # Constraints file content
    );
  }
 
@@ -3114,15 +3163,24 @@ sub compileToVerilog($$)                                                        
  {my ($exec, $name) = @_;                                                       # Execution environment of completed run, name of subroutine to contain generated code
   @_ == 2 or confess "Two parameters";
 
-  my $compile = CompileToVerilog
-   (NArea=>   $exec->widestAreaInArena->[arenaHeap],                            # The width of arrays on the heap
-    NArrays=> $exec->mostArrays       ->[arenaHeap],                            # The number of heap arrays need
-    WLocal=>  $exec->widestAreaInArena->[arenaLocal]);                          # Compilation environment
+  my $NArrays = $exec->mostArrays ->[arenaHeap];                                # Number of arrays
+  my $LArrays = max(2, containingPowerOfTwo($NArrays));                         # Log 2 number of arrays but at least 4 arrays - this gives us the address width
+  my $NArea   = $exec->widestAreaInArena->[arenaHeap];                          # Number of elements in an array
+  my $LArea   = max(1, containingPowerOfTwo($NArea));                           # Log 2 number of elements in an array but at least 2 - this gives us the index width
+  my $LData   = 12;                                                             # The number of data bits
+  my $NIn     = max(1, scalar $exec->inOriginally->@*);                         # Input queue length
+  my $NOut    = max(1, scalar [split /\s+/, $exec->out]->@*);                   # Size of output channel
+  my $NLocal  = $exec->widestAreaInArena->[arenaLocal];                         # Number of local variables
 
-  my $NArrays = $compile->NArrays;
-  my $NArea   = $compile->NArea;
-  my $NOut    = [split /\s+/, $exec->out]->@*;
-  my $WLocal  = $compile->WLocal;
+  my $compile = CompileToVerilog
+   (NArrays => $NArrays,                                                        # Number of arrays
+    LArrays => $LArrays,                                                        # Log 2 number of arrays but at least 4 arrays - this gives us the address width
+    NArea   => $NArea,                                                          # Number of elements in an array
+    LArea   => $LArea,                                                          # Log 2 number of elements in an array but at least 2 - this gives us the index width
+    LData   => $LData,                                                          # The number of data bits
+    NIn     => $NIn,                                                            # Input queue length
+    NOut    => $NOut,                                                           # Size of output channel
+    NLocal  => $NLocal);                                                        # Number of local variables
 
   my @c;                                                                        # Generated code
 
@@ -3178,7 +3236,6 @@ Return
       my $n = $i->number + 1;
       push @c, <<END;
               $t = $a + $b;
-              updateArrayLength($A, $z, $I);
               ip = $n;
 END
      },
@@ -3194,26 +3251,26 @@ END
       my $n = $i->number + 1;
       push @c, <<END;
               $t = $a - $b;
-              updateArrayLength($A, $z, $I);
               ip = $n;
 END
      },
 
     array=> sub                                                                 # Array
      {my ($i) = @_;                                                             # Instruction
+      my $n   = $i->number + 1;
+      push @c, <<END;
+              heapAction = heap.Alloc;
+              heapClock  = 1;
+              ip = $n;
+END
+     },
+    array2=> sub                                                                # Array
+     {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
       my $n   = $i->number + 1;
       push @c, <<END;
-              if (freedArraysTop > 0) begin
-                freedArraysTop = freedArraysTop - 1;
-                $t = freedArrays[freedArraysTop];
-              end
-              else begin
-                $t = allocs;
-                allocs = allocs + 1;
-
-              end
-              arraySizes[$t] = 0;
+              $t = heapOut;
+              heapClock = 0;
               ip = $n;
 END
      },
@@ -3224,7 +3281,20 @@ END
       my $t   = $compile->deref($i->target)->targetLocation;
       my $n   = $i->number + 1;
       push @c, <<END;
-              $t = arraySizes[$s];
+              heapAction = heap.Size;
+              heapArray  = $s;
+              heapClock  = 1;
+              ip = $n;
+END
+     },
+
+    arraySize2=> sub                                                            # ArraySize
+     {my ($i) = @_;                                                             # Instruction
+      my $t   = $compile->deref($i->target)->targetLocation;
+      my $n   = $i->number + 1;
+      push @c, <<END;
+              $t = heapOut;
+              heapClock  = 0;
               ip = $n;
 END
      },
@@ -3423,25 +3493,26 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      my $A   = $compile->deref($i->target)->Arena;
-      my $a   = $compile->deref($i->target)->targetLocationArea;
-      my $I   = $compile->deref($i->target)->targetIndex;
+      #my $A   = $compile->deref($i->target)->Arena;
+      #my $a   = $compile->deref($i->target)->targetLocationArea;
+      #my $I   = $compile->deref($i->target)->targetIndex;
       my $n   = $i->number + 1;
       push @c, <<END;
               $t = $s;
-              updateArrayLength($A, $a, $I);                                   // We should do this in the heap memory module
               ip = $n;
 END
      },
 
     movRead1=> sub                                                              # Mov start read from heap memory.
      {my ($i) = @_;                                                             # Instruction
-      my $t   = $compile->deref($i->target)->Location;
+      my $t   = $compile->deref($i->target)->targetLocationArea;
+      my $I   = $compile->deref($i->target)->targetIndex;
       my $n   = $i->number + 1;
       push @c, <<END;
-              heapAddress = $t;                                                 // Address of the item we wish to read from heap memory
-              heapWrite = 0;                                                    // Request a read, not a write
-              heapClock = 1;                                                    // Start read
+              heapArray  = $t;                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = $I;                                                  // Address of the item we wish to read from heap memory
+              heapAction = heap.Read;                                           // Request a read, not a write
+              heapClock  = 1;                                                   // Start read
               ip = $n;                                                          // Next instruction
 END
      },
@@ -3463,10 +3534,29 @@ END
       my $t   = $compile->deref($i->target)->Location;
       my $n   = $i->number + 1;
       push @c, <<END;
-              heapAddress = $t;                                                 // Address of the item we wish to read from heap memory
+              heapArray   = $t;                                                 // Address of the item we wish to read from heap memory
               heapIn      = $s;                                                 // Data to write
               heapWrite   = 1;                                                  // Request a write
               heapClock   = 1;                                                  // Start write
+              ip = $n;                                                          // Next instruction
+END
+     },
+
+    start=> sub                                                                 # Start program execution
+     {my ($i) = @_;                                                             # Instruction                                                                                                                                t
+      my $n   = $i->number + 1;
+      push @c, <<END;
+              heapClock = 0;                                                    // Ready for next operation
+              ip = $n;                                                          // Next instruction
+END
+     },
+
+    start1=> sub                                                                # Start program execution
+     {my ($i) = @_;                                                             # Instruction                                                                                                                                t
+      my $n   = $i->number + 1;
+      push @c, <<END;
+              heapAction = heap.Reset;                                          // Ready for next operation
+              heapClock = 1;                                                    // Ready for next operation
               ip = $n;                                                          // Next instruction
 END
      },
@@ -3540,8 +3630,10 @@ END
       my $t   = $compile->deref($i->target)->Value;
       my $n   = $i->number + 1;
       push @c, <<END;
-              heapMem[$t * NArea + arraySizes[$t]] = $s;
-              arraySizes[$t]    = arraySizes[$t] + 1;
+              heapAction = heap.Push;
+              heapIn     = $s;
+              heapArray  = $t;
+              heapClock  = 1;
               ip = $n;
 END
      },
@@ -3618,77 +3710,46 @@ module fpga                                                                     
   output reg  finished,                                                         // Goes high when the program has finished
   output reg  success);                                                         // Goes high on finish if all the tests passed
 
-  parameter integer MemoryElementWidth = 12;                                    // Memory element width
-
-  parameter integer NArea   = ${&f8($NArea         )};                                         // Size of each area on the heap
-  parameter integer NArrays = ${&f8($NArrays       )};                                         // Maximum number of arrays
-  parameter integer NHeap   = ${&f8($NArea*$NArrays)};                                         // Amount of heap memory
-  parameter integer NLocal  = ${&f8($WLocal        )};                                         // Size of local memory
-  parameter integer NOut    = ${&f8($NOut          )};                                         // Size of output area
-
-#(parameter integer ARRAYS     =  2**16,                                        // Number of memory elements for both arrays and elements
-  parameter integer INDEX_BITS =  3,                                            // Log2 width of an element in bits
-  parameter integer DATA_BITS  = 16)                                            // Log2 width of an element in bits
- (input wire                   clock,                                           // Clock to drive array operations
-  input wire[7:0]              action,                                          // Operation to be performed on array
-  input wire [ARRAYS     -1:0] array,                                           // The number of the array to work on
-  input wire [INDEX_BITS -1:0] index,                                           // Index within array
-  input wire [DATA_BITS  -1:0] in,                                              // Input data
-  output reg [DATA_BITS  -1:0] out);
+  reg                heapClock;                                                 // Clock to drive array operations
+  reg [7:0]          heapAction;                                                // Operation to be performed on array
+  reg [${&f8($LArrays)}-1:0] heapArray;                                         // The number of the array to work on
+  reg [${&f8($LArea  )}-1:0] heapIndex;                                         // Index within array
+  reg [${&f8($LData  )}-1:0] heapIn;                                            // Input data
+  reg [${&f8($LData  )}-1:0] heapOut;                                           // Output data
+  reg [31        :0] heapError;                                                 // Error on heap operation if not zero
 
   Memory                                                                        // Memory module
-   #($NArrays, 3, 12)                                                           // Number of array,s bits of index, bits of data
+   #(${&f8($LArrays)}, ${&f8($LArea)}, ${&f8($LData)})                          // Address bits, index buts, data bits
     heap(                                                                       // Create heap memory
     .clock  (heapClock),
     .action (heapAction),
     .array  (heapArray),
     .index  (heapIndex),
     .in     (heapIn),
-    .out    (heapOut)
+    .out    (heapOut),
+    .error  (heapError)
   );
-
-  defparam heap.MEM_SIZE   = NHeap;                                             // Size of heap
-  defparam heap.DATA_WIDTH = MemoryElementWidth;
-
-  reg                         heapClock;                                        // Heap ports
-  reg                         heapAction;
-  reg[NHeap-1:0]              heapAddress;
-  reg[MemoryElementWidth-1:0] heapIn;
-  reg[MemoryElementWidth-1:0] heapOut;
-
 END
 
-  if (my $n = sprintf "%4d", scalar $exec->inOriginally->@*)                    # Input queue length
+  if (my $n = scalar $exec->inOriginally->@*)                                   # Input queue length
    {push @c, <<END;
-  parameter integer NIn     = ${&f8($n)};                                         // Size of input area
+  parameter integer NIn = ${&f8($n)};                                           // Size of input area
 END
    }
 
   my $arenaHeap = arenaHeap;
 
   push @c, <<END;                                                               # A case statement to select the next sub sequence to execute
-  reg [MemoryElementWidth-1:0]   arraySizes[NArrays-1:0];                       // Size of each array
-//reg [MemoryElementWidth-1:0]      heapMem[NHeap-1  :0];                       // Heap memory
-  reg [MemoryElementWidth-1:0]     localMem[NLocal-1 :0];                       // Local memory
-  reg [MemoryElementWidth-1:0]       outMem[NOut-1   :0];                       // Out channel
-  reg [MemoryElementWidth-1:0]        inMem[NIn-1    :0];                       // In channel
-  reg [MemoryElementWidth-1:0]  freedArrays[NArrays-1:0];                       // Freed arrays list implemented as a stack
-  reg [MemoryElementWidth-1:0]   arrayShift[NArea-1  :0];                       // Array shift area
+  reg [${&f8($LData)}-1:0] localMem[${&f8($NLocal)}-1:0];                       // Local memory
+  reg [${&f8($LData)}-1:0]   outMem[${&f8($NOut)}  -1:0];                       // Out channel
+  reg [${&f8($LData)}-1:0]    inMem[${&f8($NIn)}   -1:0];                       // In channel
 
   integer inMemPos;                                                             // Current position in input channel
   integer outMemPos;                                                            // Position in output channel
-  integer allocs;                                                               // Maximum number of array allocations in use at any one time
-  integer freedArraysTop;                                                       // Position in freed arrays stack
 
   integer ip;                                                                   // Instruction pointer
   integer steps;                                                                // Number of steps executed so far
   integer i, j, k;                                                              // A useful counter
-
-  task updateArrayLength(input integer arena, input integer array, input integer index); // Update array length if we are updating an array
-    begin
-      if (arena == $arenaHeap && arraySizes[array] < index + 1) arraySizes[array] = index + 1;
-    end
-  endtask
 END
 
   if (1)                                                                        # A case statement to select each instruction to be executed in order
@@ -3700,8 +3761,6 @@ END
       steps          = 0;
       inMemPos       = 0;
       outMemPos      = 0;
-      allocs         = 0;
-      freedArraysTop = 0;
       finished       = 0;
       success        = 0;
 
@@ -3729,7 +3788,7 @@ END
 END
    }
 
-  my $code = $exec->assembly->code;                                                # Using an execution environment gives us access to sample input and output thus allowing the creation of a test for the generated code.
+  my $code = $exec->assembly->code;                                              # Using an execution environment gives us access to sample input and output thus allowing the creation of a test for the generated code.
 
   for my $i(@$code)                                                             # Each instruction
    {my $action = $i->action;
