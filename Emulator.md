@@ -4844,9 +4844,9 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 23 [Call](#call) - Call the subroutine at the target address.
 
-24 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
+24 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
 
-25 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
+25 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
 
 26 [Confess](#confess) - Confess with a stack trace showing the location both in the emulated code and in the code that produced the emulated code.
 
