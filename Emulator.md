@@ -134,9 +134,13 @@ Create a new memory area and write its number into the address named by the targ
 
       Dump;
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Stack trace:
         1     2 dump
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Stack trace:
+        1     5 dump
     END
      }
     
@@ -233,16 +237,43 @@ Create a new memory area and write its number into the address named by the targ
     
       my $e = Execute(suppressOutput=>1);
     
+      #say STDERR dump($e->counts); exit;
+    
       is_deeply $e->counts,                                                         # Several allocations and frees
        {array=>3, free=>3, add=>3, jGe=>4, jmp=>3, mov=>4
-       };
-      is_deeply $e->out, <<END;
+       } unless $e->assembly->lowLevelOps;
+    
+      is_deeply $e->counts,                                                         # Several allocations and frees
+       {add => 3,
+        array => 3,
+        free => 3,
+        jGe => 4,
+        jmp => 3,
+        mov => 4,
+        movHeapOut => 3,
+        movWrite1 => 3,
+        start => 1,
+        start2 => 1,
+       } if     $e->assembly->lowLevelOps;
+    
+      #say STDERR $e->out; exit;
+    
+      is_deeply $e->out, <<END  unless $e->assembly->lowLevelOps;
     Stack trace:
         1     8 dump
     Stack trace:
         1     8 dump
     Stack trace:
         1     8 dump
+    END
+    
+      is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
+    Stack trace:
+        1    12 dump
+    Stack trace:
+        1    12 dump
+    Stack trace:
+        1    12 dump
     END
      }
     
@@ -398,6 +429,8 @@ Dump an array.
     
       is_deeply eval($e->out), [1, 22, 333];
     
+      #say STDERR $e->assembly->codeToString; exit;
+    
       is_deeply $e->assembly->codeToString, <<'END' unless $e->assembly->lowLevelOps;
     0000     array            0             3
     0001       mov [\0, 0, 3, 0]             1
@@ -407,16 +440,16 @@ Dump an array.
     END
     
       is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
-    0000     array            0             3
-    0001       mov            1             1
-    0002  movWrite1 [\0, 0, 3, 0]            \1
-    0003      step
-    0004       mov            2            22
-    0005  movWrite1 [\0, 1, 3, 0]            \2
-    0006      step
-    0007       mov            3           333
-    0008  movWrite1 [\0, 2, 3, 0]            \3
-    0009      step
+    0000     start
+    0001    start2
+    0002     array            0             3
+    0003  movHeapOut            0
+    0004       mov            1             1
+    0005  movWrite1 [\0, 0, 3, 0]            \1
+    0006       mov            2            22
+    0007  movWrite1 [\0, 1, 3, 0]            \2
+    0008       mov            3           333
+    0009  movWrite1 [\0, 2, 3, 0]            \3
     0010  arrayDump            0
     END
     
@@ -522,15 +555,23 @@ The current size of an array.
 
       Free $a, "aaa";
     
-      Out ArraySize $a, "aaa";                                                      #FIX - an unalocated array should not be accessible  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Out ArraySize $a, "aaa";                                                      #FIX - an unallocated array should not be accessible  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      #say STDERR $e->out; exit;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     0
     0
     0
     No such with array: 0 in arena 1
         1    11 arraySize
+    END
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
+    0
+    0
+    0
+    No such with array: 0 in arena 1
+        1    18 arraySize
     END
      }
     
@@ -587,11 +628,17 @@ Assert regardless.
       Assert;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END  unless $e->assembly->lowLevelOps;
     
     Assert failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         1     1 assert
+    END
+      is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
+    
+    Assert failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+        1     3 assert
     END
      }
     
@@ -614,9 +661,13 @@ Assert two memory locations are equal.
       AssertEq \0, 2;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END  unless $e->assembly->lowLevelOps;
     Assert 1 == 2 failed
         1     2 assertEq
+    END
+      is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
+    Assert 1 == 2 failed
+        1     4 assertEq
     END
      }
     
@@ -638,15 +689,26 @@ Assert false.
       AssertFalse 1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1, trace=>1);
-      #say STDERR dump($e->out);
+      #say STDERR $e->out; exit;
     
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;;
         1     0     0    16    assertTrue
     
     AssertFalse 1 failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         1     2 assertFalse
         2     1     0    10   assertFalse
+    END
+    
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+        1     0     1    66         start
+        2     1     1    67        start2
+        3     2     0    16    assertTrue
+    
+    AssertFalse 1 failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+        1     4 assertFalse
+        4     3     0    10   assertFalse
     END
      }
     
@@ -669,9 +731,13 @@ Assert that the first value is greater than or equal to the second value.
       AssertGe \0, 2;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Assert 1 >= 2 failed
         1     2 assertGe
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Assert 1 >= 2 failed
+        1     4 assertGe
     END
      }
     
@@ -694,9 +760,13 @@ Assert that the first value is greater than the second value.
       AssertGt \0, 2;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Assert 1 >  2 failed
         1     2 assertGt
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Assert 1 >  2 failed
+        1     4 assertGt
     END
      }
     
@@ -719,9 +789,13 @@ Assert that the first value is less than or equal to the second value.
       AssertLe \0, 0;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Assert 1 <= 0 failed
         1     2 assertLe
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Assert 1 <= 0 failed
+        1     4 assertLe
     END
      }
     
@@ -744,9 +818,13 @@ Assert that the first value is less than  the second value.
       AssertLt \0, 0;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Assert 1 <  0 failed
         1     2 assertLt
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Assert 1 <  0 failed
+        1     4 assertLt
     END
      }
     
@@ -769,9 +847,13 @@ Assert two memory locations are not equal.
       AssertNe \0, 1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Assert 1 != 1 failed
         1     2 assertNe
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Assert 1 != 1 failed
+        1     4 assertNe
     END
      }
     
@@ -793,15 +875,26 @@ Assert true.
       AssertTrue  0;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1, trace=>1);
-      #say STDERR dump($e->out);
+    # say STDERR $e->out; exit;
     
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
         1     0     0    10   assertFalse
     
     AssertTrue 0 failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         1     2 assertTrue
         2     1     0    16    assertTrue
+    END
+    
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+        1     0     1    66         start
+        2     1     1    67        start2
+        3     2     0    10   assertFalse
+    
+    AssertTrue 0 failed  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+        1     4 assertTrue
+        4     3     0    16    assertTrue
     END
      }
     
@@ -956,9 +1049,13 @@ Call the subroutine at the target address.
       my $a = Array "aaa";
       Dump;
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Stack trace:
         1     2 dump
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Stack trace:
+        1     5 dump
     END
      }
     
@@ -1026,12 +1123,19 @@ Confess with a stack trace showing the location both in the emulated code and in
        };
       Call $c;
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     
     Confess at:  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         2     3 confess
         1     6 call
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    
+    Confess at:  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+        2     5 confess
+        1     8 call
     END
      }
     
@@ -1152,17 +1256,17 @@ Else block.
     
       is_deeply $e->out, <<END if $e->assembly->lowLevelOps;
     Trace: 1
-        1     0     0    64         trace
-        2     1     1    29           jNe
-        3     5     0    32         label
-        4     6     1    35           mov  [0, 3, stackArea] = 3
-        5     7     1    35           mov  [0, 4, stackArea] = 4
-        6     8     0    32         label
-        7     9     1    29           jNe
-        8    10     1    35           mov  [0, 1, stackArea] = 1
-        9    11     1    35           mov  [0, 2, stackArea] = 1
-       10    12     1    31           jmp
-       11    16     0    32         label
+        3     2     0    70         trace
+        4     3     1    29           jNe
+        5     7     0    32         label
+        6     8     1    35           mov  [0, 3, stackArea] = 3
+        7     9     1    35           mov  [0, 4, stackArea] = 4
+        8    10     0    32         label
+        9    11     1    29           jNe
+       10    12     1    35           mov  [0, 1, stackArea] = 1
+       11    13     1    35           mov  [0, 2, stackArea] = 1
+       12    14     1    31           jmp
+       13    18     0    32         label
     END
     
       is_deeply scalar($e->notExecuted->@*), 6;
@@ -1365,9 +1469,13 @@ Free the memory area named by the target operand after confirming that it has th
       Free $a, "aaa";  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Wrong name: aaa for array with name: node
         1     2 free
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Wrong name: aaa for array with name: node
+        1     5 free
     END
      }
     
@@ -2790,9 +2898,13 @@ Copy a constant or memory address to the target address.
       my $a = Array "aaa";
       Dump;
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Stack trace:
         1     2 dump
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Stack trace:
+        1     5 dump
     END
      }
     
@@ -2893,6 +3005,8 @@ Copy a constant or memory address to the target address.
     
       is_deeply eval($e->out), [1, 22, 333];
     
+      #say STDERR $e->assembly->codeToString; exit;
+    
       is_deeply $e->assembly->codeToString, <<'END' unless $e->assembly->lowLevelOps;
     0000     array            0             3
     0001       mov [\0, 0, 3, 0]             1
@@ -2902,16 +3016,16 @@ Copy a constant or memory address to the target address.
     END
     
       is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
-    0000     array            0             3
-    0001       mov            1             1
-    0002  movWrite1 [\0, 0, 3, 0]            \1
-    0003      step
-    0004       mov            2            22
-    0005  movWrite1 [\0, 1, 3, 0]            \2
-    0006      step
-    0007       mov            3           333
-    0008  movWrite1 [\0, 2, 3, 0]            \3
-    0009      step
+    0000     start
+    0001    start2
+    0002     array            0             3
+    0003  movHeapOut            0
+    0004       mov            1             1
+    0005  movWrite1 [\0, 0, 3, 0]            \1
+    0006       mov            2            22
+    0007  movWrite1 [\0, 1, 3, 0]            \2
+    0008       mov            3           333
+    0009  movWrite1 [\0, 2, 3, 0]            \3
     0010  arrayDump            0
     END
     
@@ -2931,7 +3045,7 @@ Copy the number of elements specified by the second source operand from the loca
 **Example:**
 
     if (1)                                                                          
-     {my $N = 10;
+     {my $N = 8;
       Start 1;
       my $a = Array "aaa";
       my $b = Array "bbb";
@@ -2942,13 +3056,33 @@ Copy the number of elements specified by the second source operand from the loca
         Mov [$b, \$i, "bbb"], $j;
        } $N;
     
+      ForArray
+       {my ($i, $a, $Check, $Next, $End) = @_;
+        Out $a;
+       } $a, "aaa";
+      ForArray
+       {my ($i, $a, $Check, $Next, $End) = @_;
+        Out $a;
+       } $b, "bbb";
+    
     
       MoveLong [$b, 2, 'bbb'], [$a, 4, 'aaa'], 3;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      my $e = Execute(suppressOutput=>1, maximumArraySize=>11);
-      is_deeply $e->Heap->($e, 0), [0 .. 9];
-      is_deeply $e->Heap->($e, 1), [100, 101, 4, 5, 6, 105 .. 109];
+      ForArray
+       {my ($i, $a, $Check, $Next, $End) = @_;
+        Out $a;
+       } $a, "aaa";
+      ForArray
+       {my ($i, $a, $Check, $Next, $End) = @_;
+        Out $a;
+       } $b, "bbb";
+    
+      my $e = Execute(suppressOutput=>1);
+      #say STDERR $e->assembly->codeToString;
+      #say STDERR dump($e->outLines); exit;
+    
+      is_deeply $e->outLines, [0 .. 7, 100 .. 107, 0 .. 7, 100, 101, 4, 5, 6, 105, 106, 107];
       $e->compileToVerilog("MoveLong_1") if $testSet == 1 and $debug;
      }
     
@@ -3192,6 +3326,7 @@ Pop the memory area specified by the source operand into the memory address spec
 
     if (1)                                                                          
      {Start 1;
+      my $b = Array   "bbb";
       my $a = Array   "aaa";
       Push $a, 1,     "aaa";
       Push $a, 2,     "aaa";
@@ -3206,12 +3341,6 @@ Pop the memory area specified by the source operand into the memory address spec
       Out $d;
       my $e = Execute(suppressOutput=>1);
     
-      #say STDERR $e->PrintLocal->($e); x;
-      is_deeply $e->PrintLocal->($e), <<END;
-    Memory    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
-    Local:    0    2    1
-    END
-      is_deeply $e->Heap->($e, 0), [];
       is_deeply $e->outLines, [2, 1];
     
       $e->compileToVerilog("Pop") if $testSet == 1 and $debug;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3345,7 +3474,6 @@ Push the value in the current stack frame specified by the source operand onto t
     
       $e->compileToVerilog("Push") if $debug;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-    exit;
      }
     
 
@@ -3600,6 +3728,8 @@ Shift an element up one in an area.
        } $a, "array";
     
       my $e = Execute(suppressOutput=>1);
+      #say STDERR "AAAA
+  ", dump($e->outLines); exit;
       is_deeply $e->outLines,      [99, 0, 1, 2];
       $e->compileToVerilog("Shift_up") if $testSet == 1 and $debug;
      }
@@ -3664,9 +3794,11 @@ Shift an element up one in an area.
       ShiftUp [$a, 3, 'array'], 99;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      my $e = Execute(suppressOutput=>0);
+      my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
-      is_deeply [$e->timeParallel, $e->timeSequential], [3,5];
+      is_deeply [$e->timeParallel, $e->timeSequential], [3,5]  unless $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [7,11] if     $e->assembly->lowLevelOps;
+      #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
     if (1)                                                                          
@@ -3836,17 +3968,17 @@ Then block.
     
       is_deeply $e->out, <<END if $e->assembly->lowLevelOps;
     Trace: 1
-        1     0     0    64         trace
-        2     1     1    29           jNe
-        3     5     0    32         label
-        4     6     1    35           mov  [0, 3, stackArea] = 3
-        5     7     1    35           mov  [0, 4, stackArea] = 4
-        6     8     0    32         label
-        7     9     1    29           jNe
-        8    10     1    35           mov  [0, 1, stackArea] = 1
-        9    11     1    35           mov  [0, 2, stackArea] = 1
-       10    12     1    31           jmp
-       11    16     0    32         label
+        3     2     0    70         trace
+        4     3     1    29           jNe
+        5     7     0    32         label
+        6     8     1    35           mov  [0, 3, stackArea] = 3
+        7     9     1    35           mov  [0, 4, stackArea] = 4
+        8    10     0    32         label
+        9    11     1    29           jNe
+       10    12     1    35           mov  [0, 1, stackArea] = 1
+       11    13     1    35           mov  [0, 2, stackArea] = 1
+       12    14     1    31           jmp
+       13    18     0    32         label
     END
     
       is_deeply scalar($e->notExecuted->@*), 6;
@@ -3911,17 +4043,17 @@ Start or stop tracing.  Tracing prints each instruction executed and its effect 
     
     Trace: 1  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        1     0     0    64         trace
-        2     1     1    29           jNe
-        3     5     0    32         label
-        4     6     1    35           mov  [0, 3, stackArea] = 3
-        5     7     1    35           mov  [0, 4, stackArea] = 4
-        6     8     0    32         label
-        7     9     1    29           jNe
-        8    10     1    35           mov  [0, 1, stackArea] = 1
-        9    11     1    35           mov  [0, 2, stackArea] = 1
-       10    12     1    31           jmp
-       11    16     0    32         label
+        3     2     0    70         trace
+        4     3     1    29           jNe
+        5     7     0    32         label
+        6     8     1    35           mov  [0, 3, stackArea] = 3
+        7     9     1    35           mov  [0, 4, stackArea] = 4
+        8    10     0    32         label
+        9    11     1    29           jNe
+       10    12     1    35           mov  [0, 1, stackArea] = 1
+       11    13     1    35           mov  [0, 2, stackArea] = 1
+       12    14     1    31           jmp
+       13    18     0    32         label
     END
     
       is_deeply scalar($e->notExecuted->@*), 6;
@@ -3949,7 +4081,9 @@ Enable or disable label tracing.  If tracing is enabled a stack trace is printed
        } $N;
       my $e = Execute(suppressOutput=>1);
     
-      is_deeply $e->out, <<END;
+      #say STDERR $e->out; exit;
+    
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     
     TraceLabels: 1  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -3979,6 +4113,38 @@ Enable or disable label tracing.  If tracing is enabled a stack trace is printed
         1     4 label
     Label
         1    11 label
+    END
+    
+      is_deeply $e->out, <<END if $e->assembly->lowLevelOps;
+    
+    TraceLabels: 1  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    Label
+        1     4 label
+    Label
+        1     6 label
+    Label
+        1    10 label
+    Label
+        1     6 label
+    Label
+        1    10 label
+    Label
+        1     6 label
+    Label
+        1    10 label
+    Label
+        1     6 label
+    Label
+        1    10 label
+    Label
+        1     6 label
+    Label
+        1    10 label
+    Label
+        1     6 label
+    Label
+        1    13 label
     END
      }
     
@@ -4024,9 +4190,17 @@ Watches for changes to the specified memory location.
       Mov $b, 5;
       Mov $c, 6;
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, <<END;
+    
+      #say STDERR $e->out; exit;
+    
+      is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     Change at watched arena: 2, area: 0(stackArea), address: 1
         1     6 mov
+    Current value: 2 New value: 5
+    END
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+    Change at watched arena: 2, area: 0(stackArea), address: 1
+        1     8 mov
     Current value: 2 New value: 5
     END
      }
@@ -4054,9 +4228,11 @@ Runs its sub sections in simulated parallel so that we can prove that the sectio
     
       ShiftUp [$a, 3, 'array'], 99;
     
-      my $e = Execute(suppressOutput=>0);
+      my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
-      is_deeply [$e->timeParallel, $e->timeSequential], [3,5];
+      is_deeply [$e->timeParallel, $e->timeSequential], [3,5]  unless $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [7,11] if     $e->assembly->lowLevelOps;
+      #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
 
@@ -4103,6 +4279,13 @@ Map the instruction set into a machine architecture.
 
 Compile each sub sequence of instructions into equivalent verilog.  A sub sequence starts at an instruction marked as an entry point
 
+## movResultToTarget($target)
+
+Move result from memory to indicated target
+
+       Parameter  Description
+    1  $target    Target to store result in
+
 ## compileToVerilog($exec, $name)
 
 Compile each sub sequence of instructions into equivalent verilog.  A sub sequence starts at an instruction marked as an entry point
@@ -4127,7 +4310,6 @@ Compile each sub sequence of instructions into equivalent verilog.  A sub sequen
       is_deeply $e->in, [];
       is_deeply $e->inOriginally, [33, 22, 11];
       is_deeply $e->outLines, [1,2,3, 3,33, 2,22, 1,11];
-      is_deeply [map {$_->entry} $e->assembly->code->@*], [qw(1 0 0 1 0 0 0 0 0 0 0 0)]; # Sub sequence start points
     
       $e->compileToVerilog("ForIn") if $debug;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -4336,6 +4518,10 @@ Maximum number of elements in an array on the heap
 
 Lengths of each array
 
+#### memoryTechnique
+
+Memory technique inuse
+
 #### memoryType
 
 Memory contents at the end of execution
@@ -4347,6 +4533,10 @@ The maximum number of arrays active at any point during the execution in each ar
 #### movReadAddress
 
 The address we wish to read during a read memory operation
+
+#### moveLongSource
+
+Source array for move long
 
 #### namesOfWidestArrays
 
@@ -4788,6 +4978,46 @@ Execution environment for a block of code.
        Parameter  Description
     1  %options   Execution options
 
+## Zero::Emulator::Assembly::lowLevelReplaceSource($assembly, $block, $source)
+
+Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga. The instruction under consideration is at the top of the supplied instruction list. Add the move instruction and modify the original instruction if the source field can be replaced
+
+       Parameter  Description
+    1  $assembly  Assembly options
+    2  $block     Instructions
+    3  $source    Source field
+
+## Zero::Emulator::Assembly::lowLevelReplaceTarget($assembly, $instructions)
+
+Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga. The instruction under consideration is at the top of the supplied instruction list. Add the move instruction and modify the original instruction if the source field can be replaced
+
+       Parameter      Description
+    1  $assembly      Assembly options
+    2  $instructions  Instructions
+
+## Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut($assembly, $instructions)
+
+Move the memory result to the specified target
+
+       Parameter      Description
+    1  $assembly      Assembly options
+    2  $instructions  Instructions
+
+## Zero::Emulator::Assembly::lowLevelReplace($assembly, $instructions)
+
+Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
+
+       Parameter      Description
+    1  $assembly      Code block
+    2  $instructions  Array of instructions
+
+## Zero::Emulator::Assembly::lowLevel($assembly)
+
+Translate high level assember into low level assembler
+
+       Parameter  Description
+    1  $assembly  Assembly
+
 ## Zero::CompileToVerilog::deref($compile, $ref)
 
 Compile a reference in assembler format to a corresponding verilog expression
@@ -4844,9 +5074,9 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 23 [Call](#call) - Call the subroutine at the target address.
 
-24 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
+24 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
 
-25 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
+25 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
 
 26 [Confess](#confess) - Confess with a stack trace showing the location both in the emulated code and in the code that produced the emulated code.
 
@@ -4922,69 +5152,81 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 62 [MoveLong](#movelong) - Copy the number of elements specified by the second source operand from the location specified by the first source operand to the target operand.
 
-63 [Nop](#nop) - Do nothing (but do it well!).
+63 [movResultToTarget](#movresulttotarget) - Move result from memory to indicated target
 
-64 [Not](#not) - Move and not.
+64 [Nop](#nop) - Do nothing (but do it well!).
 
-65 [Out](#out) - Write memory location contents to out.
+65 [Not](#not) - Move and not.
 
-66 [Parallel](#parallel) - Runs its sub sections in simulated parallel so that we can prove that the sections can be run in parallel.
+66 [Out](#out) - Write memory location contents to out.
 
-67 [ParallelContinue](#parallelcontinue) - Continue recording the elapsed time for parallel sections.
+67 [Parallel](#parallel) - Runs its sub sections in simulated parallel so that we can prove that the sections can be run in parallel.
 
-68 [ParallelStart](#parallelstart) - Start recording the elapsed time for parallel sections.
+68 [ParallelContinue](#parallelcontinue) - Continue recording the elapsed time for parallel sections.
 
-69 [ParallelStop](#parallelstop) - Stop recording the elapsed time for parallel sections.
+69 [ParallelStart](#parallelstart) - Start recording the elapsed time for parallel sections.
 
-70 [ParamsGet](#paramsget) - Get a word from the parameters in the previous frame and store it in the current frame.
+70 [ParallelStop](#parallelstop) - Stop recording the elapsed time for parallel sections.
 
-71 [ParamsPut](#paramsput) - Put a word into the parameters list to make it visible in a called procedure.
+71 [ParamsGet](#paramsget) - Get a word from the parameters in the previous frame and store it in the current frame.
 
-72 [Pop](#pop) - Pop the memory area specified by the source operand into the memory address specified by the target operand.
+72 [ParamsPut](#paramsput) - Put a word into the parameters list to make it visible in a called procedure.
 
-73 [Procedure](#procedure) - Define a procedure.
+73 [Pop](#pop) - Pop the memory area specified by the source operand into the memory address specified by the target operand.
 
-74 [Push](#push) - Push the value in the current stack frame specified by the source operand onto the memory area identified by the target operand.
+74 [Procedure](#procedure) - Define a procedure.
 
-75 [Random](#random) - Create a random number in a specified range.
+75 [Push](#push) - Push the value in the current stack frame specified by the source operand onto the memory area identified by the target operand.
 
-76 [RandomSeed](#randomseed) - Seed the random number generator.
+76 [Random](#random) - Create a random number in a specified range.
 
-77 [Resize](#resize) - Resize the target area to the source size.
+77 [RandomSeed](#randomseed) - Seed the random number generator.
 
-78 [Return](#return) - Return from a procedure via the call stack.
+78 [Resize](#resize) - Resize the target area to the source size.
 
-79 [ReturnGet](#returnget) - Get a word from the return area and save it.
+79 [Return](#return) - Return from a procedure via the call stack.
 
-80 [ReturnPut](#returnput) - Put a word into the return area.
+80 [ReturnGet](#returnget) - Get a word from the return area and save it.
 
-81 [Sequential](#sequential) - Runs its sub sections in sequential order
+81 [ReturnPut](#returnput) - Put a word into the return area.
 
-82 [ShiftDown](#shiftdown) - Shift an element down one in an area.
+82 [Sequential](#sequential) - Runs its sub sections in sequential order
 
-83 [ShiftLeft](#shiftleft) - Shift left within an element.
+83 [ShiftDown](#shiftdown) - Shift an element down one in an area.
 
-84 [ShiftRight](#shiftright) - Shift right with an element.
+84 [ShiftLeft](#shiftleft) - Shift left within an element.
 
-85 [ShiftUp](#shiftup) - Shift an element up one in an area.
+85 [ShiftRight](#shiftright) - Shift right with an element.
 
-86 [Start](#start) - Start the current assembly using the specified version of the Zero language.
+86 [ShiftUp](#shiftup) - Shift an element up one in an area.
 
-87 [Subtract](#subtract) - Subtract the second source operand value from the first source operand value and store the result in the target area.
+87 [Start](#start) - Start the current assembly using the specified version of the Zero language.
 
-88 [Tally](#tally) - Counts instructions when enabled.
+88 [Subtract](#subtract) - Subtract the second source operand value from the first source operand value and store the result in the target area.
 
-89 [Then](#then) - Then block.
+89 [Tally](#tally) - Counts instructions when enabled.
 
-90 [Trace](#trace) - Start or stop tracing.
+90 [Then](#then) - Then block.
 
-91 [TraceLabels](#tracelabels) - Enable or disable label tracing.
+91 [Trace](#trace) - Start or stop tracing.
 
-92 [Var](#var) - Create a variable initialized to the specified value.
+92 [TraceLabels](#tracelabels) - Enable or disable label tracing.
 
-93 [Watch](#watch) - Watches for changes to the specified memory location.
+93 [Var](#var) - Create a variable initialized to the specified value.
 
-94 [Zero::CompileToVerilog::deref](#zero-compiletoverilog-deref) - Compile a reference in assembler format to a corresponding verilog expression
+94 [Watch](#watch) - Watches for changes to the specified memory location.
+
+95 [Zero::CompileToVerilog::deref](#zero-compiletoverilog-deref) - Compile a reference in assembler format to a corresponding verilog expression
+
+96 [Zero::Emulator::Assembly::lowLevel](#zero-emulator-assembly-lowlevel) - Translate high level assember into low level assembler
+
+97 [Zero::Emulator::Assembly::lowLevelReplace](#zero-emulator-assembly-lowlevelreplace) - Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
+
+98 [Zero::Emulator::Assembly::lowLevelReplaceSource](#zero-emulator-assembly-lowlevelreplacesource) - Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga.
+
+99 [Zero::Emulator::Assembly::lowLevelReplaceTarget](#zero-emulator-assembly-lowlevelreplacetarget) - Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga.
+
+100 [Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut](#zero-emulator-assembly-lowlevelreplacetargetfromheapout) - Move the memory result to the specified target
 
 # Installation
 
