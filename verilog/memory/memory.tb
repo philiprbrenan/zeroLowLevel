@@ -149,9 +149,17 @@ module MemoryTB();                                                              
     array =a2; index = 7; action = m.Read; step(); ok(error == 10000022,  "Read error2");
     array = 3;            action = m.Push; step(); ok(error == 10000120,  "Push error");
     array = 3;            action = m.Pop;  step(); ok(error == 10000130,  "Pop error");
+
+
+    array = a2;
+               in = 8;  action = m.Resize; step();
+                        action = m.Size;   step(); ok(out ==  8, "Shift down size 8");
+    index = 3;          action = m.Down;   step(); ok(out == 11, "Shift down out");
+                        action = m.Size;   step(); ok(out ==  7, "Shift down size 7");
+                        action = m.Read;   step(); ok(out == 22, "Shift down 3");
+    index = 2;          action = m.Read;   step(); ok(out == 62, "Shift down 2");
 //$display("AAAA %d", error);
 //dump();
-
-    checkAllTestsPassed(61);
+    checkAllTestsPassed(66);
   end
 endmodule
