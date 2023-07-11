@@ -235,7 +235,7 @@ sub fpgaLowLevelTestsVerilog                                                    
     - name: $s
       if: \${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga $t $s && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga $t $s && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
 END
    }
