@@ -25,12 +25,8 @@ my $btree    = fpf $home, q(lib/Zero/BTree.pm);                                 
 my $readMe   = fpe $home, qw(README md2);                                       # Read me
 
 my $testsDir = fpd $home, qw(verilog fpga tests);                               # Tests folder
-my $verilog  = 0;                                                               # Run the low level tests using verilog
+my $verilog  = 1;                                                               # Run the low level tests using verilog
 my $yosys    = 0;                                                               # Run the low level tests using Yosys
-my $macos    = 0;                                                               # Macos if true
-my $windows  = 0;                                                               # Windows if true
-my $openBsd  = 0;                                                               # OpenBsd if true
-my $freeBsd  = 0;                                                               # FreeBsd if true - fails
 
 my $T = -e $timeFile ? eval readFile($timeFile) : undef;                        # Last upload time
 
@@ -480,81 +476,3 @@ END
   2  4     8 10    14    18    22 24    28    32    36    40    44    48 50    54    58 60    64    68 70    74    78    82    86 88    92    96   100102   106   110   114   118   122   126128   132   136   140142   146148   152154   158160   164   168170   174176   180   184186   190   194   198200   204   208   212214
 END
 END2
-
-
-sub macos{<<'END'}                                                              # High level on Mac if requested
-  testMac:
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: 'main'
-
-END
-
-sub windows{<<'END'}                                                            # High level on windows if requested
-  testWindows:
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: wsl-bash {0}                                                     # Use Windows Services For Linux as the command line in subsequent steps
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: 'main'
-
-    - uses: Vampire/setup-wsl@v2                                                # Install Windows Services For Linux - just: wsl --install -D Ubuntu
-      with:
-        distribution: Ubuntu-22.04
-
-    - name: Ubuntu
-      run: |
-        sudo apt-get -y update
-
-    - name: Configure Ubuntu
-      run: |
-        sudo apt-get -y install build-essential
-
-END
-
-sub openBsd{<<'END'}                                                            # High level on openBSD if requested
-  testOpenBsd:
-    runs-on: macos-12
-    name: OpenBSD
-    env:
-      MYTOKEN : ${{ secrets.MYTOKEN }}
-      MYTOKEN2: "value2"
-    steps:
-    - uses: actions/checkout@v3
-    - name: Test in OpenBSD
-      id: test
-      uses: vmactions/openbsd-vm@v0
-      with:
-        envs: 'MYTOKEN MYTOKEN2'
-        usesh: true
-        prepare: |
-          cpan install -T Data::Dump Data::Table::Text
-END
-
-sub freeBsd{<<'END'}                                                            # High level on freeBSD if requested
-  #
-  testFreeBsd:
-    runs-on: macos-12
-    name: FreeBSD
-    env:
-      MYTOKEN : ${{ secrets.MYTOKEN }}
-      MYTOKEN2: "value2"
-    steps:
-    - uses: actions/checkout@v3
-    - name: Test in OpenBSD
-      id: test
-      uses: vmactions/freebsd-vm@v0
-      with:
-        envs: 'MYTOKEN MYTOKEN2'
-        usesh: true
-        prepare: |
-          cpan install -T Data::Dump Data::Table::Text
-END
