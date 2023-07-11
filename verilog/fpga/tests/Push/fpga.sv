@@ -47,7 +47,7 @@ module fpga                                                                     
       finished       = 0;
       success        = 0;
 
-      if (0) begin                                                  // Clear memory
+      if (0 && 0) begin                                                  // Clear memory
         for(i = 0; i < NHeap;   i = i + 1)    heapMem[i] = 0;
         for(i = 0; i < NLocal;  i = i + 1)   localMem[i] = 0;
         for(i = 0; i < NArrays; i = i + 1) arraySizes[i] = 0;
@@ -87,13 +87,12 @@ end
         end
 
           3 :
-        begin                                                                   // array2
+        begin                                                                   // movHeapOut
 if (0) begin
-  $display("AAAA %4d %4d array2", steps, ip);
+  $display("AAAA %4d %4d movHeapOut", steps, ip);
 end
               localMem[0] = heapOut;
               ip = 4;
-              heapClock = ~ heapClock;
         end
 
           4 :
@@ -132,13 +131,12 @@ end
         end
 
           7 :
-        begin                                                                   // arraySize2
+        begin                                                                   // movHeapOut
 if (0) begin
-  $display("AAAA %4d %4d arraySize2", steps, ip);
+  $display("AAAA %4d %4d movHeapOut", steps, ip);
 end
               localMem[1] = heapOut;
               ip = 8;
-              heapClock = ~ heapClock;
         end
 
           8 :
@@ -248,7 +246,7 @@ end
               ip = 20;
         end
       endcase
-      if (0) begin
+      if (0 && 0) begin
         for(i = 0; i < 200; i = i + 1) $write("%2d",   localMem[i]); $display("");
         for(i = 0; i < 200; i = i + 1) $write("%2d",    heapMem[i]); $display("");
         for(i = 0; i < 200; i = i + 1) $write("%2d", arraySizes[i]); $display("");
@@ -264,6 +262,7 @@ endmodule
 // Check double frees, over allocation
 // Check access to unallocated arrays or elements
 // Check push overflow, pop underflow
+// Next Message 10000280
 module Memory
 #(parameter integer ADDRESS_BITS =  8,                                          // Number of bits in an address
   parameter integer INDEX_BITS   =  3,                                          // Bits in in an index
@@ -355,7 +354,7 @@ module Memory
     end
   endtask
 
-  always @(posedge clock, negedge clock) begin                                  // Each transition
+  always @(clock) begin                                                         // Each transition
     case(action)                                                                // Decode request
       Reset: begin                                                              // Reset
         freedArraysTop = 0;                                                     // Free all arrays
@@ -447,7 +446,21 @@ module Memory
       end
 
       Down: begin                                                               // Down
-$display("Need Memory array down");
+        checkWriteable(10000270);
+        if (!error) begin
+          size   = arraySizes[array];
+          if (size > 0) begin
+            for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i]; // Copy source array
+            for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                       // Move original array up
+              if (i > index && i <= size) begin
+                memory[array][i-1] = copy[i];
+              end
+            end
+            out = copy[index];                                                  // Return replaced value
+            arraySizes[array] = arraySizes[array] - 1;                          // Decrease array size
+          end
+          else error = 100000274;                                               // Orignal array was emoty so we cannot shift it down
+        end
       end
 
       Up: begin                                                                 // Up
@@ -468,7 +481,7 @@ $display("Need Memory array down");
       Long1: begin                                                              // Move long start
         checkReadable(10000100);
         if (!error) begin
-          moveLongStartArray = array;
+          moveLongStartArray = array;                                           // Record source
           moveLongStartIndex = index;
         end
       end
@@ -476,7 +489,7 @@ $display("Need Memory array down");
       Long2: begin                                                              // Move long finish
         checkWriteable(10000110);
         if (!error) begin
-          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                           // Copy from source to target
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                         // Copy from source to target
             if (i < in && index + i < ARRAY_LENGTH && moveLongStartIndex+i < ARRAY_LENGTH) begin
               memory[array][index+i] = memory[moveLongStartArray][moveLongStartIndex+i];
               if (index+i >= arraySizes[array]) arraySizes[array] = index+i+1;
