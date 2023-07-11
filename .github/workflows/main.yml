@@ -1,4 +1,4 @@
-# Test 2023-07-12 at 00:55:49
+# Test 2023-07-12 at 00:58:18
 
 name: Test
 
@@ -88,220 +88,220 @@ jobs:
     - name: verilog/fpga/tests/Add/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Add/fpga.tb verilog/fpga/tests/Add/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Add/fpga.tb verilog/fpga/tests/Add/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Array/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Array/fpga.tb verilog/fpga/tests/Array/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Array/fpga.tb verilog/fpga/tests/Array/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ArrayAdd/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ArrayAdd/fpga.tb verilog/fpga/tests/ArrayAdd/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayAdd/fpga.tb verilog/fpga/tests/ArrayAdd/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ArrayCountGreaterIndex/fpga.tb verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayCountGreaterIndex/fpga.tb verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ArrayCountLess/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ArrayCountLess/fpga.tb verilog/fpga/tests/ArrayCountLess/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayCountLess/fpga.tb verilog/fpga/tests/ArrayCountLess/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ArrayIndex/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ArrayIndex/fpga.tb verilog/fpga/tests/ArrayIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayIndex/fpga.tb verilog/fpga/tests/ArrayIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Array_scans/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Array_scans/fpga.tb verilog/fpga/tests/Array_scans/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Array_scans/fpga.tb verilog/fpga/tests/Array_scans/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/1/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/1/fpga.tb verilog/fpga/tests/BTree/basic/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/1/fpga.tb verilog/fpga/tests/BTree/basic/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/2/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/2/fpga.tb verilog/fpga/tests/BTree/basic/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/2/fpga.tb verilog/fpga/tests/BTree/basic/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/3/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/3/fpga.tb verilog/fpga/tests/BTree/basic/3/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/3/fpga.tb verilog/fpga/tests/BTree/basic/3/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/4/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/4/fpga.tb verilog/fpga/tests/BTree/basic/4/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/4/fpga.tb verilog/fpga/tests/BTree/basic/4/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/5/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/5/fpga.tb verilog/fpga/tests/BTree/basic/5/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/5/fpga.tb verilog/fpga/tests/BTree/basic/5/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/6/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/6/fpga.tb verilog/fpga/tests/BTree/basic/6/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/6/fpga.tb verilog/fpga/tests/BTree/basic/6/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/basic/7/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/basic/7/fpga.tb verilog/fpga/tests/BTree/basic/7/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/7/fpga.tb verilog/fpga/tests/BTree/basic/7/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/in/1/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/in/1/fpga.tb verilog/fpga/tests/BTree/in/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/1/fpga.tb verilog/fpga/tests/BTree/in/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/in/2/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/in/2/fpga.tb verilog/fpga/tests/BTree/in/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/2/fpga.tb verilog/fpga/tests/BTree/in/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/in/3/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/in/3/fpga.tb verilog/fpga/tests/BTree/in/3/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/3/fpga.tb verilog/fpga/tests/BTree/in/3/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/in/4/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/in/4/fpga.tb verilog/fpga/tests/BTree/in/4/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/4/fpga.tb verilog/fpga/tests/BTree/in/4/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/01/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/01/fpga.tb verilog/fpga/tests/BTree/insert/01/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/01/fpga.tb verilog/fpga/tests/BTree/insert/01/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/02/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/02/fpga.tb verilog/fpga/tests/BTree/insert/02/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/02/fpga.tb verilog/fpga/tests/BTree/insert/02/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/03/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/03/fpga.tb verilog/fpga/tests/BTree/insert/03/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/03/fpga.tb verilog/fpga/tests/BTree/insert/03/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/04/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/04/fpga.tb verilog/fpga/tests/BTree/insert/04/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/04/fpga.tb verilog/fpga/tests/BTree/insert/04/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/05/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/05/fpga.tb verilog/fpga/tests/BTree/insert/05/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/05/fpga.tb verilog/fpga/tests/BTree/insert/05/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/06/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/06/fpga.tb verilog/fpga/tests/BTree/insert/06/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/06/fpga.tb verilog/fpga/tests/BTree/insert/06/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/BTree/insert/66/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/BTree/insert/66/fpga.tb verilog/fpga/tests/BTree/insert/66/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/66/fpga.tb verilog/fpga/tests/BTree/insert/66/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ForIn/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ForIn/fpga.tb verilog/fpga/tests/ForIn/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ForIn/fpga.tb verilog/fpga/tests/ForIn/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Free/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Free/fpga.tb verilog/fpga/tests/Free/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Free/fpga.tb verilog/fpga/tests/Free/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/In/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/In/fpga.tb verilog/fpga/tests/In/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/In/fpga.tb verilog/fpga/tests/In/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/InSize/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/InSize/fpga.tb verilog/fpga/tests/InSize/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/InSize/fpga.tb verilog/fpga/tests/InSize/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/JFalse/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/JFalse/fpga.tb verilog/fpga/tests/JFalse/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/JFalse/fpga.tb verilog/fpga/tests/JFalse/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Jeq/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Jeq/fpga.tb verilog/fpga/tests/Jeq/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Jeq/fpga.tb verilog/fpga/tests/Jeq/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Jmp/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Jmp/fpga.tb verilog/fpga/tests/Jmp/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Jmp/fpga.tb verilog/fpga/tests/Jmp/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Mov/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Mov/fpga.tb verilog/fpga/tests/Mov/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Mov/fpga.tb verilog/fpga/tests/Mov/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Mov2/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Mov2/fpga.tb verilog/fpga/tests/Mov2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Mov2/fpga.tb verilog/fpga/tests/Mov2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/MoveLong_1/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/MoveLong_1/fpga.tb verilog/fpga/tests/MoveLong_1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/MoveLong_1/fpga.tb verilog/fpga/tests/MoveLong_1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/MoveLong_2/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/MoveLong_2/fpga.tb verilog/fpga/tests/MoveLong_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/MoveLong_2/fpga.tb verilog/fpga/tests/MoveLong_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Not/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Not/fpga.tb verilog/fpga/tests/Not/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Not/fpga.tb verilog/fpga/tests/Not/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Pop/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Pop/fpga.tb verilog/fpga/tests/Pop/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Pop/fpga.tb verilog/fpga/tests/Pop/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Push/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Push/fpga.tb verilog/fpga/tests/Push/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Push/fpga.tb verilog/fpga/tests/Push/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ShiftLeft/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ShiftLeft/fpga.tb verilog/fpga/tests/ShiftLeft/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ShiftLeft/fpga.tb verilog/fpga/tests/ShiftLeft/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ShiftRight/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/ShiftRight/fpga.tb verilog/fpga/tests/ShiftRight/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ShiftRight/fpga.tb verilog/fpga/tests/ShiftRight/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Shift_up/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Shift_up/fpga.tb verilog/fpga/tests/Shift_up/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Shift_up/fpga.tb verilog/fpga/tests/Shift_up/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Shift_up_2/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Shift_up_2/fpga.tb verilog/fpga/tests/Shift_up_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Shift_up_2/fpga.tb verilog/fpga/tests/Shift_up_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/Subtract/fpga.sv
       if: ${{ always() }}
       run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/ -g2012 -o fpga verilog/fpga/tests/Subtract/fpga.tb verilog/fpga/tests/Subtract/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Subtract/fpga.tb verilog/fpga/tests/Subtract/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
