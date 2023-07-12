@@ -26,7 +26,7 @@ my $readMe   = fpe $home, qw(README md2);                                       
 
 my $testsDir = fpd $home, qw(verilog fpga tests);                               # Tests folder
 my $verilog  = 1;                                                               # Run the low level tests using verilog
-my $yosys    = 0;                                                               # Run the low level tests using Yosys
+my $yosys    = 1;                                                               # Run the low level tests using Yosys
 
 my $T = -e $timeFile ? eval readFile($timeFile) : undef;                        # Last upload time
 
@@ -243,6 +243,34 @@ END
  }
 
 sub fpgaLowLevelTestsYosys                                                      # Low level tests
+ {my @tests = lowLevelTests;
+  my $y = '';
+  my $d = q(GW1NR-LV9QN88PC6/I5);                                               # Device
+  my $f = q(GW1N-9C);                                                           # Device family
+
+  for my $s(@tests)                                                             # Tests
+   {my $t = fp($s) =~ s(/) (_)gsr =~ s(verilog_fpga_tests_) ()gsr;              # Test name in a form suitable for github
+
+    my $v = setFileExtension $s, q(sv);                                         # Source file
+    my $j = setFileExtension $s, q(json);                                       # Json description
+    my $p = setFileExtension $s, q(pnr);                                        # Place and route
+    my $P = setFileExtension $s, q(fs);                                         # Bit stream
+    my $b = fpe fp($s), qw(tangnano9k cst);                                     # Device description
+
+    $y .= job("Yosys_$t").yosys(). <<END;
+
+    - name: Yosys_$t
+      if: \${{ always() }}
+      run: |
+        export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -q -d -p "read_verilog $v;"
+
+END
+   }
+  $y
+ }
+
+sub fpgaLowLevelTestsYosys22                                                    # Low level tests
  {my @tests = lowLevelTests;
   my $y = '';
   my $d = q(GW1NR-LV9QN88PC6/I5);                                               # Device
