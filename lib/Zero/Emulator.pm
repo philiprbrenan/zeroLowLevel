@@ -3954,15 +3954,15 @@ END
    {my $D = fpd qw(../../verilog fpga tests), $name;                            # Folder to write into
     my $S = fpe $D, qw(fpga sv);                                                # Code
     my $s = join "", $compile->code;
-    owf($S, $s);
+    owf($S, $s) unless -e $S and readFile($S) eq $s;
 
     my $T = setFileExtension $S, "tb";                                          # Test bench
     my $t = join "", $compile->testBench;
-    owf($T, $t);
+    owf($T, $t) unless -e $T and readFile($T) eq $t;
 
     my $C = fpe $D, qw(tangnano9k cst);                                         # Constraints
     my $c = join "", $compile->constraints;
-    owf($C, $c);
+    owf($C, $c) unless -e $C and readFile($C) eq $c;
 #   say STDERR "AAAA\n$S\n$T\n$C";
    }
 
