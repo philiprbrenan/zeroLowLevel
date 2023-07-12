@@ -742,7 +742,7 @@ module Memory
   integer moveLongStartIndex;                                                   // Source index of move long
   integer i, a, b;                                                              // Index
 
-  task checkWriteable(integer input err);                                       // Check a memory is writable
+  task checkWriteable(input integer err);                                       // Check a memory is writable
     begin
        error = 0;
        if (array >= allocatedArrays) begin
@@ -756,7 +756,7 @@ module Memory
     end
   endtask
 
-  task checkReadable(integer input err);                                        // Check a memory locationis readable
+  task checkReadable(input integer err);                                        // Check a memory locationis readable
     begin
        checkWriteable(err);
        if (index >= arraySizes[array]) begin
@@ -766,7 +766,7 @@ module Memory
     end
   endtask
 
-  task dump();                                                                  // Dump some memory
+  task dump;                                                                    // Dump some memory
     begin
       $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
       for(i = 0; i < ARRAY_LENGTH; ++i) $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
