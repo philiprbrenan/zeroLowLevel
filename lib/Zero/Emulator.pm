@@ -1525,9 +1525,6 @@ sub Zero::Emulator::Assembly::execute($%)                                       
       assign($exec, $size, areaLength($exec, $area))                            # Size of area
      },
 
-    movResultToTarget=> sub                                                     # Used in the low level assembly, not the high level assembly
-     {},
-
     arrayIndex=> sub                                                            # Place the 1 based index of the second source operand in the array referenced by the first source operand in the target location
      {my $i = currentInstruction $exec;
       my $x = $exec->latestLeftTarget;                                          # Location to store index in
@@ -2994,10 +2991,10 @@ sub Zero::Emulator::Assembly::lowLevelReplaceSource($$$)                        
    }
  }
 
-sub movResultToTarget($)                                                        # Move result from memory to indicated target
- {my ($target) = @_;                                                            # Target to store result in
-  Instruction(action=>"movResultToTarget", target=>$target)
- }
+#sub movResultToTarget($)                                                        # Move result from memory to indicated target
+# {my ($target) = @_;                                                            # Target to store result in
+#  Instruction(action=>"movResultToTarget", target=>$target)
+# }
 
 sub Zero::Emulator::Assembly::lowLevelReplaceTarget($$)                         #P Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga. The instruction under consideration is at the top of the supplied instruction list. Add the move instruction and modify the original instruction if the source field can be replaced
  {my ($assembly, $instructions) = @_;                                           # Assembly options, instructions
@@ -3306,7 +3303,7 @@ END
 END
      },
 
-    movResultToTarget=> sub                                                                # Array
+    movResultToTarget=> sub                                                     # Array
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
       push @c, <<END.nextInstruction($i).transitionHeapClock;
@@ -3539,8 +3536,30 @@ END
 END
      },
 
-    moveLong1=> sub {},                                                         # Move long 1
-    moveLong2=> sub {},                                                         # Move long 2
+    moveLong1=> sub                                                             # Move long 1
+     {my ($i) = @_;                                                             # Instruction
+      my $ds  = $compile->deref($i->source);
+      my $sl  = $ds->targetLocationArea;
+      my $si  = $ds->targetIndex;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapArray  = $sl;                                                 // Array to write to
+              heapIndex  = $si;                                                 // Index of element to write to
+              heapAction = heap.Long1;                                          // Request a write
+END
+     },
+    moveLong2=> sub                                                             # Move long 2
+     {my ($i) = @_;                                                             # Instruction
+      my $s   = $compile->deref($i->source2)->Value;
+      my $dt  = $compile->deref($i->target);
+      my $tl  = $dt->targetLocationArea;
+      my $ti  = $dt->targetIndex;
+      push @c, <<END.nextInstruction($i).transitionHeapClock;
+              heapArray  = $tl;                                                 // Array to write to
+              heapIndex  = $ti;                                                 // Index of element to write to
+              heapIn     = $s;                                                  // Index of element to write to
+              heapAction = heap.Long2;                                          // Request a write
+END
+     },
 
 
     movHeapOut=> sub                                                            # Either move heap out to the specified local variable directly, or perform a memory write to put it back into memory at the specified lcoation
