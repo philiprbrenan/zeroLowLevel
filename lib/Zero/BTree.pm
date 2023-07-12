@@ -1712,7 +1712,7 @@ if (1)                                                                          
     is_deeply $e->timeSequential,  56758;
 
     #say STDERR formatTable($e->counts);
-    is_deeply formatTable($e->counts), <<END ;                                     # All instruction codes used in NWay Tree
+    is_deeply formatTable($e->counts), <<END ;                                  # All instruction codes used in NWay Tree
 add                 1920
 array                253
 arrayCountGreater      2
