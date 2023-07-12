@@ -873,7 +873,7 @@ module Memory
   integer moveLongStartIndex;                                                   // Source index of move long
   integer i, a, b;                                                              // Index
 
-  task checkWriteable(integer err);                                             // Check a memory is writable
+  task checkWriteable(integer input err);                                       // Check a memory is writable
     begin
        error = 0;
        if (array >= allocatedArrays) begin
@@ -887,7 +887,7 @@ module Memory
     end
   endtask
 
-  task checkReadable(integer err);                                              // Check a memory locationis readable
+  task checkReadable(integer input err);                                        // Check a memory locationis readable
     begin
        checkWriteable(err);
        if (index >= arraySizes[array]) begin
