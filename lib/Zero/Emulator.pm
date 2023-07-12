@@ -31,6 +31,7 @@ my $traceExecution               =   0;                                         
 my $runLowLevel                  =   1;                                         # Run low level assembly code
 my $memoryPrintWidth             = 200;                                         # How much memory to print
 my $maximumInstructionsToExecute = 1e6;                                         # Maximum number of subroutines to execute
+my $memoryImplementationFile     = fpe qw(verilog memory memory sv);            # Verilog implemetation of array memory
 
 our $memoryTechnique;                                                           # Undef or the address of a sub that loads the memory handlers into an execution environment.
 
@@ -3871,7 +3872,19 @@ END
 endmodule
 END
 
-  push @c, readFile("../../verilog/memory/memory.sv");                                 # Add memory module
+  if (1)                                                                        # Include memory implementation file
+   {my $m;
+    for my $i(0..2)
+     {$m = fpf "../" x $i, $memoryImplementationFile;
+      last if -e $m;
+     }
+    if ($m)
+     {push @c, readFile($m);
+     }
+    else
+     {confess "Cannot find memory file: $memoryImplementationFile";
+     }
+   }
 
   $compile->code = join '', @c;
 
