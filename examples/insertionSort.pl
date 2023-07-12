@@ -1,4 +1,4 @@
-#!/usr/bin/perl -Ilib -I../lib  -I/home/phil/perl/cpan/ZeroEmulator/lib/
+#!/usr/bin/perl -Ilib -I../lib -I/home/phil/perl/cpan/ZeroEmulator/LowLevel/lib/
 #-------------------------------------------------------------------------------
 # Zero assembler programming language of in situ insertion sort
 # Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
@@ -56,10 +56,11 @@ if (1)                                                                          
 
   is_deeply $e->outLines, [1 .. 8];
 
-  is_deeply $e->count, 188;                                                     # Instructions executed
+  is_deeply $e->count, 188 unless $e->assembly->lowLevelOps;                    # Instructions executed
+  is_deeply $e->count, 266 if     $e->assembly->lowLevelOps;                    # Instructions executed
 
   #say STDERR formatTable($e->counts); exit;
-  is_deeply formatTable($e->counts), <<END;
+  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps;
 add         7
 array       1
 arraySize   1
@@ -69,6 +70,24 @@ jmp        44
 mov        49
 push        8
 subtract   29
+END
+
+  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps;
+add          7
+array        1
+arraySize    1
+jGe         27
+jLt         22
+jmp         44
+mov         49
+movHeapOut   2
+movRead1    26
+movRead2    26
+movWrite1   22
+push         8
+start        1
+start2       1
+subtract    29
 END
  }
 
@@ -85,5 +104,6 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
 
   is_deeply $e->outLines, [1 .. 32];
-  is_deeply $e->count, 3787;                                                    # Approximately 4*4== 16 times bigger
+  is_deeply $e->count, 3787 unless $e->assembly->lowLevelOps;                   # Approximately 4*4== 16 times bigger
+  is_deeply $e->count, 5372 if     $e->assembly->lowLevelOps;                   # Approximately 4*4== 16 times bigger
  }
