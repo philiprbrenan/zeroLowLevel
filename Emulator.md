@@ -5011,6 +5011,13 @@ Translate high level assember into low level assembler
        Parameter  Description
     1  $assembly  Assembly
 
+## Zero::CompileToVerilog::memoryImplementation($compile)
+
+Loadthe memory implementation code
+
+       Parameter  Description
+    1  $compile   Compile
+
 ## Zero::CompileToVerilog::deref($compile, $ref)
 
 Compile a reference in assembler format to a corresponding verilog expression
@@ -5209,15 +5216,17 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 94 [Zero::CompileToVerilog::deref](#zero-compiletoverilog-deref) - Compile a reference in assembler format to a corresponding verilog expression
 
-95 [Zero::Emulator::Assembly::lowLevel](#zero-emulator-assembly-lowlevel) - Translate high level assember into low level assembler
+95 [Zero::CompileToVerilog::memoryImplementation](#zero-compiletoverilog-memoryimplementation) - Loadthe memory implementation code
 
-96 [Zero::Emulator::Assembly::lowLevelReplace](#zero-emulator-assembly-lowlevelreplace) - Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
+96 [Zero::Emulator::Assembly::lowLevel](#zero-emulator-assembly-lowlevel) - Translate high level assember into low level assembler
 
-97 [Zero::Emulator::Assembly::lowLevelReplaceSource](#zero-emulator-assembly-lowlevelreplacesource) - Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga.
+97 [Zero::Emulator::Assembly::lowLevelReplace](#zero-emulator-assembly-lowlevelreplace) - Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
 
-98 [Zero::Emulator::Assembly::lowLevelReplaceTarget](#zero-emulator-assembly-lowlevelreplacetarget) - Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga.
+98 [Zero::Emulator::Assembly::lowLevelReplaceSource](#zero-emulator-assembly-lowlevelreplacesource) - Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga.
 
-99 [Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut](#zero-emulator-assembly-lowlevelreplacetargetfromheapout) - Move the memory result to the specified target
+99 [Zero::Emulator::Assembly::lowLevelReplaceTarget](#zero-emulator-assembly-lowlevelreplacetarget) - Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga.
+
+100 [Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut](#zero-emulator-assembly-lowlevelreplacetargetfromheapout) - Move the memory result to the specified target
 
 # Installation
 
