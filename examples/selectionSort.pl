@@ -1,4 +1,4 @@
-#!/usr/bin/perl -Ilib -I../lib -I/home/phil/perl/cpan/ZeroEmulator/lib/
+#!/usr/bin/perl -Ilib -I../lib -I/home/phil/perl/cpan/ZeroEmulator/LowLevel/lib/
 #-------------------------------------------------------------------------------
 # Zero assembler programming language of in situ selection sort
 # Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
@@ -48,12 +48,19 @@ if (1)                                                                          
 
   is_deeply $e->outLines, [1 .. 8];
 
-  is_deeply $e->count,           285;                                           # Instructions executed
-  is_deeply $e->timeParallel,    270;
-  is_deeply $e->timeSequential,  285;
+  if ($e->assembly->lowLevelOps)
+   {is_deeply $e->count,           407;                                           # Instructions executed
+    is_deeply $e->timeParallel,    377;
+    is_deeply $e->timeSequential,  407;
+   }
+  else
+   {is_deeply $e->count,           285;                                           # Instructions executed
+    is_deeply $e->timeParallel,    270;
+    is_deeply $e->timeSequential,  285;
+   }
 
   #say STDERR formatTable($e->counts); exit;
-  is_deeply formatTable($e->counts), <<END;
+  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps;
 add        44
 array       1
 arraySize   1
@@ -62,6 +69,23 @@ jLe        36
 jmp        44
 mov        98
 push        8
+END
+
+  is_deeply formatTable($e->counts), <<END if $e->assembly->lowLevelOps;
+add         44
+array        1
+arraySize    1
+jGe         53
+jLe         36
+jmp         44
+mov         98
+movHeapOut   2
+movRead1    44
+movRead2    44
+movWrite1   30
+push         8
+start        1
+start2       1
 END
  }
 
@@ -78,7 +102,14 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
 
   is_deeply $e->outLines, [1 .. 32];
-  is_deeply $e->count, 4356;                                                    # Approximately 4*4== 16 times bigger
-  is_deeply $e->timeParallel,    3860;
-  is_deeply $e->timeSequential,  4356;
+  if ($e->assembly->lowLevelOps)
+   {is_deeply $e->count,           6472;                                        # Approximately 4*4== 16 times bigger
+    is_deeply $e->timeParallel,    5480;
+    is_deeply $e->timeSequential,  6472;
+   }
+  else
+   {is_deeply $e->count,           4356;                                        # Approximately 4*4== 16 times bigger
+    is_deeply $e->timeParallel,    3860;
+    is_deeply $e->timeSequential,  4356;
+   }
  }
