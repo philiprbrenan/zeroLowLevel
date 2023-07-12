@@ -3741,7 +3741,7 @@ module fpga                                                                     
   reg [31        :0] heapError;                                                 // Error on heap operation if not zero
 
   Memory                                                                        // Memory module
-   #(${&f8($LArrays)}, ${&f8($LArea)}, ${&f8($LData)})                          // Address bits, index buts, data bits
+   #(${&f8($LArrays)}, ${&f8($LArea)}, ${&f8($LData)})                          // Address bits, index bits, data bits
     heap(                                                                       // Create heap memory
     .clock  (heapClock),
     .action (heapAction),
