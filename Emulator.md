@@ -4279,13 +4279,6 @@ Map the instruction set into a machine architecture.
 
 Compile each sub sequence of instructions into equivalent verilog.  A sub sequence starts at an instruction marked as an entry point
 
-## movResultToTarget($target)
-
-Move result from memory to indicated target
-
-       Parameter  Description
-    1  $target    Target to store result in
-
 ## compileToVerilog($exec, $name)
 
 Compile each sub sequence of instructions into equivalent verilog.  A sub sequence starts at an instruction marked as an entry point
@@ -5074,9 +5067,9 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 23 [Call](#call) - Call the subroutine at the target address.
 
-24 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
+24 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
 
-25 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
+25 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
 
 26 [Confess](#confess) - Confess with a stack trace showing the location both in the emulated code and in the code that produced the emulated code.
 
@@ -5152,81 +5145,79 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 62 [MoveLong](#movelong) - Copy the number of elements specified by the second source operand from the location specified by the first source operand to the target operand.
 
-63 [movResultToTarget](#movresulttotarget) - Move result from memory to indicated target
+63 [Nop](#nop) - Do nothing (but do it well!).
 
-64 [Nop](#nop) - Do nothing (but do it well!).
+64 [Not](#not) - Move and not.
 
-65 [Not](#not) - Move and not.
+65 [Out](#out) - Write memory location contents to out.
 
-66 [Out](#out) - Write memory location contents to out.
+66 [Parallel](#parallel) - Runs its sub sections in simulated parallel so that we can prove that the sections can be run in parallel.
 
-67 [Parallel](#parallel) - Runs its sub sections in simulated parallel so that we can prove that the sections can be run in parallel.
+67 [ParallelContinue](#parallelcontinue) - Continue recording the elapsed time for parallel sections.
 
-68 [ParallelContinue](#parallelcontinue) - Continue recording the elapsed time for parallel sections.
+68 [ParallelStart](#parallelstart) - Start recording the elapsed time for parallel sections.
 
-69 [ParallelStart](#parallelstart) - Start recording the elapsed time for parallel sections.
+69 [ParallelStop](#parallelstop) - Stop recording the elapsed time for parallel sections.
 
-70 [ParallelStop](#parallelstop) - Stop recording the elapsed time for parallel sections.
+70 [ParamsGet](#paramsget) - Get a word from the parameters in the previous frame and store it in the current frame.
 
-71 [ParamsGet](#paramsget) - Get a word from the parameters in the previous frame and store it in the current frame.
+71 [ParamsPut](#paramsput) - Put a word into the parameters list to make it visible in a called procedure.
 
-72 [ParamsPut](#paramsput) - Put a word into the parameters list to make it visible in a called procedure.
+72 [Pop](#pop) - Pop the memory area specified by the source operand into the memory address specified by the target operand.
 
-73 [Pop](#pop) - Pop the memory area specified by the source operand into the memory address specified by the target operand.
+73 [Procedure](#procedure) - Define a procedure.
 
-74 [Procedure](#procedure) - Define a procedure.
+74 [Push](#push) - Push the value in the current stack frame specified by the source operand onto the memory area identified by the target operand.
 
-75 [Push](#push) - Push the value in the current stack frame specified by the source operand onto the memory area identified by the target operand.
+75 [Random](#random) - Create a random number in a specified range.
 
-76 [Random](#random) - Create a random number in a specified range.
+76 [RandomSeed](#randomseed) - Seed the random number generator.
 
-77 [RandomSeed](#randomseed) - Seed the random number generator.
+77 [Resize](#resize) - Resize the target area to the source size.
 
-78 [Resize](#resize) - Resize the target area to the source size.
+78 [Return](#return) - Return from a procedure via the call stack.
 
-79 [Return](#return) - Return from a procedure via the call stack.
+79 [ReturnGet](#returnget) - Get a word from the return area and save it.
 
-80 [ReturnGet](#returnget) - Get a word from the return area and save it.
+80 [ReturnPut](#returnput) - Put a word into the return area.
 
-81 [ReturnPut](#returnput) - Put a word into the return area.
+81 [Sequential](#sequential) - Runs its sub sections in sequential order
 
-82 [Sequential](#sequential) - Runs its sub sections in sequential order
+82 [ShiftDown](#shiftdown) - Shift an element down one in an area.
 
-83 [ShiftDown](#shiftdown) - Shift an element down one in an area.
+83 [ShiftLeft](#shiftleft) - Shift left within an element.
 
-84 [ShiftLeft](#shiftleft) - Shift left within an element.
+84 [ShiftRight](#shiftright) - Shift right with an element.
 
-85 [ShiftRight](#shiftright) - Shift right with an element.
+85 [ShiftUp](#shiftup) - Shift an element up one in an area.
 
-86 [ShiftUp](#shiftup) - Shift an element up one in an area.
+86 [Start](#start) - Start the current assembly using the specified version of the Zero language.
 
-87 [Start](#start) - Start the current assembly using the specified version of the Zero language.
+87 [Subtract](#subtract) - Subtract the second source operand value from the first source operand value and store the result in the target area.
 
-88 [Subtract](#subtract) - Subtract the second source operand value from the first source operand value and store the result in the target area.
+88 [Tally](#tally) - Counts instructions when enabled.
 
-89 [Tally](#tally) - Counts instructions when enabled.
+89 [Then](#then) - Then block.
 
-90 [Then](#then) - Then block.
+90 [Trace](#trace) - Start or stop tracing.
 
-91 [Trace](#trace) - Start or stop tracing.
+91 [TraceLabels](#tracelabels) - Enable or disable label tracing.
 
-92 [TraceLabels](#tracelabels) - Enable or disable label tracing.
+92 [Var](#var) - Create a variable initialized to the specified value.
 
-93 [Var](#var) - Create a variable initialized to the specified value.
+93 [Watch](#watch) - Watches for changes to the specified memory location.
 
-94 [Watch](#watch) - Watches for changes to the specified memory location.
+94 [Zero::CompileToVerilog::deref](#zero-compiletoverilog-deref) - Compile a reference in assembler format to a corresponding verilog expression
 
-95 [Zero::CompileToVerilog::deref](#zero-compiletoverilog-deref) - Compile a reference in assembler format to a corresponding verilog expression
+95 [Zero::Emulator::Assembly::lowLevel](#zero-emulator-assembly-lowlevel) - Translate high level assember into low level assembler
 
-96 [Zero::Emulator::Assembly::lowLevel](#zero-emulator-assembly-lowlevel) - Translate high level assember into low level assembler
+96 [Zero::Emulator::Assembly::lowLevelReplace](#zero-emulator-assembly-lowlevelreplace) - Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
 
-97 [Zero::Emulator::Assembly::lowLevelReplace](#zero-emulator-assembly-lowlevelreplace) - Convert all heap memory operations in a scalar operation into moves so that we can use a separate heap memory on the fpga
+97 [Zero::Emulator::Assembly::lowLevelReplaceSource](#zero-emulator-assembly-lowlevelreplacesource) - Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga.
 
-98 [Zero::Emulator::Assembly::lowLevelReplaceSource](#zero-emulator-assembly-lowlevelreplacesource) - Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga.
+98 [Zero::Emulator::Assembly::lowLevelReplaceTarget](#zero-emulator-assembly-lowlevelreplacetarget) - Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga.
 
-99 [Zero::Emulator::Assembly::lowLevelReplaceTarget](#zero-emulator-assembly-lowlevelreplacetarget) - Convert a memory write to a target heap array into a move operation so that we can use a separate heap memory on the fpga.
-
-100 [Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut](#zero-emulator-assembly-lowlevelreplacetargetfromheapout) - Move the memory result to the specified target
+99 [Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut](#zero-emulator-assembly-lowlevelreplacetargetfromheapout) - Move the memory result to the specified target
 
 # Installation
 
