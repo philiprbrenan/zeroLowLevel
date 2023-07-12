@@ -26,7 +26,7 @@ my $readMe   = fpe $home, qw(README md2);                                       
 
 my $testsDir = fpd $home, qw(verilog fpga tests);                               # Tests folder
 my $verilog  = 1;                                                               # Run the low level tests using verilog
-my $yosys    = 0;                                                               # Run the low level tests using Yosys
+my $yosys    = 1;                                                               # Run the low level tests using Yosys
 
 my $T = -e $timeFile ? eval readFile($timeFile) : undef;                        # Last upload time
 
