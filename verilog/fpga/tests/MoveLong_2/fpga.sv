@@ -617,6 +617,11 @@ end
 if (0) begin
   $display("AAAA %4d %4d moveLong1", steps, ip);
 end
+              heapArray  = localMem[1];                                                 // Array to write to
+              heapIndex  = 2;                                                 // Index of element to write to
+              heapAction = heap.Long1;                                          // Request a write
+              ip = 57;
+              heapClock = ~ heapClock;
         end
 
          57 :
@@ -624,6 +629,12 @@ end
 if (0) begin
   $display("AAAA %4d %4d moveLong2", steps, ip);
 end
+              heapArray  = localMem[0];                                                 // Array to write to
+              heapIndex  = 1;                                                 // Index of element to write to
+              heapIn     = 2;                                                  // Index of element to write to
+              heapAction = heap.Long2;                                          // Request a write
+              ip = 58;
+              heapClock = ~ heapClock;
         end
 
          58 :
