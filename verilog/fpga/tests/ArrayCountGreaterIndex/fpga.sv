@@ -174,13 +174,22 @@ end
         end
 
          11 :
+        begin                                                                   // movHeapOut
+if (0) begin
+  $display("AAAA %4d %4d movHeapOut", steps, ip);
+end
+              localMem[1] = heapOut;
+              ip = 12;
+        end
+
+         12 :
         begin                                                                   // out
 if (0) begin
   $display("AAAA %4d %4d out", steps, ip);
 end
               outMem[outMemPos] = localMem[1];
               outMemPos = outMemPos + 1;
-              ip = 12;
+              ip = 13;
         end
       endcase
       if (0 && 0) begin
@@ -190,7 +199,7 @@ end
       end
       success  = 1;
       success  = success && outMem[0] == 2;
-      finished = steps >     13;
+      finished = steps >     14;
     end
   end
 
