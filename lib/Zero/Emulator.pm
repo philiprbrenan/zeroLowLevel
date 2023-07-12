@@ -3048,6 +3048,15 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
       arraySize=> sub
        {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
        },
+      arrayCountGreater=> sub
+       {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
+       },
+      arrayCountLess=> sub
+       {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
+       },
+      arrayIndex=> sub
+       {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
+       },
       moveLong=> sub                                                            # Move long
        {my $m = pop @l;
         my $o = Instruction(action=>"moveLong1");
