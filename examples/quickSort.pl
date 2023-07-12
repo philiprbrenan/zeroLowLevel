@@ -1,4 +1,4 @@
-#!/usr/bin/perl -Ilib -I../lib -I/home/phil/perl/cpan/ZeroEmulator/lib/
+#!/usr/bin/perl -Ilib -I../lib -I/home/phil/perl/cpan/ZeroEmulator/LowLevel/lib/
 #-------------------------------------------------------------------------------
 # Zero assembler programming language of in situ quick sort
 # Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
@@ -127,10 +127,11 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
   is_deeply $e->outLines, [1 .. 8];
 
-  is_deeply $e->count,  284;                                                    # Instructions executed
+  is_deeply $e->count,  284 unless $e->assembly->lowLevelOps;                   # Instructions executed
+  is_deeply $e->count,  464 if     $e->assembly->lowLevelOps;                   # Instructions executed
 
   #say STDERR formatTable($e->counts); exit;
-  is_deeply formatTable($e->counts), <<END;                                     # Counts of each instruction type executed
+  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps;    # Counts of each instruction type executed
 add         39
 array        3
 arraySize    8
@@ -143,6 +144,27 @@ mov         58
 pop         14
 push        22
 shiftRight   3
+subtract    19
+END
+  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps;    # Counts of each instruction type executed
+add         39
+array        3
+arraySize    8
+jGe         57
+jLt         12
+jNe          5
+jTrue        7
+jmp         37
+mov         58
+movHeapOut  25
+movRead1    65
+movRead2    65
+movWrite1   23
+pop         14
+push        22
+shiftRight   3
+start        1
+start2       1
 subtract    19
 END
  }
@@ -160,5 +182,6 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
 
   is_deeply $e->outLines, [1 .. 32];
-  is_deeply $e->count, 1433;                                                    # Approximately 5 times bigger
+  is_deeply $e->count, 1433 unless $e->assembly->lowLevelOps;                   # Approximately 5 times bigger
+  is_deeply $e->count, 2462 if     $e->assembly->lowLevelOps;                   # Approximately 5 times bigger
  }
