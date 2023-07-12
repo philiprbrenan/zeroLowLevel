@@ -3093,6 +3093,21 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
   $assembly->code = [@l];
  }
 
+sub Zero::CompileToVerilog::memoryImplementation($)                             #P Loadthe memory implementation code
+ {my ($compile) = @_;                                                           # Compile
+  my $m;
+  for my $i(0..2)
+   {$m = fpf "../" x $i, $memoryImplementationFile;
+    last if -e $m;
+   }
+  if ($m)
+   {return readFile($m);
+   }
+  else
+   {confess "Cannot find memory file: $memoryImplementationFile";
+   }
+ }
+
 sub Zero::CompileToVerilog::deref($$)                                           #P Compile a reference in assembler format to a corresponding verilog expression
  {my ($compile, $ref) = @_;                                                     # Compile, reference
   @_ == 2 or confess "Two parameters";
@@ -3224,7 +3239,7 @@ sub compileToVerilog($$)                                                        
     NOut    => $NOut,                                                           # Size of output channel
     NLocal  => $NLocal);                                                        # Number of local variables
 
-  my @c;                                                                        # Generated code
+  my @c = $compile->memoryImplementation;                                       # Generated code - start with memory implementation
 
   my sub skip                                                                   # Skip this instruction and continue at the next one
    {my ($i) = @_;                                                               # Instruction
@@ -3233,6 +3248,7 @@ sub compileToVerilog($$)                                                        
             ip = $n;
 END
    }
+
 
 =pod
 Constant to local
@@ -3871,20 +3887,6 @@ END
 
 endmodule
 END
-
-  if (1)                                                                        # Include memory implementation file
-   {my $m;
-    for my $i(0..2)
-     {$m = fpf "../" x $i, $memoryImplementationFile;
-      last if -e $m;
-     }
-    if ($m)
-     {push @c, readFile($m);
-     }
-    else
-     {confess "Cannot find memory file: $memoryImplementationFile";
-     }
-   }
 
   $compile->code = join '', @c;
 
