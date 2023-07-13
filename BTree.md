@@ -218,15 +218,20 @@ Create a variable referring to a new tree descriptor.
     
       For                                                                           # Find each prior element
        {my ($j, $check, $next, $end) = @_;
-        my $d = Add $j, $j;
-        AssertEq $d, FindResult_data(Find($t, $j));
+        Out FindResult_data(Find($t, $j));
        } $N;
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, -1));                      # Should not be present
-      AssertNe FindResult_found, FindResult_cmp(Find($t, $N));
+      Out FindResult_cmp(Find($t, -1));                                             # Should not be present
+      Out FindResult_cmp(Find($t, $N));
     
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, "";                                                        # No asserts
+      is_deeply $e->outLines,
+    [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+      78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+    ];
+    
       $e->compileToVerilog("BTree/insert/66");
      }
     
@@ -499,19 +504,24 @@ Get comparison from find result.
     
       For                                                                           # Find each prior element
        {my ($j, $check, $next, $end) = @_;
-        my $d = Add $j, $j;
-        AssertEq $d, FindResult_data(Find($t, $j));
+        Out FindResult_data(Find($t, $j));
        } $N;
     
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, -1));                      # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Out FindResult_cmp(Find($t, -1));                                             # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Out FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, "";                                                        # No asserts
+      is_deeply $e->outLines,
+    [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+      78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+    ];
+    
       $e->compileToVerilog("BTree/insert/66");
      }
     
@@ -1026,21 +1036,26 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
       For                                                                           # Find each prior element  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
        {my ($j, $check, $next, $end) = @_;
-        my $d = Add $j, $j;
     
-        AssertEq $d, FindResult_data(Find($t, $j));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+        Out FindResult_data(Find($t, $j));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
        } $N;
     
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, -1));                      # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Out FindResult_cmp(Find($t, -1));                                             # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Out FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, "";                                                        # No asserts
+      is_deeply $e->outLines,
+    [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+      78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+    ];
+    
       $e->compileToVerilog("BTree/insert/66");
      }
     
@@ -1321,7 +1336,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(2), bless([1, 1, 0, 0, 3, 4, 0], "Node");
       is_deeply $e->heap(3), bless([1], "Keys");
       is_deeply $e->heap(4), bless([11], "Data");
-      $e->compileToVerilog("BTree/insert/01");
+      #$e->compileToVerilog("BTree/insert/01");
      }
     
     if (1)                                                                          
@@ -1339,7 +1354,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(2), bless([2, 1, 0, 0, 3, 4, 0], "Node");
       is_deeply $e->heap(3), bless([1, 2], "Keys");
       is_deeply $e->heap(4), bless([11, 22], "Data");
-      $e->compileToVerilog("BTree/insert/02");
+      #$e->compileToVerilog("BTree/insert/02");
      }
     
     if (1)                                                                          
@@ -1354,7 +1369,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(2), bless([3, 1, 0, 0, 3, 4, 0], "Node");
       is_deeply $e->heap(3), bless([1, 2, 3], "Keys");
       is_deeply $e->heap(4), bless([11, 22, 33], "Data");
-      $e->compileToVerilog("BTree/insert/03");
+      #$e->compileToVerilog("BTree/insert/03");
      }
     
     if (1)                                                                          
@@ -1376,7 +1391,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(9 ), bless([3, 4], "Keys");
       is_deeply $e->heap(10), bless([33, 44], "Data");
       is_deeply $e->heap(11), bless([5, 8], "Down");
-      $e->compileToVerilog("BTree/insert/04");
+      #$e->compileToVerilog("BTree/insert/04");
      }
     
     if (1)                                                                          
@@ -1402,7 +1417,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(12), bless([1, 4, 2, 0, 13, 14, 0], "Node");
       is_deeply $e->heap(13), bless([5], "Keys");
       is_deeply $e->heap(14), bless([55], "Data");
-      $e->compileToVerilog("BTree/insert/05");
+      #$e->compileToVerilog("BTree/insert/05");
      }
     
     if (1)                                                                          
@@ -1427,7 +1442,7 @@ Insert a key and its associated data into a tree.
       is_deeply $e->heap(12), bless([2, 4, 2, 0, 13, 14, 0], "Node");
       is_deeply $e->heap(13), bless([5, 6], "Keys");
       is_deeply $e->heap(14), bless([55, 66], "Data");
-      $e->compileToVerilog("BTree/insert/06");
+      #$e->compileToVerilog("BTree/insert/06");
      }
     
     if (1)                                                                          
@@ -1488,15 +1503,20 @@ Insert a key and its associated data into a tree.
     
       For                                                                           # Find each prior element
        {my ($j, $check, $next, $end) = @_;
-        my $d = Add $j, $j;
-        AssertEq $d, FindResult_data(Find($t, $j));
+        Out FindResult_data(Find($t, $j));
        } $N;
     
-      AssertNe FindResult_found, FindResult_cmp(Find($t, -1));                      # Should not be present
-      AssertNe FindResult_found, FindResult_cmp(Find($t, $N));
+      Out FindResult_cmp(Find($t, -1));                                             # Should not be present
+      Out FindResult_cmp(Find($t, $N));
     
       my $e = Execute(suppressOutput=>1);
-      is_deeply $e->out, "";                                                        # No asserts
+      is_deeply $e->outLines,
+    [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+      78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+    ];
+    
       $e->compileToVerilog("BTree/insert/66");
      }
     
