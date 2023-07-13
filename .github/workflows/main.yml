@@ -1,4 +1,4 @@
-# Test 2023-07-12 at 17:39:54
+# Test 2023-07-13 at 03:46:54
 
 name: Test
 
@@ -352,7 +352,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Add/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Add/fpga.sv;"
 
 
   Yosys_Array_:
@@ -401,7 +401,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Array/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array/fpga.sv;"
 
 
   Yosys_ArrayAdd_:
@@ -450,7 +450,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ArrayAdd/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayAdd/fpga.sv;"
 
 
   Yosys_ArrayCountGreaterIndex_:
@@ -499,7 +499,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv;"
 
 
   Yosys_ArrayCountLess_:
@@ -548,7 +548,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ArrayCountLess/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountLess/fpga.sv;"
 
 
   Yosys_ArrayIndex_:
@@ -597,7 +597,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ArrayIndex/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayIndex/fpga.sv;"
 
 
   Yosys_Array_scans_:
@@ -646,7 +646,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Array_scans/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array_scans/fpga.sv;"
 
 
   Yosys_BTree_basic_1_:
@@ -695,7 +695,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/1/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/1/fpga.sv;"
 
 
   Yosys_BTree_basic_2_:
@@ -744,7 +744,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/2/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/2/fpga.sv;"
 
 
   Yosys_BTree_basic_3_:
@@ -793,7 +793,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/3/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/3/fpga.sv;"
 
 
   Yosys_BTree_basic_4_:
@@ -842,7 +842,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/4/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/4/fpga.sv;"
 
 
   Yosys_BTree_basic_5_:
@@ -891,7 +891,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/5/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/5/fpga.sv;"
 
 
   Yosys_BTree_basic_6_:
@@ -940,7 +940,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/6/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/6/fpga.sv;"
 
 
   Yosys_BTree_basic_7_:
@@ -989,7 +989,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/basic/7/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/7/fpga.sv;"
 
 
   Yosys_BTree_in_1_:
@@ -1038,7 +1038,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/in/1/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/1/fpga.sv;"
 
 
   Yosys_BTree_in_2_:
@@ -1087,7 +1087,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/in/2/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/2/fpga.sv;"
 
 
   Yosys_BTree_in_3_:
@@ -1136,7 +1136,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/in/3/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/3/fpga.sv;"
 
 
   Yosys_BTree_in_4_:
@@ -1185,7 +1185,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/in/4/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/4/fpga.sv;"
 
 
   Yosys_BTree_insert_01_:
@@ -1234,7 +1234,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/01/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/01/fpga.sv;"
 
 
   Yosys_BTree_insert_02_:
@@ -1283,7 +1283,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/02/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/02/fpga.sv;"
 
 
   Yosys_BTree_insert_03_:
@@ -1332,7 +1332,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/03/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/03/fpga.sv;"
 
 
   Yosys_BTree_insert_04_:
@@ -1381,7 +1381,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/04/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/04/fpga.sv;"
 
 
   Yosys_BTree_insert_05_:
@@ -1430,7 +1430,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/05/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/05/fpga.sv;"
 
 
   Yosys_BTree_insert_06_:
@@ -1479,7 +1479,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/06/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/06/fpga.sv;"
 
 
   Yosys_BTree_insert_66_:
@@ -1528,7 +1528,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/BTree/insert/66/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/66/fpga.sv;"
 
 
   Yosys_ForIn_:
@@ -1577,7 +1577,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ForIn/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ForIn/fpga.sv;"
 
 
   Yosys_Free_:
@@ -1626,7 +1626,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Free/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Free/fpga.sv;"
 
 
   Yosys_In_:
@@ -1675,7 +1675,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/In/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/In/fpga.sv;"
 
 
   Yosys_InSize_:
@@ -1724,7 +1724,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/InSize/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/InSize/fpga.sv;"
 
 
   Yosys_JFalse_:
@@ -1773,7 +1773,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/JFalse/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/JFalse/fpga.sv;"
 
 
   Yosys_Jeq_:
@@ -1822,7 +1822,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Jeq/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jeq/fpga.sv;"
 
 
   Yosys_Jmp_:
@@ -1871,7 +1871,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Jmp/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jmp/fpga.sv;"
 
 
   Yosys_Mov_:
@@ -1920,7 +1920,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Mov/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov/fpga.sv;"
 
 
   Yosys_Mov2_:
@@ -1969,7 +1969,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Mov2/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov2/fpga.sv;"
 
 
   Yosys_MoveLong_1_:
@@ -2018,7 +2018,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/MoveLong_1/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_1/fpga.sv;"
 
 
   Yosys_MoveLong_2_:
@@ -2067,7 +2067,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/MoveLong_2/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_2/fpga.sv;"
 
 
   Yosys_Not_:
@@ -2116,7 +2116,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Not/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Not/fpga.sv;"
 
 
   Yosys_Pop_:
@@ -2165,7 +2165,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Pop/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Pop/fpga.sv;"
 
 
   Yosys_Push_:
@@ -2214,7 +2214,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Push/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push/fpga.sv;"
 
 
   Yosys_ShiftLeft_:
@@ -2263,7 +2263,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ShiftLeft/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftLeft/fpga.sv;"
 
 
   Yosys_ShiftRight_:
@@ -2312,7 +2312,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/ShiftRight/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftRight/fpga.sv;"
 
 
   Yosys_Shift_up_:
@@ -2361,7 +2361,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Shift_up/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up/fpga.sv;"
 
 
   Yosys_Shift_up_2_:
@@ -2410,7 +2410,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Shift_up_2/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up_2/fpga.sv;"
 
 
   Yosys_Subtract_:
@@ -2459,5 +2459,5 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog verilog/fpga/tests/Subtract/fpga.sv;"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Subtract/fpga.sv;"
 
