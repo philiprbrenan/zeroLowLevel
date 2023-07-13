@@ -555,7 +555,6 @@ module fpga                                                                     
       inMem[106] = 107;
     end
     else begin
-      steps = steps + 1;
       case(ip)
 
           0 :
@@ -19353,6 +19352,7 @@ module fpga                                                                     
         end
       endcase
       success = outMem[0] == 1 && outMem[1] == 2 && outMem[2] == 3 && outMem[3] == 4 && outMem[4] == 5 && outMem[5] == 6 && outMem[6] == 7 && outMem[7] == 8 && outMem[8] == 9 && outMem[9] == 10 && outMem[10] == 11 && outMem[11] == 12 && outMem[12] == 13 && outMem[13] == 14 && outMem[14] == 15 && outMem[15] == 16 && outMem[16] == 17 && outMem[17] == 18 && outMem[18] == 19 && outMem[19] == 20 && outMem[20] == 21 && outMem[21] == 22 && outMem[22] == 23 && outMem[23] == 24 && outMem[24] == 25 && outMem[25] == 26 && outMem[26] == 27 && outMem[27] == 28 && outMem[28] == 29 && outMem[29] == 30 && outMem[30] == 31 && outMem[31] == 32 && outMem[32] == 33 && outMem[33] == 34 && outMem[34] == 35 && outMem[35] == 36 && outMem[36] == 37 && outMem[37] == 38 && outMem[38] == 39 && outMem[39] == 40 && outMem[40] == 41 && outMem[41] == 42 && outMem[42] == 43 && outMem[43] == 44 && outMem[44] == 45 && outMem[45] == 46 && outMem[46] == 47 && outMem[47] == 48 && outMem[48] == 49 && outMem[49] == 50 && outMem[50] == 51 && outMem[51] == 52 && outMem[52] == 53 && outMem[53] == 54 && outMem[54] == 55 && outMem[55] == 56 && outMem[56] == 57 && outMem[57] == 58 && outMem[58] == 59 && outMem[59] == 60 && outMem[60] == 61 && outMem[61] == 62 && outMem[62] == 63 && outMem[63] == 64 && outMem[64] == 65 && outMem[65] == 66 && outMem[66] == 67 && outMem[67] == 68 && outMem[68] == 69 && outMem[69] == 70 && outMem[70] == 71 && outMem[71] == 72 && outMem[72] == 73 && outMem[73] == 74 && outMem[74] == 75 && outMem[75] == 76 && outMem[76] == 77 && outMem[77] == 78 && outMem[78] == 79 && outMem[79] == 80 && outMem[80] == 81 && outMem[81] == 82 && outMem[82] == 83 && outMem[83] == 84 && outMem[84] == 85 && outMem[85] == 86 && outMem[86] == 87 && outMem[87] == 88 && outMem[88] == 89 && outMem[89] == 90 && outMem[90] == 91 && outMem[91] == 92 && outMem[92] == 93 && outMem[93] == 94 && outMem[94] == 95 && outMem[95] == 96 && outMem[96] == 97 && outMem[97] == 98 && outMem[98] == 99 && outMem[99] == 100 && outMem[100] == 101 && outMem[101] == 102 && outMem[102] == 103 && outMem[103] == 104 && outMem[104] == 105 && outMem[105] == 106 && outMem[106] == 107;
+      steps = steps + 1;
       finished = steps >  67460;
     end
   end
