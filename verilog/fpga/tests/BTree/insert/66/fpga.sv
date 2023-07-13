@@ -467,7 +467,7 @@ module fpga                                                                     
           2 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 3;
               heapClock = ~ heapClock;
         end
@@ -586,7 +586,7 @@ module fpga                                                                     
          17 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 18;
               heapClock = ~ heapClock;
         end
@@ -638,7 +638,7 @@ module fpga                                                                     
          24 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 25;
               heapClock = ~ heapClock;
         end
@@ -689,7 +689,7 @@ module fpga                                                                     
          30 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 31;
               heapClock = ~ heapClock;
         end
@@ -722,7 +722,7 @@ module fpga                                                                     
          34 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 35;
               heapClock = ~ heapClock;
         end
@@ -3040,7 +3040,7 @@ module fpga                                                                     
         378 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 379;
               heapClock = ~ heapClock;
         end
@@ -3091,7 +3091,7 @@ module fpga                                                                     
         384 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 385;
               heapClock = ~ heapClock;
         end
@@ -3124,7 +3124,7 @@ module fpga                                                                     
         388 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 389;
               heapClock = ~ heapClock;
         end
@@ -3265,7 +3265,7 @@ module fpga                                                                     
         404 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 405;
               heapClock = ~ heapClock;
         end
@@ -3316,7 +3316,7 @@ module fpga                                                                     
         410 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 411;
               heapClock = ~ heapClock;
         end
@@ -3349,7 +3349,7 @@ module fpga                                                                     
         414 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 415;
               heapClock = ~ heapClock;
         end
@@ -3521,7 +3521,7 @@ module fpga                                                                     
         434 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 435;
               heapClock = ~ heapClock;
         end
@@ -3554,7 +3554,7 @@ module fpga                                                                     
         438 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 439;
               heapClock = ~ heapClock;
         end
@@ -4339,7 +4339,7 @@ module fpga                                                                     
         534 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 535;
               heapClock = ~ heapClock;
         end
@@ -5549,7 +5549,7 @@ module fpga                                                                     
         681 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 682;
               heapClock = ~ heapClock;
         end
@@ -5600,7 +5600,7 @@ module fpga                                                                     
         687 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 688;
               heapClock = ~ heapClock;
         end
@@ -5633,7 +5633,7 @@ module fpga                                                                     
         691 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 692;
               heapClock = ~ heapClock;
         end
@@ -5805,7 +5805,7 @@ module fpga                                                                     
         711 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 712;
               heapClock = ~ heapClock;
         end
@@ -12256,7 +12256,7 @@ module fpga                                                                     
        1727 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 1728;
               heapClock = ~ heapClock;
         end
@@ -12307,7 +12307,7 @@ module fpga                                                                     
        1733 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 1734;
               heapClock = ~ heapClock;
         end
@@ -12340,7 +12340,7 @@ module fpga                                                                     
        1737 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 1738;
               heapClock = ~ heapClock;
         end
@@ -15323,7 +15323,7 @@ module fpga                                                                     
        2195 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 2196;
               heapClock = ~ heapClock;
         end
@@ -16099,7 +16099,7 @@ module fpga                                                                     
        2302 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 2303;
               heapClock = ~ heapClock;
         end
@@ -16752,7 +16752,7 @@ module fpga                                                                     
        2396 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 2397;
               heapClock = ~ heapClock;
         end
