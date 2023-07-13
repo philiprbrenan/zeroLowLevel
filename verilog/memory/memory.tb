@@ -9,7 +9,7 @@ module MemoryTB();                                                              
 
   reg                   clock;                                                  // Clock to drive array operations
   reg [7:0]             action;                                                 // Operation to be performed on array
-  reg [ADDRESS_BITS -1:0] array, a1, a2;                                        // The number of the array to work on
+  reg [ADDRESS_BITS -1:0] array, a1, a2, a3;                                    // The number of the array to work on
   reg [INDEX_BITS -1:0] index;                                                  // Index within array
   reg [DATA_BITS  -1:0] in;                                                     // Input data
   reg [DATA_BITS  -1:0] out;                                                    // Output data
@@ -92,16 +92,15 @@ module MemoryTB();                                                              
     index = 4;          action = `Read;       step();  ok(out == 33,     "Up 15");
     index = 5;          action = `Read;       step();  ok(out == 55,     "Up 16");
 
-
     a1 = array; allocateArray(); a2 = array;
     index = 0; in = 60; action = `Write;      step();
-    index = 1; in = 61;                        step();
-    index = 2; in = 62;                        step();
-    index = 3; in = 63;                        step();
-    index = 4; in = 64;                        step();
-    index = 5; in = 65;                        step();
-    index = 6; in = 66;                        step();
-    index = 7; in = 67;                        step();
+    index = 1; in = 61;                       step();
+    index = 2; in = 62;                       step();
+    index = 3; in = 63;                       step();
+    index = 4; in = 64;                       step();
+    index = 5; in = 65;                       step();
+    index = 6; in = 66;                       step();
+    index = 7; in = 67;                       step();
                         action = `Size;       step();  ok(out == 8,      "Size MoveLong1");
     array = a1;
     index = 2;          action = `Long1;      step();
@@ -111,13 +110,13 @@ module MemoryTB();                                                              
     array = a2;
                         action = `Size;       step();  ok(out ==  8,     "Size MoveLong2");
     index = 0;          action = `Read;       step();  ok(out == 60,     "ML 0");
-    index = 1;                                 step();  ok(out == 61,     "ML 1");
-    index = 2;                                 step();  ok(out == 62,     "ML 2");
-    index = 3;                                 step();  ok(out == 11,     "ML 3");
-    index = 4;                                 step();  ok(out == 22,     "ML 4");
-    index = 5;                                 step();  ok(out == 65,     "ML 5");
-    index = 6;                                 step();  ok(out == 66,     "ML 6");
-    index = 7;                                 step();  ok(out == 67,     "ML 7");
+    index = 1;                                step();  ok(out == 61,     "ML 1");
+    index = 2;                                step();  ok(out == 62,     "ML 2");
+    index = 3;                                step();  ok(out == 11,     "ML 3");
+    index = 4;                                step();  ok(out == 22,     "ML 4");
+    index = 5;                                step();  ok(out == 65,     "ML 5");
+    index = 6;                                step();  ok(out == 66,     "ML 6");
+    index = 7;                                step();  ok(out == 67,     "ML 7");
 
     array = a2; in = 2; action = `Resize;     step();
                         action = `Size;       step();  ok(out ==  2,     "Resize1");
@@ -125,7 +124,7 @@ module MemoryTB();                                                              
                         action = `Size;       step();  ok(out ==  2,     "Resize2");
 
     array = a1;         action = `Free;       step();
-    allocateArray();                                    ok(array == a1,   "Reallocate");
+    allocateArray();                                   ok(array == a1,   "Reallocate");
                         action = `Size;       step();  ok(out   ==  0,   "Reallocate-Size");
                 in =11; action = `Push;       step();
                 in =22; action = `Push;       step();
@@ -145,21 +144,31 @@ module MemoryTB();                                                              
                         action = `NotLogical; step();  ok(out ==  0,     "NL0");
                         action = `NotLogical; step();  ok(out ==  1,     "NL1");
 
-    array = 3; index = 0; action = `Read; step(); ok(error == 10000020,  "Read error1");
-    array =a2; index = 7; action = `Read; step(); ok(error == 10000022,  "Read error2");
-    array = 3;            action = `Push; step(); ok(error == 10000120,  "Push error");
-    array = 3;            action = `Pop;  step(); ok(error == 10000130,  "Pop error");
+    array = 3; index = 0; action = `Read;     step(); ok(error == 10000020,  "Read error1");
+    array =a2; index = 7; action = `Read;     step(); ok(error == 10000022,  "Read error2");
+    array = 3;            action = `Push;     step(); ok(error == 10000120,  "Push error");
+    array = 3;            action = `Pop;      step(); ok(error == 10000130,  "Pop error");
 
 
     array = a2;
-               in = 8;  action = `Resize; step();
-                        action = `Size;   step(); ok(out ==  8, "Shift down size 8");
-    index = 3;          action = `Down;   step(); ok(out == 11, "Shift down out");
-                        action = `Size;   step(); ok(out ==  7, "Shift down size 7");
-                        action = `Read;   step(); ok(out == 22, "Shift down 3");
-    index = 2;          action = `Read;   step(); ok(out == 62, "Shift down 2");
+               in = 8;  action = `Resize;     step();
+                        action = `Size;       step(); ok(out ==  8, "Shift down size 8");
+    index = 3;          action = `Down;       step(); ok(out == 11, "Shift down out");
+                        action = `Size;       step(); ok(out ==  7, "Shift down size 7");
+                        action = `Read;       step(); ok(out == 22, "Shift down 3");
+    index = 2;          action = `Read;       step(); ok(out == 62, "Shift down 2");
+
+                        action = `Alloc;      step(); a3 = out; ok(out == 2, "Array 3");
+    array = a3;
+    index = 0; in = 70; action = `Write;      step();
+    index = 1; in = 71;                       step();
+    index = 2; in = 72;                       step();
+    index = 1;          action = `Read;       step(); ok(out == 71,  "Read array 3.1");
+                        action = `Free;       step();
+                        action = `Write;      step(); ok(error == 10000011,  "Write 3.1");
+                        action = `Read;       step(); ok(error == 10000021,  "Read  3.1");
 //$display("AAAA %d", error);
 //dump();
-    checkAllTestsPassed(66);
+    checkAllTestsPassed(70);
   end
 endmodule
