@@ -439,19 +439,18 @@ module fpga                                                                     
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
-//      ip             = 0;
-//      steps          = 0;
-//      inMemPos       = 0;
-//      outMemPos      = 0;
-//      finished       = 0;
-//      success        = 0;
+      ip             = 0;
+      steps          = 0;
+      inMemPos       = 0;
+      outMemPos      = 0;
+      finished       = 0;
+      success        = 0;
 
-//      inMem[0] = 33;
-//      inMem[1] = 22;
-//      inMem[2] = 11;
+      inMem[0] = 33;
+      inMem[1] = 22;
+      inMem[2] = 11;
     end
     else begin
-//      steps = steps + 1;
       case(ip)
 
           0 :
@@ -532,8 +531,9 @@ module fpga                                                                     
               ip = 11;
         end
       endcase
-      success = outMem[0] == 3 && outMem[1] == 33 && outMem[2] == 2 && outMem[3] == 22 && outMem[4] == 1 && outMem[5] == 11;
-      finished = steps >     31;
+      //success = outMem[0] == 3 && outMem[1] == 33 && outMem[2] == 2 && outMem[3] == 22 && outMem[4] == 1 && outMem[5] == 11;
+      //steps = steps + 1;
+      //finished = steps >     31;
     end
   end
 
