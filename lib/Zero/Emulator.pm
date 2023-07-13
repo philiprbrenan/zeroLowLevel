@@ -3796,12 +3796,12 @@ END
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
-      ip             = 0;
-      steps          = 0;
-      inMemPos       = 0;
-      outMemPos      = 0;
-      finished       = 0;
-      success        = 0;
+//      ip             = 0;
+//      steps          = 0;
+//      inMemPos       = 0;
+//      outMemPos      = 0;
+//      finished       = 0;
+//      success        = 0;
 
 END
 
@@ -3809,15 +3809,14 @@ END
     for my $i(keys @i)
      {my $I = $i[$i];
       push @c, <<END;
-      inMem[$i] = $I;
+//      inMem[$i] = $I;
 END
      }
-
 
     push @c, <<END;
     end
     else begin
-      steps = steps + 1;
+//      steps = steps + 1;
       case(ip)
 END
    }
