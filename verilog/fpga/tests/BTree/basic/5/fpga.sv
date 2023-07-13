@@ -467,7 +467,7 @@ module fpga                                                                     
           2 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 3;
               heapClock = ~ heapClock;
         end
@@ -554,7 +554,7 @@ module fpga                                                                     
          12 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 13;
               heapClock = ~ heapClock;
         end
@@ -605,7 +605,7 @@ module fpga                                                                     
          18 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 19;
               heapClock = ~ heapClock;
         end
@@ -638,7 +638,7 @@ module fpga                                                                     
          22 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 23;
               heapClock = ~ heapClock;
         end
@@ -779,7 +779,7 @@ module fpga                                                                     
          38 :
         begin                                                                   // array
           //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
               ip = 39;
               heapClock = ~ heapClock;
         end
