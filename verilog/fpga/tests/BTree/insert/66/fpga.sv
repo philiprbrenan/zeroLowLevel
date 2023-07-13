@@ -447,7 +447,6 @@ module fpga                                                                     
 
     end
     else begin
-      steps = steps + 1;
       case(ip)
 
           0 :
@@ -16739,6 +16738,7 @@ module fpga                                                                     
         end
       endcase
       success = outMem[0] == 0 && outMem[1] == 2 && outMem[2] == 4 && outMem[3] == 6 && outMem[4] == 8 && outMem[5] == 10 && outMem[6] == 12 && outMem[7] == 14 && outMem[8] == 16 && outMem[9] == 18 && outMem[10] == 20 && outMem[11] == 22 && outMem[12] == 24 && outMem[13] == 26 && outMem[14] == 28 && outMem[15] == 30 && outMem[16] == 32 && outMem[17] == 34 && outMem[18] == 36 && outMem[19] == 38 && outMem[20] == 40 && outMem[21] == 42 && outMem[22] == 44 && outMem[23] == 46 && outMem[24] == 48 && outMem[25] == 50 && outMem[26] == 52 && outMem[27] == 54 && outMem[28] == 56 && outMem[29] == 58 && outMem[30] == 60 && outMem[31] == 62 && outMem[32] == 64 && outMem[33] == 66 && outMem[34] == 68 && outMem[35] == 70 && outMem[36] == 72 && outMem[37] == 74 && outMem[38] == 76 && outMem[39] == 78 && outMem[40] == 80 && outMem[41] == 82 && outMem[42] == 84 && outMem[43] == 86 && outMem[44] == 88 && outMem[45] == 90 && outMem[46] == 92 && outMem[47] == 94 && outMem[48] == 96 && outMem[49] == 98 && outMem[50] == 100 && outMem[51] == 102 && outMem[52] == 104 && outMem[53] == 106 && outMem[54] == 108 && outMem[55] == 110 && outMem[56] == 112 && outMem[57] == 114 && outMem[58] == 116 && outMem[59] == 118 && outMem[60] == 120 && outMem[61] == 122 && outMem[62] == 124 && outMem[63] == 126 && outMem[64] == 128 && outMem[65] == 130 && outMem[66] == 2;
+      steps = steps + 1;
       finished = steps >  35917;
     end
   end
