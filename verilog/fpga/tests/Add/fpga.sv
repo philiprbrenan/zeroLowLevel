@@ -42,16 +42,7 @@ module fpga                                                                     
   integer i, j, k;                                                              // A useful counter
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
-    if (reset) begin
-      ip             = 0;
-      steps          = 0;
-      inMemPos       = 0;
-      outMemPos      = 0;
-      finished       = 0;
-      success        = 0;
-
-    end
-    else begin
+    begin
       case(ip)
           0 :
         begin                                                                   // start
@@ -64,5 +55,4 @@ module fpga                                                                     
       finished = steps >      5;
     end
   end
-
 endmodule
