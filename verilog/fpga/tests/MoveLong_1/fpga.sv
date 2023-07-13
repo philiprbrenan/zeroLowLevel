@@ -1005,39 +1005,7 @@ module fpga                                                                     
               ip = 77;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 0;
-      success  = success && outMem[1] == 1;
-      success  = success && outMem[2] == 2;
-      success  = success && outMem[3] == 3;
-      success  = success && outMem[4] == 4;
-      success  = success && outMem[5] == 5;
-      success  = success && outMem[6] == 6;
-      success  = success && outMem[7] == 7;
-      success  = success && outMem[8] == 100;
-      success  = success && outMem[9] == 101;
-      success  = success && outMem[10] == 102;
-      success  = success && outMem[11] == 103;
-      success  = success && outMem[12] == 104;
-      success  = success && outMem[13] == 105;
-      success  = success && outMem[14] == 106;
-      success  = success && outMem[15] == 107;
-      success  = success && outMem[16] == 0;
-      success  = success && outMem[17] == 1;
-      success  = success && outMem[18] == 2;
-      success  = success && outMem[19] == 3;
-      success  = success && outMem[20] == 4;
-      success  = success && outMem[21] == 5;
-      success  = success && outMem[22] == 6;
-      success  = success && outMem[23] == 7;
-      success  = success && outMem[24] == 100;
-      success  = success && outMem[25] == 101;
-      success  = success && outMem[26] == 4;
-      success  = success && outMem[27] == 5;
-      success  = success && outMem[28] == 6;
-      success  = success && outMem[29] == 105;
-      success  = success && outMem[30] == 106;
-      success  = success && outMem[31] == 107;
+      success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 2 && outMem[3] == 3 && outMem[4] == 4 && outMem[5] == 5 && outMem[6] == 6 && outMem[7] == 7 && outMem[8] == 100 && outMem[9] == 101 && outMem[10] == 102 && outMem[11] == 103 && outMem[12] == 104 && outMem[13] == 105 && outMem[14] == 106 && outMem[15] == 107 && outMem[16] == 0 && outMem[17] == 1 && outMem[18] == 2 && outMem[19] == 3 && outMem[20] == 4 && outMem[21] == 5 && outMem[22] == 6 && outMem[23] == 7 && outMem[24] == 100 && outMem[25] == 101 && outMem[26] == 4 && outMem[27] == 5 && outMem[28] == 6 && outMem[29] == 105 && outMem[30] == 106 && outMem[31] == 107;
       finished = steps >    410;
     end
   end
