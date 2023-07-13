@@ -469,7 +469,6 @@ module fpga                                                                     
       inMem[20] = 3;
     end
     else begin
-      steps = steps + 1;
       case(ip)
 
           0 :
@@ -15391,6 +15390,7 @@ module fpga                                                                     
         end
       endcase
       success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 22 && outMem[3] == 0 && outMem[4] == 1 && outMem[5] == 33;
+      steps = steps + 1;
       finished = steps >    880;
     end
   end
