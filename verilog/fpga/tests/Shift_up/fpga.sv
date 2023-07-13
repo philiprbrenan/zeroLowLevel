@@ -669,11 +669,7 @@ module fpga                                                                     
               ip = 28;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 99;
-      success  = success && outMem[1] == 0;
-      success  = success && outMem[2] == 1;
-      success  = success && outMem[3] == 2;
+      success = outMem[0] == 99 && outMem[1] == 0 && outMem[2] == 1 && outMem[3] == 2;
       finished = steps >     58;
     end
   end
