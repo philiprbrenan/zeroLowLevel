@@ -480,8 +480,7 @@ module fpga                                                                     
               ip = 4;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 2;
+      success = outMem[0] == 2;
       finished = steps >      5;
     end
   end
