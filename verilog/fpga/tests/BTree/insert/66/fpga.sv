@@ -17394,7 +17394,7 @@ module fpga                                                                     
             ip = 2490;
         end
       endcase
-      success  = 1;
+      success = ;
       finished = steps >  36159;
     end
   end
