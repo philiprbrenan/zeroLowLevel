@@ -1,16 +1,12 @@
-`define Reset        1  /* Zero all memory sizes                               */
-
 module Memory
  (input wire                    clock,                                          // Clock to drive array operations
   input wire[7:0]               action);                                         // Operation to be performed on array
 
   integer allocatedArrays;                                                      // Arrays allocated
-  integer freedArraysTop;                                                       // Top of the freed arrays stack
 
   always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
-      `Reset: begin                                                             // Reset
-        freedArraysTop = 0;                                                     // Free all arrays
+      1: begin                                                                  // Reset
         allocatedArrays = 0;
       end
     endcase
