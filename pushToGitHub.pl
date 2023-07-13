@@ -274,7 +274,7 @@ sub fpgaLowLevelTestsYosys                                                      
       if: \${{ always() }}
       run: |
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg $v; # synth_gowin -noflatten -top fpga -json $j"
+        yosys -d -Q -p "read_verilog -nomem2reg $v; synth_gowin -noflatten -nodffe -top fpga -json $j"
 
 END
    }
