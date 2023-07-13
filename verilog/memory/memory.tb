@@ -35,66 +35,66 @@ module MemoryTB();                                                              
 
   task allocateArray();
     begin
-       action = m.Alloc; step(); array = out;
+       action = `Alloc; step(); array = out;
     end
   endtask
 
   task dump();
     begin
-       action = m.Dump; step();
+       action = `Dump; step();
     end
   endtask
 
   initial begin                                                                 // Test the circular buffer
-    clock = 0;                     action = m.Reset; step();
+    clock = 0;                     action = `Reset; step();
 
     allocateArray();
-    index = 0; in = 11; action = m.Write;      step();
+    index = 0; in = 11; action = `Write;      step();
     index = 1; in = 22;                        step();
     index = 2; in = 33;                        step();
     index = 3; in = 44;                        step();
 
-    index = 2;          action = m.Read;       step();  ok(out == 33,     "Read");
-                        action = m.Size;       step();  ok(out == 4,      "Size");
-               in = 22; action = m.Index;      step();  ok(out == 2,      "Index");
-                        action = m.Less;       step();  ok(out == 1,      "Less");
-                        action = m.Greater;    step();  ok(out == 2,      "Greater");
-                        action = m.Dec;        step();
-                        action = m.Size;       step();  ok(out == 3,      "Dec Size");
-                        action = m.Inc;        step();
-                        action = m.Size;       step();  ok(out == 4,      "Inc Size");
-                        action = m.Pop;        step();  ok(out == 44,     "Pop");
-                        action = m.Size;       step();  ok(out == 3,      "Pop Size");
+    index = 2;          action = `Read;       step();  ok(out == 33,     "Read");
+                        action = `Size;       step();  ok(out == 4,      "Size");
+               in = 22; action = `Index;      step();  ok(out == 2,      "Index");
+                        action = `Less;       step();  ok(out == 1,      "Less");
+                        action = `Greater;    step();  ok(out == 2,      "Greater");
+                        action = `Dec;        step();
+                        action = `Size;       step();  ok(out == 3,      "Dec Size");
+                        action = `Inc;        step();
+                        action = `Size;       step();  ok(out == 4,      "Inc Size");
+                        action = `Pop;        step();  ok(out == 44,     "Pop");
+                        action = `Size;       step();  ok(out == 3,      "Pop Size");
 
-               in=55;   action = m.Push;       step();
-    index = 3;          action = m.Read;       step();  ok(out == 55,     "Read push");
+               in=55;   action = `Push;       step();
+    index = 3;          action = `Read;       step();  ok(out == 55,     "Read push");
 
-                        action = m.Size;       step();  ok(out == 4,      "Push Size");
-    index = 0;          action = m.Read;       step();  ok(out == 11,     "PreUp 0");
-    index = 1;          action = m.Read;       step();  ok(out == 22,     "PreUp 1");
-    index = 2;          action = m.Read;       step();  ok(out == 33,     "PreUp 2");
-    index = 3;          action = m.Read;       step();  ok(out == 55,     "PreUp 3");
+                        action = `Size;       step();  ok(out == 4,      "Push Size");
+    index = 0;          action = `Read;       step();  ok(out == 11,     "PreUp 0");
+    index = 1;          action = `Read;       step();  ok(out == 22,     "PreUp 1");
+    index = 2;          action = `Read;       step();  ok(out == 33,     "PreUp 2");
+    index = 3;          action = `Read;       step();  ok(out == 55,     "PreUp 3");
 
-    index = 0; in = 99; action = m.Up;         step();
-                        action = m.Size;       step();  ok(out ==  5,     "Up Size0");
-                        action = m.Read;       step();  ok(out == 99,     "Up 01");
-    index = 1;          action = m.Read;       step();  ok(out == 11,     "Up 02");
-    index = 2;          action = m.Read;       step();  ok(out == 22,     "Up 03");
-    index = 3;          action = m.Read;       step();  ok(out == 33,     "Up 04");
-    index = 4;          action = m.Read;       step();  ok(out == 55,     "Up 05");
+    index = 0; in = 99; action = `Up;         step();
+                        action = `Size;       step();  ok(out ==  5,     "Up Size0");
+                        action = `Read;       step();  ok(out == 99,     "Up 01");
+    index = 1;          action = `Read;       step();  ok(out == 11,     "Up 02");
+    index = 2;          action = `Read;       step();  ok(out == 22,     "Up 03");
+    index = 3;          action = `Read;       step();  ok(out == 33,     "Up 04");
+    index = 4;          action = `Read;       step();  ok(out == 55,     "Up 05");
 
-    index = 1; in = 88; action = m.Up;         step();
-                        action = m.Size;       step();  ok(out ==  6,     "Up Size1");
-    index = 0;          action = m.Read;       step();  ok(out == 99,     "Up 11");
-    index = 1;          action = m.Read;       step();  ok(out == 88,     "Up 12");
-    index = 2;          action = m.Read;       step();  ok(out == 11,     "Up 13");
-    index = 3;          action = m.Read;       step();  ok(out == 22,     "Up 14");
-    index = 4;          action = m.Read;       step();  ok(out == 33,     "Up 15");
-    index = 5;          action = m.Read;       step();  ok(out == 55,     "Up 16");
+    index = 1; in = 88; action = `Up;         step();
+                        action = `Size;       step();  ok(out ==  6,     "Up Size1");
+    index = 0;          action = `Read;       step();  ok(out == 99,     "Up 11");
+    index = 1;          action = `Read;       step();  ok(out == 88,     "Up 12");
+    index = 2;          action = `Read;       step();  ok(out == 11,     "Up 13");
+    index = 3;          action = `Read;       step();  ok(out == 22,     "Up 14");
+    index = 4;          action = `Read;       step();  ok(out == 33,     "Up 15");
+    index = 5;          action = `Read;       step();  ok(out == 55,     "Up 16");
 
 
     a1 = array; allocateArray(); a2 = array;
-    index = 0; in = 60; action = m.Write;      step();
+    index = 0; in = 60; action = `Write;      step();
     index = 1; in = 61;                        step();
     index = 2; in = 62;                        step();
     index = 3; in = 63;                        step();
@@ -102,15 +102,15 @@ module MemoryTB();                                                              
     index = 5; in = 65;                        step();
     index = 6; in = 66;                        step();
     index = 7; in = 67;                        step();
-                        action = m.Size;       step();  ok(out == 8,      "Size MoveLong1");
+                        action = `Size;       step();  ok(out == 8,      "Size MoveLong1");
     array = a1;
-    index = 2;          action = m.Long1;      step();
+    index = 2;          action = `Long1;      step();
     array = a2;
-    index = 3; in = 2;  action = m.Long2;      step();
+    index = 3; in = 2;  action = `Long2;      step();
 
     array = a2;
-                        action = m.Size;       step();  ok(out ==  8,     "Size MoveLong2");
-    index = 0;          action = m.Read;       step();  ok(out == 60,     "ML 0");
+                        action = `Size;       step();  ok(out ==  8,     "Size MoveLong2");
+    index = 0;          action = `Read;       step();  ok(out == 60,     "ML 0");
     index = 1;                                 step();  ok(out == 61,     "ML 1");
     index = 2;                                 step();  ok(out == 62,     "ML 2");
     index = 3;                                 step();  ok(out == 11,     "ML 3");
@@ -119,45 +119,45 @@ module MemoryTB();                                                              
     index = 6;                                 step();  ok(out == 66,     "ML 6");
     index = 7;                                 step();  ok(out == 67,     "ML 7");
 
-    array = a2; in = 2; action = m.Resize;     step();
-                        action = m.Size;       step();  ok(out ==  2,     "Resize1");
-    array = a2; in =22; action = m.Resize;     step();  ok(error == 10000144, "Resize 22");
-                        action = m.Size;       step();  ok(out ==  2,     "Resize2");
+    array = a2; in = 2; action = `Resize;     step();
+                        action = `Size;       step();  ok(out ==  2,     "Resize1");
+    array = a2; in =22; action = `Resize;     step();  ok(error == 10000144, "Resize 22");
+                        action = `Size;       step();  ok(out ==  2,     "Resize2");
 
-    array = a1;         action = m.Free;       step();
+    array = a1;         action = `Free;       step();
     allocateArray();                                    ok(array == a1,   "Reallocate");
-                        action = m.Size;       step();  ok(out   ==  0,   "Reallocate-Size");
-                in =11; action = m.Push;       step();
-                in =22; action = m.Push;       step();
-                in =33; action = m.Push;       step();
-    index = 1;  in = 2; action = m.AddAfter;   step();  ok(out == 22,     "Add after");
-                        action = m.Read;       step();  ok(out == 24,     "Add after 2");
-                        action = m.Add;        step();  ok(out == 26,     "Add");
-                        action = m.Subtract;   step();  ok(out == 24,     "Subtract");
-                        action = m.Write;      step();  ok(out ==  2,     "Write 10");
-                in = 2; action = m.ShiftLeft;  step();  ok(out ==  8,     "Shift left");
-                        action = m.ShiftRight; step();  ok(out ==  2,     "Shift right");
-                        action = m.Not;        step();  ok(out ==  65533, "Not");
-                in = 1; action = m.Write;      step();  ok(out ==  1,     "Write 11");
-                in = 2; action = m.Or;         step();  ok(out ==  3,     "Or");
-                in = 2; action = m.And;        step();  ok(out ==  2,     "And");
-                in = 3; action = m.Xor;        step();  ok(out ==  1,     "Xor");
-                        action = m.NotLogical; step();  ok(out ==  0,     "NL0");
-                        action = m.NotLogical; step();  ok(out ==  1,     "NL1");
+                        action = `Size;       step();  ok(out   ==  0,   "Reallocate-Size");
+                in =11; action = `Push;       step();
+                in =22; action = `Push;       step();
+                in =33; action = `Push;       step();
+    index = 1;  in = 2; action = `AddAfter;   step();  ok(out == 22,     "Add after");
+                        action = `Read;       step();  ok(out == 24,     "Add after 2");
+                        action = `Add;        step();  ok(out == 26,     "Add");
+                        action = `Subtract;   step();  ok(out == 24,     "Subtract");
+                        action = `Write;      step();  ok(out ==  2,     "Write 10");
+                in = 2; action = `ShiftLeft;  step();  ok(out ==  8,     "Shift left");
+                        action = `ShiftRight; step();  ok(out ==  2,     "Shift right");
+                        action = `Not;        step();  ok(out ==  65533, "Not");
+                in = 1; action = `Write;      step();  ok(out ==  1,     "Write 11");
+                in = 2; action = `Or;         step();  ok(out ==  3,     "Or");
+                in = 2; action = `And;        step();  ok(out ==  2,     "And");
+                in = 3; action = `Xor;        step();  ok(out ==  1,     "Xor");
+                        action = `NotLogical; step();  ok(out ==  0,     "NL0");
+                        action = `NotLogical; step();  ok(out ==  1,     "NL1");
 
-    array = 3; index = 0; action = m.Read; step(); ok(error == 10000020,  "Read error1");
-    array =a2; index = 7; action = m.Read; step(); ok(error == 10000022,  "Read error2");
-    array = 3;            action = m.Push; step(); ok(error == 10000120,  "Push error");
-    array = 3;            action = m.Pop;  step(); ok(error == 10000130,  "Pop error");
+    array = 3; index = 0; action = `Read; step(); ok(error == 10000020,  "Read error1");
+    array =a2; index = 7; action = `Read; step(); ok(error == 10000022,  "Read error2");
+    array = 3;            action = `Push; step(); ok(error == 10000120,  "Push error");
+    array = 3;            action = `Pop;  step(); ok(error == 10000130,  "Pop error");
 
 
     array = a2;
-               in = 8;  action = m.Resize; step();
-                        action = m.Size;   step(); ok(out ==  8, "Shift down size 8");
-    index = 3;          action = m.Down;   step(); ok(out == 11, "Shift down out");
-                        action = m.Size;   step(); ok(out ==  7, "Shift down size 7");
-                        action = m.Read;   step(); ok(out == 22, "Shift down 3");
-    index = 2;          action = m.Read;   step(); ok(out == 62, "Shift down 2");
+               in = 8;  action = `Resize; step();
+                        action = `Size;   step(); ok(out ==  8, "Shift down size 8");
+    index = 3;          action = `Down;   step(); ok(out == 11, "Shift down out");
+                        action = `Size;   step(); ok(out ==  7, "Shift down size 7");
+                        action = `Read;   step(); ok(out == 22, "Shift down 3");
+    index = 2;          action = `Read;   step(); ok(out == 62, "Shift down 2");
 //$display("AAAA %d", error);
 //dump();
     checkAllTestsPassed(66);
