@@ -894,9 +894,9 @@ module fpga                                                                     
               ip = 70;
         end
       endcase
-      //success = outMem[0] == 1 && outMem[1] == 3 && outMem[2] == 5 && outMem[3] == 9 && outMem[4] == 10 && outMem[5] == 2 && outMem[6] == 4 && outMem[7] == 5 && outMem[8] == 9 && outMem[9] == 10 && outMem[10] == 2 && outMem[11] == 4 && outMem[12] == 5 && outMem[13] == 9 && outMem[14] == 10 && outMem[15] == 2 && outMem[16] == 4 && outMem[17] == 6 && outMem[18] == 8 && outMem[19] == 10 && outMem[20] == 2 && outMem[21] == 4 && outMem[22] == 5 && outMem[23] == 7 && outMem[24] == 8;
-      //steps = steps + 1;
-      //finished = steps >    258;
+      success = outMem[0] == 1 && outMem[1] == 3 && outMem[2] == 5 && outMem[3] == 9 && outMem[4] == 10 && outMem[5] == 2 && outMem[6] == 4 && outMem[7] == 5 && outMem[8] == 9 && outMem[9] == 10 && outMem[10] == 2 && outMem[11] == 4 && outMem[12] == 5 && outMem[13] == 9 && outMem[14] == 10 && outMem[15] == 2 && outMem[16] == 4 && outMem[17] == 6 && outMem[18] == 8 && outMem[19] == 10 && outMem[20] == 2 && outMem[21] == 4 && outMem[22] == 5 && outMem[23] == 7 && outMem[24] == 8;
+      steps = steps + 1;
+      finished = steps >    258;
     end
   end
 
