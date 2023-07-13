@@ -2,6 +2,37 @@
 // Check access to unallocated arrays or elements
 // Check push overflow, pop underflow
 // Next Message 10000280
+`define Reset        1  /* Zero all memory sizes                               */
+`define Write        2  /* Write an element                                    */
+`define Read         3  /* Read an element                                     */
+`define Size         4  /* Size of array                                       */
+`define Inc          5  /* Increment size of array if possible                 */
+`define Dec          6  /* Decrement size of array if possible                 */
+`define Index        7  /* Index of element in array                           */
+`define Less         8  /* Elements of array less than in                      */
+`define Greater      9  /* Elements of array greater than in                   */
+`define Up          10  /* Move array up                                       */
+`define Down        11  /* Move array down                                     */
+`define Long1       12  /* Move long first step                                */
+`define Long2       13  /* Move long last  step                                */
+`define Push        14  /* Push if possible                                    */
+`define Pop         15  /* Pop if possible                                     */
+`define Dump        16  /* Dump                                                */
+`define Resize      17  /* Resize an array                                     */
+`define Alloc       18  /* Allocate a new array before using it                */
+`define Free        19  /* Free an array for reuse                             */
+`define Add         20  /* Add to an element returning the new value           */
+`define AddAfter    21  /* Add to an element returning the previous value      */
+`define Subtract    22  /* Subtract to an element returning the new value      */
+`define SubAfter    23  /* Subtract to an element returning the previous value */
+`define ShiftLeft   24  /* Shift left                                          */
+`define ShiftRight  25  /* Shift right                                         */
+`define NotLogical  26  /* Not - logical                                       */
+`define Not         27  /* Not - bitwise                                       */
+`define Or          28  /* Or                                                  */
+`define Xor         29  /* Xor                                                 */
+`define And         30  /* And                                                 */
+
 module Memory
 #(parameter integer ADDRESS_BITS =  8,                                          // Number of bits in an address
   parameter integer INDEX_BITS   =  3,                                          // Bits in in an index
@@ -16,37 +47,6 @@ module Memory
 
   parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
   parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
-
-  parameter integer Reset       =  1;                                           // Zero all memory sizes
-  parameter integer Write       =  2;                                           // Write an element
-  parameter integer Read        =  3;                                           // Read an element
-  parameter integer Size        =  4;                                           // Size of array
-  parameter integer Inc         =  5;                                           // Increment size of array if possible
-  parameter integer Dec         =  6;                                           // Decrement size of array if possible
-  parameter integer Index       =  7;                                           // Index of element in array
-  parameter integer Less        =  8;                                           // Elements of array less than in
-  parameter integer Greater     =  9;                                           // Elements of array greater than in
-  parameter integer Up          = 10;                                           // Move array up
-  parameter integer Down        = 11;                                           // Move array down
-  parameter integer Long1       = 12;                                           // Move long first step
-  parameter integer Long2       = 13;                                           // Move long last  step
-  parameter integer Push        = 14;                                           // Push if possible
-  parameter integer Pop         = 15;                                           // Pop if possible
-  parameter integer Dump        = 16;                                           // Dump
-  parameter integer Resize      = 17;                                           // Resize an array
-  parameter integer Alloc       = 18;                                           // Allocate a new array before using it
-  parameter integer Free        = 19;                                           // Free an array for reuse
-  parameter integer Add         = 20;                                           // Add to an element returning the new value
-  parameter integer AddAfter    = 21;                                           // Add to an element returning the previous value
-  parameter integer Subtract    = 22;                                           // Subtract to an element returning the new value
-  parameter integer SubAfter    = 23;                                           // Subtract to an element returning the previous value
-  parameter integer ShiftLeft   = 24;                                           // Shift left
-  parameter integer ShiftRight  = 25;                                           // Shift right
-  parameter integer NotLogical  = 26;                                           // Not - logical
-  parameter integer Not         = 27;                                           // Not - bitwise
-  parameter integer Or          = 28;                                           // Or
-  parameter integer Xor         = 29;                                           // Xor
-  parameter integer And         = 30;                                           // And
 
   reg [DATA_BITS   -1:0] memory     [ARRAYS-1:0][ARRAY_LENGTH-1:0];             // Memory containing arrays in fixed blocks
   reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
@@ -89,18 +89,20 @@ module Memory
   task dump;                                                                    // Dump some memory
     begin
       $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
-      for(i = 0; i < ARRAY_LENGTH; i = i + 1) $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+      for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+        $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+      end
     end
   endtask
 
-  always @(clock) begin                                                         // Each transition
+  always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
-      Reset: begin                                                              // Reset
+      `Reset: begin                                                             // Reset
         freedArraysTop = 0;                                                     // Free all arrays
         allocatedArrays = 0;
       end
 
-      Write: begin                                                              // Write
+      `Write: begin                                                             // Write
         checkWriteable(10000010);
         if (!error) begin
           memory[array][index] = in;
@@ -111,21 +113,21 @@ module Memory
         end
       end
 
-      Read: begin                                                               // Read
+      `Read: begin                                                              // Read
         checkReadable(10000020);
         if (!error) begin
           out = memory[array][index];
         end
       end
 
-      Size: begin                                                               // Size
+      `Size: begin                                                              // Size
         checkWriteable(10000030);
         if (!error) begin
           out = arraySizes[array];
         end
       end
 
-      Dec: begin                                                                // Decrement
+      `Dec: begin                                                               // Decrement
         checkWriteable(10000040);
         if (!error) begin
           if (arraySizes[array] > 0) arraySizes[array] = arraySizes[array] - 1;
@@ -135,7 +137,7 @@ module Memory
         end
       end
 
-      Inc: begin                                                                // Increment
+      `Inc: begin                                                               // Increment
         checkWriteable(10000050);
         if (!error) begin
           if (arraySizes[array] < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;
@@ -145,7 +147,7 @@ module Memory
         end
       end
 
-      Index: begin                                                              // Index
+      `Index: begin                                                             // Index
         checkWriteable(10000060);
         if (!error) begin
           result = 0;
@@ -158,7 +160,7 @@ module Memory
         end
       end
 
-      Less: begin                                                               // Count less
+      `Less: begin                                                              // Count less
         checkWriteable(10000070);
         if (!error) begin
           result = 0;
@@ -171,7 +173,7 @@ module Memory
         end
       end
 
-      Greater: begin                                                            // Count greater
+      `Greater: begin                                                           // Count greater
         checkWriteable(10000080);
         if (!error) begin
           result = 0;
@@ -184,7 +186,7 @@ module Memory
         end
       end
 
-      Down: begin                                                               // Down
+      `Down: begin                                                              // Down
         checkWriteable(10000270);
         if (!error) begin
           size   = arraySizes[array];
@@ -202,7 +204,7 @@ module Memory
         end
       end
 
-      Up: begin                                                                 // Up
+      `Up: begin                                                                // Up
         checkWriteable(10000090);
         if (!error) begin
           size   = arraySizes[array];
@@ -217,7 +219,7 @@ module Memory
         end
       end
 
-      Long1: begin                                                              // Move long start
+      `Long1: begin                                                             // Move long start
         checkReadable(10000100);
         if (!error) begin
           moveLongStartArray = array;                                           // Record source
@@ -225,7 +227,7 @@ module Memory
         end
       end
 
-      Long2: begin                                                              // Move long finish
+      `Long2: begin                                                             // Move long finish
         checkWriteable(10000110);
         if (!error) begin
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                         // Copy from source to target
@@ -237,7 +239,7 @@ module Memory
         end
       end
 
-      Push: begin                                                               // Push
+      `Push: begin                                                              // Push
         checkWriteable(10000120);
         if (!error) begin
           if (arraySizes[array] < ARRAY_LENGTH) begin
@@ -250,7 +252,7 @@ module Memory
         end
       end
 
-      Pop: begin                                                                // Pop
+      `Pop: begin                                                               // Pop
         checkWriteable(10000130);
         if (!error) begin
           if (arraySizes[array] > 0) begin
@@ -263,11 +265,11 @@ module Memory
         end
       end
 
-      Dump: begin                                                               // Dump
+      `Dump: begin                                                              // Dump
         dump();
       end
 
-      Resize: begin                                                             // Resize
+      `Resize: begin                                                            // Resize
         checkWriteable(10000140);
         if (!error) begin
           if (in <= ARRAY_LENGTH) arraySizes[array] = in;
@@ -277,7 +279,7 @@ module Memory
         end
       end
 
-      Alloc: begin                                                              // Allocate an array
+      `Alloc: begin                                                             // Allocate an array
         if (freedArraysTop > 0) begin                                           // Reuse a freed array
           freedArraysTop = freedArraysTop - 1;
           result = freedArrays[freedArraysTop];
@@ -294,7 +296,7 @@ module Memory
         out = result;
       end
 
-      Free: begin                                                               // Free an array
+      `Free: begin                                                              // Free an array
         checkWriteable(10000150);
         if (!error) begin
           freedArrays[freedArraysTop] = array;                                  // Relies on the user not re freeing a freed array - we should probably hve another array to prevent this
@@ -303,14 +305,15 @@ module Memory
         end
       end
 
-      Add: begin                                                                // Add to an element
+      `Add: begin                                                               // Add to an element
         checkReadable(10000160);
         if (!error) begin
           memory[array][index] = memory[array][index] + in;
           out = memory[array][index];
         end
       end
-      AddAfter: begin                                                           // Add to an element after putting the content of the element on out
+
+      `AddAfter: begin                                                          // Add to an element after putting the content of the element on out
         checkReadable(10000170);
         if (!error) begin
         out = memory[array][index];
@@ -318,14 +321,15 @@ module Memory
         end
       end
 
-      Subtract: begin                                                           // Subtract from an element
+      `Subtract: begin                                                          // Subtract from an element
         checkReadable(10000180);
         if (!error) begin
           memory[array][index] = memory[array][index] - in;
           out = memory[array][index];
         end
       end
-      SubAfter: begin                                                           // Subtract from an element after putting the content of the element on out
+
+      `SubAfter: begin                                                          // Subtract from an element after putting the content of the element on out
         checkReadable(10000190);
         if (!error) begin
           out = memory[array][index];
@@ -333,50 +337,55 @@ module Memory
         end
       end
 
-      ShiftLeft: begin                                                          // Shift left
+      `ShiftLeft: begin                                                         // Shift left
         checkReadable(10000200);
         if (!error) begin
           memory[array][index] = memory[array][index] << in;
           out = memory[array][index];
         end
       end
-      ShiftRight: begin                                                         // Shift right
+
+      `ShiftRight: begin                                                        // Shift right
         checkReadable(10000210);
         if (!error) begin
           memory[array][index] = memory[array][index] >> in;
           out = memory[array][index];
         end
       end
-      NotLogical: begin                                                         // Not logical
+
+      `NotLogical: begin                                                        // Not logical
         checkReadable(10000220);
         if (!error) begin
-          if (memory[array][index] == 0) memory[array][index] = 1;
-          else                           memory[array][index] = 0;
+          memory[array][index] = !memory[array][index];
           out = memory[array][index];
         end
       end
-      Not: begin                                                                // Not
+
+      `Not: begin                                                               // Not
         checkReadable(10000230);
         if (!error) begin
           memory[array][index] = ~memory[array][index];
           out = memory[array][index];
         end
       end
-      Or: begin                                                                 // Or
+
+      `Or: begin                                                                // Or
         checkReadable(10000240);
         if (!error) begin
           memory[array][index] = memory[array][index] | in;
           out = memory[array][index];
         end
       end
-      Xor: begin                                                                // Xor
+
+      `Xor: begin                                                               // Xor
         checkReadable(10000250);
         if (!error) begin
           memory[array][index] = memory[array][index] ^ in;
           out = memory[array][index];
         end
       end
-      And: begin                                                                // And
+
+      `And: begin                                                               // And
         checkReadable(10000260);
         if (!error) begin
           memory[array][index] = memory[array][index] & in;
