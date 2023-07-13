@@ -558,9 +558,9 @@ module fpga                                                                     
               ip = 13;
         end
       endcase
-      //success = outMem[0] == 2;
-      //steps = steps + 1;
-      //finished = steps >     14;
+      success = outMem[0] == 2;
+      steps = steps + 1;
+      finished = steps >     14;
     end
   end
 
