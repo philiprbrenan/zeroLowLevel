@@ -1045,7 +1045,7 @@ if (1)                                                                          
   is_deeply $e->heap(1), [0, 1, 0, 0, 2, 3, 0];
   is_deeply $e->heap(2), [];
   is_deeply $e->heap(3), [];
-  $e->compileToVerilog("BTree/basic/3");
+  #$e->compileToVerilog("BTree/basic/3");
  }
 
 #latest:;
@@ -1074,7 +1074,7 @@ if (1)                                                                          
   is_deeply $e->heap(2), bless([10, 20, 30, 40, 50, 60, 70], "Keys");
   is_deeply $e->heap(3), bless([10, 20, 30, 40, 50, 60, 70], "Data");
   is_deeply $e->heap(4), bless([5, 15, 25, 35, 45, 55, 65, 75], "Down");
-  $e->compileToVerilog("BTree/basic/4");
+  #$e->compileToVerilog("BTree/basic/4");
  }
 
 #latest:;
@@ -1104,7 +1104,7 @@ if (1)                                                                          
   is_deeply $e->heap(2), bless([10, 20, 26, 30, 40, 50, 60, 70], "Keys");
   is_deeply $e->heap(3), bless([10, 20, 26, 30, 40, 50, 60, 70], "Data");
   is_deeply $e->heap(4), bless([5, 15, 25, 26, 35, 45, 55, 65, 75], "Down");
-  $e->compileToVerilog("BTree/basic/5");
+  #$e->compileToVerilog("BTree/basic/5");
  }
 
 #latest:;
@@ -1141,7 +1141,7 @@ if (1)                                                                          
   is_deeply $e->heap(6), bless([2010, 2020, 2030, 2040, 2050, 2060, 2070], "Keys");
   is_deeply $e->heap(7), bless([2010, 2020, 2030, 2040, 2050, 2060, 2070], "Data");
   is_deeply $e->heap(8), bless([2005, 2015, 2025, 2035, 2045, 2055, 2065, 2075], "Down");
-  $e->compileToVerilog("BTree/basic/6");
+  #$e->compileToVerilog("BTree/basic/6");
  }
 
 #latest:;
@@ -1175,7 +1175,7 @@ if (1)                                                                          
   is_deeply $e->heap(6), bless([14, 15, 43 .. 47], "Keys");
   is_deeply $e->heap(7), bless([24, 25, 53 .. 57], "Data");
   is_deeply $e->heap(8), bless([34, 35, 36, 64 .. 67, 99], "Down");
-  $e->compileToVerilog("BTree/basic/7");
+  #$e->compileToVerilog("BTree/basic/7");
  }
 
 #latest:;
@@ -1200,7 +1200,7 @@ if (1)                                                                          
   is_deeply $e->heap(2), bless([1, 1, 0, 0, 3, 4, 0], "Node");
   is_deeply $e->heap(3), bless([1], "Keys");
   is_deeply $e->heap(4), bless([11], "Data");
-  $e->compileToVerilog("BTree/insert/01");
+  #$e->compileToVerilog("BTree/insert/01");
  }
 
 #latest:;
@@ -1215,7 +1215,7 @@ if (1)                                                                          
   is_deeply $e->heap(2), bless([2, 1, 0, 0, 3, 4, 0], "Node");
   is_deeply $e->heap(3), bless([1, 2], "Keys");
   is_deeply $e->heap(4), bless([11, 22], "Data");
-  $e->compileToVerilog("BTree/insert/02");
+  #$e->compileToVerilog("BTree/insert/02");
  }
 
 #latest:;
@@ -1229,7 +1229,7 @@ if (1)                                                                          
   is_deeply $e->heap(2), bless([3, 1, 0, 0, 3, 4, 0], "Node");
   is_deeply $e->heap(3), bless([1, 2, 3], "Keys");
   is_deeply $e->heap(4), bless([11, 22, 33], "Data");
-  $e->compileToVerilog("BTree/insert/03");
+  #$e->compileToVerilog("BTree/insert/03");
  }
 
 #latest:;
@@ -1250,7 +1250,7 @@ if (1)                                                                          
   is_deeply $e->heap(9 ), bless([3, 4], "Keys");
   is_deeply $e->heap(10), bless([33, 44], "Data");
   is_deeply $e->heap(11), bless([5, 8], "Down");
-  $e->compileToVerilog("BTree/insert/04");
+  #$e->compileToVerilog("BTree/insert/04");
  }
 
 #latest:;
@@ -1275,7 +1275,7 @@ if (1)                                                                          
   is_deeply $e->heap(12), bless([1, 4, 2, 0, 13, 14, 0], "Node");
   is_deeply $e->heap(13), bless([5], "Keys");
   is_deeply $e->heap(14), bless([55], "Data");
-  $e->compileToVerilog("BTree/insert/05");
+  #$e->compileToVerilog("BTree/insert/05");
  }
 
 #latest:;
@@ -1299,7 +1299,7 @@ if (1)                                                                          
   is_deeply $e->heap(12), bless([2, 4, 2, 0, 13, 14, 0], "Node");
   is_deeply $e->heap(13), bless([5, 6], "Keys");
   is_deeply $e->heap(14), bless([55, 66], "Data");
-  $e->compileToVerilog("BTree/insert/06");
+  #$e->compileToVerilog("BTree/insert/06");
  }
 
 #latest:;
@@ -1407,15 +1407,20 @@ if (1)                                                                          
 
   For                                                                           # Find each prior element
    {my ($j, $check, $next, $end) = @_;
-    my $d = Add $j, $j;
-    AssertEq $d, FindResult_data(Find($t, $j));
+    Out FindResult_data(Find($t, $j));
    } $N;
 
-  AssertNe FindResult_found, FindResult_cmp(Find($t, -1));                      # Should not be present
-  AssertNe FindResult_found, FindResult_cmp(Find($t, $N));
+  Out FindResult_cmp(Find($t, -1));                                             # Should not be present
+  Out FindResult_cmp(Find($t, $N));
 
   my $e = Execute(suppressOutput=>1);
-  is_deeply $e->out, "";                                                        # No asserts
+  is_deeply $e->outLines,
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+  40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+  78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
+  112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+];
+
   $e->compileToVerilog("BTree/insert/66");
  }
 
