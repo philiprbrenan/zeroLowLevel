@@ -3858,17 +3858,19 @@ END
   my $steps = sprintf "%6d", $exec->totalInstructions + 1;                      # The extra step is to allow the tests to be analyzed by the test bench
   push @c, <<END;                                                               # End of last sub sequence
       endcase
-      success  = 1;
 END
 
   if (1)                                                                        # Check output queue matches out expectations
    {my @o = $exec->outLines->@*;
+    my @b;
     for my $o(keys @o)
      {my $O = $o[$o];
-      push @c, <<END;
-      success  = success && outMem[$o] == $O;
-END
+      push @b, "outMem[$o] == $O";
      }
+    my $b = join " && ", @b;
+    push @c, <<END;
+      success = $b;
+END
    }
 
   push @c, <<END;                                                               # End of module
