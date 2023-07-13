@@ -438,16 +438,15 @@ module fpga                                                                     
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
-//      ip             = 0;
-//      steps          = 0;
-//      inMemPos       = 0;
-//      outMemPos      = 0;
-//      finished       = 0;
-//      success        = 0;
+      ip             = 0;
+      steps          = 0;
+      inMemPos       = 0;
+      outMemPos      = 0;
+      finished       = 0;
+      success        = 0;
 
     end
     else begin
-//      steps = steps + 1;
       case(ip)
 
           0 :
@@ -1005,8 +1004,9 @@ module fpga                                                                     
               ip = 77;
         end
       endcase
-      success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 2 && outMem[3] == 3 && outMem[4] == 4 && outMem[5] == 5 && outMem[6] == 6 && outMem[7] == 7 && outMem[8] == 100 && outMem[9] == 101 && outMem[10] == 102 && outMem[11] == 103 && outMem[12] == 104 && outMem[13] == 105 && outMem[14] == 106 && outMem[15] == 107 && outMem[16] == 0 && outMem[17] == 1 && outMem[18] == 2 && outMem[19] == 3 && outMem[20] == 4 && outMem[21] == 5 && outMem[22] == 6 && outMem[23] == 7 && outMem[24] == 100 && outMem[25] == 101 && outMem[26] == 4 && outMem[27] == 5 && outMem[28] == 6 && outMem[29] == 105 && outMem[30] == 106 && outMem[31] == 107;
-      finished = steps >    410;
+      //success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 2 && outMem[3] == 3 && outMem[4] == 4 && outMem[5] == 5 && outMem[6] == 6 && outMem[7] == 7 && outMem[8] == 100 && outMem[9] == 101 && outMem[10] == 102 && outMem[11] == 103 && outMem[12] == 104 && outMem[13] == 105 && outMem[14] == 106 && outMem[15] == 107 && outMem[16] == 0 && outMem[17] == 1 && outMem[18] == 2 && outMem[19] == 3 && outMem[20] == 4 && outMem[21] == 5 && outMem[22] == 6 && outMem[23] == 7 && outMem[24] == 100 && outMem[25] == 101 && outMem[26] == 4 && outMem[27] == 5 && outMem[28] == 6 && outMem[29] == 105 && outMem[30] == 106 && outMem[31] == 107;
+      //steps = steps + 1;
+      //finished = steps >    410;
     end
   end
 
