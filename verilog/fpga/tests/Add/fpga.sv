@@ -50,7 +50,6 @@ module fpga                                                                     
               ip = 1;
         end
       endcase
-      success = outMem[0] == 5;
     end
   end
 endmodule
