@@ -95,7 +95,7 @@ module Memory
     end
   endtask
 
-  always @(clock) begin                                                         // Each transition
+  always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
       `Reset: begin                                                             // Reset
         freedArraysTop = 0;                                                     // Free all arrays
@@ -356,8 +356,7 @@ module Memory
       `NotLogical: begin                                                        // Not logical
         checkReadable(10000220);
         if (!error) begin
-          if (memory[array][index] == 0) memory[array][index] = 1;
-          else                           memory[array][index] = 0;
+          memory[array][index] = !memory[array][index];
           out = memory[array][index];
         end
       end
