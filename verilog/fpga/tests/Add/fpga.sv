@@ -47,7 +47,6 @@ module fpga                                                                     
           0 :
         begin                                                                   // start
               heapClock = 0;                                                    // Ready for next operation
-              ip = 1;
         end
       endcase
     end
