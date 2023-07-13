@@ -1925,7 +1925,7 @@ module fpga                                                                     
               heapClock = ~ heapClock;
         end
       endcase
-      success  = 1;
+      success = ;
       finished = steps >    172;
     end
   end
