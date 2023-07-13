@@ -992,9 +992,7 @@ module fpga                                                                     
               ip = 62;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 3;
-      success  = success && outMem[1] == 5;
+      success = outMem[0] == 3 && outMem[1] == 5;
       finished = steps >     63;
     end
   end
