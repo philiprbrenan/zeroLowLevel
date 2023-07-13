@@ -16653,17 +16653,7 @@ module fpga                                                                     
               heapClock = ~ heapClock;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 0;
-      success  = success && outMem[1] == 1;
-      success  = success && outMem[2] == 2;
-      success  = success && outMem[3] == 3;
-      success  = success && outMem[4] == 4;
-      success  = success && outMem[5] == 5;
-      success  = success && outMem[6] == 6;
-      success  = success && outMem[7] == 7;
-      success  = success && outMem[8] == 8;
-      success  = success && outMem[9] == 9;
+      success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 2 && outMem[3] == 3 && outMem[4] == 4 && outMem[5] == 5 && outMem[6] == 6 && outMem[7] == 7 && outMem[8] == 8 && outMem[9] == 9;
       finished = steps >   3094;
     end
   end
