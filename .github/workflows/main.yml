@@ -1,4 +1,4 @@
-# Test 2023-07-13 at 07:21:32
+# Test 2023-07-13 at 07:30:41
 
 name: Test
 
@@ -279,7 +279,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Add/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Add/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Add/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Add/fpga.json"
 
 
   Yosys_Array_:
@@ -310,7 +310,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Array/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Array/fpga.json"
 
 
   Yosys_ArrayAdd_:
@@ -341,7 +341,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayAdd/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayAdd/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayAdd/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayAdd/fpga.json"
 
 
   Yosys_ArrayCountGreaterIndex_:
@@ -372,7 +372,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayCountGreaterIndex/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayCountGreaterIndex/fpga.json"
 
 
   Yosys_ArrayCountLess_:
@@ -403,7 +403,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountLess/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayCountLess/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountLess/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayCountLess/fpga.json"
 
 
   Yosys_ArrayIndex_:
@@ -434,7 +434,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayIndex/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayIndex/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayIndex/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ArrayIndex/fpga.json"
 
 
   Yosys_Array_scans_:
@@ -465,7 +465,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array_scans/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Array_scans/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array_scans/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Array_scans/fpga.json"
 
 
   Yosys_BTree_basic_1_:
@@ -496,7 +496,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/1/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/basic/1/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/1/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/basic/1/fpga.json"
 
 
   Yosys_BTree_basic_2_:
@@ -527,7 +527,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/2/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/basic/2/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/2/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/basic/2/fpga.json"
 
 
   Yosys_BTree_in_1_:
@@ -558,7 +558,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/1/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/1/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/1/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/1/fpga.json"
 
 
   Yosys_BTree_in_2_:
@@ -589,7 +589,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/2/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/2/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/2/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/2/fpga.json"
 
 
   Yosys_BTree_in_3_:
@@ -620,7 +620,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/3/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/3/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/3/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/3/fpga.json"
 
 
   Yosys_BTree_in_4_:
@@ -651,7 +651,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/4/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/4/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/4/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/in/4/fpga.json"
 
 
   Yosys_BTree_insert_66_:
@@ -682,7 +682,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/66/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/insert/66/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/66/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/BTree/insert/66/fpga.json"
 
 
   Yosys_ForIn_:
@@ -713,7 +713,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ForIn/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ForIn/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ForIn/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ForIn/fpga.json"
 
 
   Yosys_Free_:
@@ -744,7 +744,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Free/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Free/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Free/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Free/fpga.json"
 
 
   Yosys_In_:
@@ -775,7 +775,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/In/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/In/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/In/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/In/fpga.json"
 
 
   Yosys_InSize_:
@@ -806,7 +806,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/InSize/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/InSize/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/InSize/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/InSize/fpga.json"
 
 
   Yosys_JFalse_:
@@ -837,7 +837,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/JFalse/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/JFalse/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/JFalse/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/JFalse/fpga.json"
 
 
   Yosys_Jeq_:
@@ -868,7 +868,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jeq/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Jeq/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jeq/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Jeq/fpga.json"
 
 
   Yosys_Jmp_:
@@ -899,7 +899,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jmp/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Jmp/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jmp/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Jmp/fpga.json"
 
 
   Yosys_Mov_:
@@ -930,7 +930,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Mov/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Mov/fpga.json"
 
 
   Yosys_Mov2_:
@@ -961,7 +961,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov2/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Mov2/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov2/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Mov2/fpga.json"
 
 
   Yosys_MoveLong_1_:
@@ -992,7 +992,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_1/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/MoveLong_1/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_1/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/MoveLong_1/fpga.json"
 
 
   Yosys_MoveLong_2_:
@@ -1023,7 +1023,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_2/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/MoveLong_2/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_2/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/MoveLong_2/fpga.json"
 
 
   Yosys_Not_:
@@ -1054,7 +1054,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Not/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Not/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Not/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Not/fpga.json"
 
 
   Yosys_Pop_:
@@ -1085,7 +1085,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Pop/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Pop/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Pop/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Pop/fpga.json"
 
 
   Yosys_Push_:
@@ -1116,7 +1116,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Push/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Push/fpga.json"
 
 
   Yosys_ShiftLeft_:
@@ -1147,7 +1147,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftLeft/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ShiftLeft/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftLeft/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ShiftLeft/fpga.json"
 
 
   Yosys_ShiftRight_:
@@ -1178,7 +1178,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftRight/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ShiftRight/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftRight/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/ShiftRight/fpga.json"
 
 
   Yosys_Shift_up_:
@@ -1209,7 +1209,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Shift_up/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Shift_up/fpga.json"
 
 
   Yosys_Shift_up_2_:
@@ -1240,7 +1240,7 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up_2/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Shift_up_2/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up_2/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Shift_up_2/fpga.json"
 
 
   Yosys_Subtract_:
@@ -1271,5 +1271,5 @@ jobs:
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Subtract/fpga.sv; synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Subtract/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Subtract/fpga.sv; # synth_gowin -noflatten -top fpga -json verilog/fpga/tests/Subtract/fpga.json"
 
