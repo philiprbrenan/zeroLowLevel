@@ -1391,7 +1391,7 @@ if (1)
   $e->compileToVerilog("BTree/in/1");
  }
 
-#latest:;
+latest:;
 if (1)                                                                          ##New ##Insert ##Find ##FindResult_cmp
  {my $W = 3; my $N = 66;
 
