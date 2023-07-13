@@ -2,6 +2,37 @@
 // Check access to unallocated arrays or elements
 // Check push overflow, pop underflow
 // Next Message 10000280
+`define Reset        1  /* Zero all memory sizes                               */
+`define Write        2  /* Write an element                                    */
+`define Read         3  /* Read an element                                     */
+`define Size         4  /* Size of array                                       */
+`define Inc          5  /* Increment size of array if possible                 */
+`define Dec          6  /* Decrement size of array if possible                 */
+`define Index        7  /* Index of element in array                           */
+`define Less         8  /* Elements of array less than in                      */
+`define Greater      9  /* Elements of array greater than in                   */
+`define Up          10  /* Move array up                                       */
+`define Down        11  /* Move array down                                     */
+`define Long1       12  /* Move long first step                                */
+`define Long2       13  /* Move long last  step                                */
+`define Push        14  /* Push if possible                                    */
+`define Pop         15  /* Pop if possible                                     */
+`define Dump        16  /* Dump                                                */
+`define Resize      17  /* Resize an array                                     */
+`define Alloc       18  /* Allocate a new array before using it                */
+`define Free        19  /* Free an array for reuse                             */
+`define Add         20  /* Add to an element returning the new value           */
+`define AddAfter    21  /* Add to an element returning the previous value      */
+`define Subtract    22  /* Subtract to an element returning the new value      */
+`define SubAfter    23  /* Subtract to an element returning the previous value */
+`define ShiftLeft   24  /* Shift left                                          */
+`define ShiftRight  25  /* Shift right                                         */
+`define NotLogical  26  /* Not - logical                                       */
+`define Not         27  /* Not - bitwise                                       */
+`define Or          28  /* Or                                                  */
+`define Xor         29  /* Xor                                                 */
+`define And         30  /* And                                                 */
+
 module Memory
 #(parameter integer ADDRESS_BITS =  8,                                          // Number of bits in an address
   parameter integer INDEX_BITS   =  3,                                          // Bits in in an index
@@ -16,37 +47,6 @@ module Memory
 
   parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
   parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
-
-  parameter integer Reset       =  1;                                           // Zero all memory sizes
-  parameter integer Write       =  2;                                           // Write an element
-  parameter integer Read        =  3;                                           // Read an element
-  parameter integer Size        =  4;                                           // Size of array
-  parameter integer Inc         =  5;                                           // Increment size of array if possible
-  parameter integer Dec         =  6;                                           // Decrement size of array if possible
-  parameter integer Index       =  7;                                           // Index of element in array
-  parameter integer Less        =  8;                                           // Elements of array less than in
-  parameter integer Greater     =  9;                                           // Elements of array greater than in
-  parameter integer Up          = 10;                                           // Move array up
-  parameter integer Down        = 11;                                           // Move array down
-  parameter integer Long1       = 12;                                           // Move long first step
-  parameter integer Long2       = 13;                                           // Move long last  step
-  parameter integer Push        = 14;                                           // Push if possible
-  parameter integer Pop         = 15;                                           // Pop if possible
-  parameter integer Dump        = 16;                                           // Dump
-  parameter integer Resize      = 17;                                           // Resize an array
-  parameter integer Alloc       = 18;                                           // Allocate a new array before using it
-  parameter integer Free        = 19;                                           // Free an array for reuse
-  parameter integer Add         = 20;                                           // Add to an element returning the new value
-  parameter integer AddAfter    = 21;                                           // Add to an element returning the previous value
-  parameter integer Subtract    = 22;                                           // Subtract to an element returning the new value
-  parameter integer SubAfter    = 23;                                           // Subtract to an element returning the previous value
-  parameter integer ShiftLeft   = 24;                                           // Shift left
-  parameter integer ShiftRight  = 25;                                           // Shift right
-  parameter integer NotLogical  = 26;                                           // Not - logical
-  parameter integer Not         = 27;                                           // Not - bitwise
-  parameter integer Or          = 28;                                           // Or
-  parameter integer Xor         = 29;                                           // Xor
-  parameter integer And         = 30;                                           // And
 
   reg [DATA_BITS   -1:0] memory     [ARRAYS-1:0][ARRAY_LENGTH-1:0];             // Memory containing arrays in fixed blocks
   reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
@@ -66,11 +66,11 @@ module Memory
     begin
        error = 0;
        if (array >= allocatedArrays) begin
-         $display("Array has not been allocated, array %d", array);
+         //$display("Array has not been allocated, array %d", array);
          error = err;
        end
        if (!allocations[array]) begin
-         $display("Array has been freed, array %d", array);
+         //$display("Array has been freed, array %d", array);
          error = err + 1;
        end
     end
@@ -80,7 +80,7 @@ module Memory
     begin
        checkWriteable(err);
        if (index >= arraySizes[array]) begin
-         $display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
+         //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
          error = err + 2;
        end
     end
@@ -88,19 +88,21 @@ module Memory
 
   task dump;                                                                    // Dump some memory
     begin
-      $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
-      for(i = 0; i < ARRAY_LENGTH; i = i + 1) $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+      //$display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
+      for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+        //$display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+      end
     end
   endtask
 
-  always @(clock) begin                                                         // Each transition
+  always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
-      Reset: begin                                                              // Reset
+      `Reset: begin                                                             // Reset
         freedArraysTop = 0;                                                     // Free all arrays
         allocatedArrays = 0;
       end
 
-      Write: begin                                                              // Write
+      `Write: begin                                                             // Write
         checkWriteable(10000010);
         if (!error) begin
           memory[array][index] = in;
@@ -111,80 +113,80 @@ module Memory
         end
       end
 
-      Read: begin                                                               // Read
+      `Read: begin                                                              // Read
         checkReadable(10000020);
         if (!error) begin
           out = memory[array][index];
         end
       end
 
-      Size: begin                                                               // Size
+      `Size: begin                                                              // Size
         checkWriteable(10000030);
         if (!error) begin
           out = arraySizes[array];
         end
       end
 
-      Dec: begin                                                                // Decrement
+      `Dec: begin                                                               // Decrement
         checkWriteable(10000040);
         if (!error) begin
           if (arraySizes[array] > 0) arraySizes[array] = arraySizes[array] - 1;
           else begin
-            $display("Attempt to decrement empty array, array %d", array); error = 10000044;
+            //$display("Attempt to decrement empty array, array %d", array); error = 10000044;
           end
         end
       end
 
-      Inc: begin                                                                // Increment
+      `Inc: begin                                                               // Increment
         checkWriteable(10000050);
         if (!error) begin
           if (arraySizes[array] < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;
           else begin
-            $display("Attempt to decrement full array, array %d", array);  error = 10000054;
+            //$display("Attempt to decrement full array, array %d", array);  error = 10000054;
           end
         end
       end
 
-      Index: begin                                                              // Index
+      `Index: begin                                                             // Index
         checkWriteable(10000060);
         if (!error) begin
           result = 0;
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] == in) result = i + 1;
-//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
       end
 
-      Less: begin                                                               // Count less
+      `Less: begin                                                              // Count less
         checkWriteable(10000070);
         if (!error) begin
           result = 0;
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] < in) result = result + 1;
-//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
       end
 
-      Greater: begin                                                            // Count greater
+      `Greater: begin                                                           // Count greater
         checkWriteable(10000080);
         if (!error) begin
           result = 0;
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] > in) result = result + 1;
-//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
       end
 
-      Down: begin                                                               // Down
+      `Down: begin                                                              // Down
         checkWriteable(10000270);
         if (!error) begin
           size   = arraySizes[array];
@@ -202,7 +204,7 @@ module Memory
         end
       end
 
-      Up: begin                                                                 // Up
+      `Up: begin                                                                // Up
         checkWriteable(10000090);
         if (!error) begin
           size   = arraySizes[array];
@@ -217,7 +219,7 @@ module Memory
         end
       end
 
-      Long1: begin                                                              // Move long start
+      `Long1: begin                                                             // Move long start
         checkReadable(10000100);
         if (!error) begin
           moveLongStartArray = array;                                           // Record source
@@ -225,7 +227,7 @@ module Memory
         end
       end
 
-      Long2: begin                                                              // Move long finish
+      `Long2: begin                                                             // Move long finish
         checkWriteable(10000110);
         if (!error) begin
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                         // Copy from source to target
@@ -237,7 +239,7 @@ module Memory
         end
       end
 
-      Push: begin                                                               // Push
+      `Push: begin                                                              // Push
         checkWriteable(10000120);
         if (!error) begin
           if (arraySizes[array] < ARRAY_LENGTH) begin
@@ -245,12 +247,12 @@ module Memory
             arraySizes[array] = arraySizes[array] + 1;
           end
           else begin
-            $display("Attempt to push to full array, array %d, value %d", array, in);  error = 10000124;
+            //$display("Attempt to push to full array, array %d, value %d", array, in);  error = 10000124;
           end
         end
       end
 
-      Pop: begin                                                                // Pop
+      `Pop: begin                                                               // Pop
         checkWriteable(10000130);
         if (!error) begin
           if (arraySizes[array] > 0) begin
@@ -258,26 +260,26 @@ module Memory
             out = memory[array][arraySizes[array]];
           end
           else begin
-            $display("Attempt to pop empty array, array %d", array); error = 10000134;
+            //$display("Attempt to pop empty array, array %d", array); error = 10000134;
           end
         end
       end
 
-      Dump: begin                                                               // Dump
+      `Dump: begin                                                              // Dump
         dump();
       end
 
-      Resize: begin                                                             // Resize
+      `Resize: begin                                                            // Resize
         checkWriteable(10000140);
         if (!error) begin
           if (in <= ARRAY_LENGTH) arraySizes[array] = in;
           else begin
-            $display("Attempt to make an array too large, array %d, max %d, size %d", array, ARRAY_LENGTH, in); error = 10000144;
+            //$display("Attempt to make an array too large, array %d, max %d, size %d", array, ARRAY_LENGTH, in); error = 10000144;
           end
         end
       end
 
-      Alloc: begin                                                              // Allocate an array
+      `Alloc: begin                                                             // Allocate an array
         if (freedArraysTop > 0) begin                                           // Reuse a freed array
           freedArraysTop = freedArraysTop - 1;
           result = freedArrays[freedArraysTop];
@@ -287,14 +289,14 @@ module Memory
           allocatedArrays = allocatedArrays + 1;
         end
         else begin
-          $display("Out of memory, cannot allocate a new array"); error = 10000270;
+          //$display("Out of memory, cannot allocate a new array"); error = 10000270;
         end
         allocations[result] = 1;                                                // Allocated
         arraySizes[result] = 0;                                                 // Empty array
         out = result;
       end
 
-      Free: begin                                                               // Free an array
+      `Free: begin                                                              // Free an array
         checkWriteable(10000150);
         if (!error) begin
           freedArrays[freedArraysTop] = array;                                  // Relies on the user not re freeing a freed array - we should probably hve another array to prevent this
@@ -303,14 +305,15 @@ module Memory
         end
       end
 
-      Add: begin                                                                // Add to an element
+      `Add: begin                                                               // Add to an element
         checkReadable(10000160);
         if (!error) begin
           memory[array][index] = memory[array][index] + in;
           out = memory[array][index];
         end
       end
-      AddAfter: begin                                                           // Add to an element after putting the content of the element on out
+
+      `AddAfter: begin                                                          // Add to an element after putting the content of the element on out
         checkReadable(10000170);
         if (!error) begin
         out = memory[array][index];
@@ -318,14 +321,15 @@ module Memory
         end
       end
 
-      Subtract: begin                                                           // Subtract from an element
+      `Subtract: begin                                                          // Subtract from an element
         checkReadable(10000180);
         if (!error) begin
           memory[array][index] = memory[array][index] - in;
           out = memory[array][index];
         end
       end
-      SubAfter: begin                                                           // Subtract from an element after putting the content of the element on out
+
+      `SubAfter: begin                                                          // Subtract from an element after putting the content of the element on out
         checkReadable(10000190);
         if (!error) begin
           out = memory[array][index];
@@ -333,50 +337,55 @@ module Memory
         end
       end
 
-      ShiftLeft: begin                                                          // Shift left
+      `ShiftLeft: begin                                                         // Shift left
         checkReadable(10000200);
         if (!error) begin
           memory[array][index] = memory[array][index] << in;
           out = memory[array][index];
         end
       end
-      ShiftRight: begin                                                         // Shift right
+
+      `ShiftRight: begin                                                        // Shift right
         checkReadable(10000210);
         if (!error) begin
           memory[array][index] = memory[array][index] >> in;
           out = memory[array][index];
         end
       end
-      NotLogical: begin                                                         // Not logical
+
+      `NotLogical: begin                                                        // Not logical
         checkReadable(10000220);
         if (!error) begin
-          if (memory[array][index] == 0) memory[array][index] = 1;
-          else                           memory[array][index] = 0;
+          memory[array][index] = !memory[array][index];
           out = memory[array][index];
         end
       end
-      Not: begin                                                                // Not
+
+      `Not: begin                                                               // Not
         checkReadable(10000230);
         if (!error) begin
           memory[array][index] = ~memory[array][index];
           out = memory[array][index];
         end
       end
-      Or: begin                                                                 // Or
+
+      `Or: begin                                                                // Or
         checkReadable(10000240);
         if (!error) begin
           memory[array][index] = memory[array][index] | in;
           out = memory[array][index];
         end
       end
-      Xor: begin                                                                // Xor
+
+      `Xor: begin                                                               // Xor
         checkReadable(10000250);
         if (!error) begin
           memory[array][index] = memory[array][index] ^ in;
           out = memory[array][index];
         end
       end
-      And: begin                                                                // And
+
+      `And: begin                                                               // And
         checkReadable(10000260);
         if (!error) begin
           memory[array][index] = memory[array][index] & in;
@@ -435,11 +444,6 @@ module fpga                                                                     
       finished       = 0;
       success        = 0;
 
-      if (0 && 0) begin                                                  // Clear memory
-        for(i = 0; i < NHeap;   i = i + 1)    heapMem[i] = 0;
-        for(i = 0; i < NLocal;  i = i + 1)   localMem[i] = 0;
-        for(i = 0; i < NArrays; i = i + 1) arraySizes[i] = 0;
-      end
     end
     else begin
       steps = steps + 1;
@@ -447,186 +451,146 @@ module fpga                                                                     
 
           0 :
         begin                                                                   // start
-if (0) begin
-  $display("AAAA %4d %4d start", steps, ip);
-end
+          //$display("AAAA %4d %4d start", steps, ip);
               heapClock = 0;                                                    // Ready for next operation
               ip = 1;
         end
 
           1 :
         begin                                                                   // start2
-if (0) begin
-  $display("AAAA %4d %4d start2", steps, ip);
-end
-              heapAction = heap.Reset;                                          // Ready for next operation
+          //$display("AAAA %4d %4d start2", steps, ip);
+              heapAction = `Reset;                                          // Ready for next operation
               ip = 2;
               heapClock = ~ heapClock;
         end
 
           2 :
         begin                                                                   // array
-if (0) begin
-  $display("AAAA %4d %4d array", steps, ip);
-end
-              heapAction = heap.Alloc;
+          //$display("AAAA %4d %4d array", steps, ip);
+              heapAction = `heapAlloc;
               ip = 3;
               heapClock = ~ heapClock;
         end
 
           3 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[0] = heapOut;
               ip = 4;
         end
 
           4 :
         begin                                                                   // array
-if (0) begin
-  $display("AAAA %4d %4d array", steps, ip);
-end
-              heapAction = heap.Alloc;
+          //$display("AAAA %4d %4d array", steps, ip);
+              heapAction = `heapAlloc;
               ip = 5;
               heapClock = ~ heapClock;
         end
 
           5 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[1] = heapOut;
               ip = 6;
         end
 
           6 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 7;
         end
 
           7 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[2] = 0;
               ip = 8;
         end
 
           8 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 9;
         end
 
           9 :
         begin                                                                   // jGe
-if (0) begin
-  $display("AAAA %4d %4d jGe", steps, ip);
-end
+          //$display("AAAA %4d %4d jGe", steps, ip);
               ip = localMem[2] >= 8 ? 18 : 10;
         end
 
          10 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[16] = localMem[2];
               ip = 11;
         end
 
          11 :
         begin                                                                   // movWrite1
-if (0) begin
-  $display("AAAA %4d %4d movWrite1", steps, ip);
-end
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
               heapIndex   = localMem[2];                                                // Index of element to write to
               heapIn      = localMem[16];                                                 // Data to write
-              heapAction  = heap.Write;                                         // Request a write
+              heapAction  = `Write;                                         // Request a write
               ip = 12;
               heapClock = ~ heapClock;
         end
 
          12 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[3] = localMem[2] + 100;
               ip = 13;
         end
 
          13 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[17] = localMem[3];
               ip = 14;
         end
 
          14 :
         begin                                                                   // movWrite1
-if (0) begin
-  $display("AAAA %4d %4d movWrite1", steps, ip);
-end
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[1];                                                // Array to write to
               heapIndex   = localMem[2];                                                // Index of element to write to
               heapIn      = localMem[17];                                                 // Data to write
-              heapAction  = heap.Write;                                         // Request a write
+              heapAction  = `Write;                                         // Request a write
               ip = 15;
               heapClock = ~ heapClock;
         end
 
          15 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 16;
         end
 
          16 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[2] = localMem[2] + 1;
               ip = 17;
         end
 
          17 :
         begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
+          //$display("AAAA %4d %4d jmp", steps, ip);
               ip = 8;
         end
 
          18 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 19;
         end
 
          19 :
         begin                                                                   // arraySize
-if (0) begin
-  $display("AAAA %4d %4d arraySize", steps, ip);
-end
-              heapAction = heap.Size;
+          //$display("AAAA %4d %4d arraySize", steps, ip);
+              heapAction = `Size;
               heapArray  = localMem[0];
               ip = 20;
               heapClock = ~ heapClock;
@@ -634,63 +598,49 @@ end
 
          20 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[4] = heapOut;
               ip = 21;
         end
 
          21 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 22;
         end
 
          22 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[5] = 0;
               ip = 23;
         end
 
          23 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 24;
         end
 
          24 :
         begin                                                                   // jGe
-if (0) begin
-  $display("AAAA %4d %4d jGe", steps, ip);
-end
+          //$display("AAAA %4d %4d jGe", steps, ip);
               ip = localMem[5] >= localMem[4] ? 32 : 25;
         end
 
          25 :
         begin                                                                   // movRead1
-if (0) begin
-  $display("AAAA %4d %4d movRead1", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = localMem[5];                                                  // Address of the item we wish to read from heap memory
-              heapAction = heap.Read;                                           // Request a read, not a write
+              heapAction = `Read;                                           // Request a read, not a write
               ip = 26;
               heapClock = ~ heapClock;
         end
 
          26 :
         begin                                                                   // movRead2
-if (0) begin
-  $display("AAAA %4d %4d movRead2", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead2", steps, ip);
               localMem[18] = heapOut;                                                     // Data retrieved from heap memory
               ip = 27;
               heapClock = ~ heapClock;
@@ -698,18 +648,14 @@ end
 
          27 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[6] = localMem[18];
               ip = 28;
         end
 
          28 :
         begin                                                                   // out
-if (0) begin
-  $display("AAAA %4d %4d out", steps, ip);
-end
+          //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[6];
               outMemPos = outMemPos + 1;
               ip = 29;
@@ -717,43 +663,33 @@ end
 
          29 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 30;
         end
 
          30 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[5] = localMem[5] + 1;
               ip = 31;
         end
 
          31 :
         begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
+          //$display("AAAA %4d %4d jmp", steps, ip);
               ip = 23;
         end
 
          32 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 33;
         end
 
          33 :
         begin                                                                   // arraySize
-if (0) begin
-  $display("AAAA %4d %4d arraySize", steps, ip);
-end
-              heapAction = heap.Size;
+          //$display("AAAA %4d %4d arraySize", steps, ip);
+              heapAction = `Size;
               heapArray  = localMem[1];
               ip = 34;
               heapClock = ~ heapClock;
@@ -761,63 +697,49 @@ end
 
          34 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[7] = heapOut;
               ip = 35;
         end
 
          35 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 36;
         end
 
          36 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[8] = 0;
               ip = 37;
         end
 
          37 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 38;
         end
 
          38 :
         begin                                                                   // jGe
-if (0) begin
-  $display("AAAA %4d %4d jGe", steps, ip);
-end
+          //$display("AAAA %4d %4d jGe", steps, ip);
               ip = localMem[8] >= localMem[7] ? 46 : 39;
         end
 
          39 :
         begin                                                                   // movRead1
-if (0) begin
-  $display("AAAA %4d %4d movRead1", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[1];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = localMem[8];                                                  // Address of the item we wish to read from heap memory
-              heapAction = heap.Read;                                           // Request a read, not a write
+              heapAction = `Read;                                           // Request a read, not a write
               ip = 40;
               heapClock = ~ heapClock;
         end
 
          40 :
         begin                                                                   // movRead2
-if (0) begin
-  $display("AAAA %4d %4d movRead2", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead2", steps, ip);
               localMem[19] = heapOut;                                                     // Data retrieved from heap memory
               ip = 41;
               heapClock = ~ heapClock;
@@ -825,18 +747,14 @@ end
 
          41 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[9] = localMem[19];
               ip = 42;
         end
 
          42 :
         begin                                                                   // out
-if (0) begin
-  $display("AAAA %4d %4d out", steps, ip);
-end
+          //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[9];
               outMemPos = outMemPos + 1;
               ip = 43;
@@ -844,68 +762,54 @@ end
 
          43 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 44;
         end
 
          44 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[8] = localMem[8] + 1;
               ip = 45;
         end
 
          45 :
         begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
+          //$display("AAAA %4d %4d jmp", steps, ip);
               ip = 37;
         end
 
          46 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 47;
         end
 
          47 :
         begin                                                                   // moveLong1
-if (0) begin
-  $display("AAAA %4d %4d moveLong1", steps, ip);
-end
+          //$display("AAAA %4d %4d moveLong1", steps, ip);
               heapArray  = localMem[0];                                                 // Array to write to
               heapIndex  = 4;                                                 // Index of element to write to
-              heapAction = heap.Long1;                                          // Request a write
+              heapAction = `Long1;                                          // Request a write
               ip = 48;
               heapClock = ~ heapClock;
         end
 
          48 :
         begin                                                                   // moveLong2
-if (0) begin
-  $display("AAAA %4d %4d moveLong2", steps, ip);
-end
+          //$display("AAAA %4d %4d moveLong2", steps, ip);
               heapArray  = localMem[1];                                                 // Array to write to
               heapIndex  = 2;                                                 // Index of element to write to
               heapIn     = 3;                                                  // Index of element to write to
-              heapAction = heap.Long2;                                          // Request a write
+              heapAction = `Long2;                                          // Request a write
               ip = 49;
               heapClock = ~ heapClock;
         end
 
          49 :
         begin                                                                   // arraySize
-if (0) begin
-  $display("AAAA %4d %4d arraySize", steps, ip);
-end
-              heapAction = heap.Size;
+          //$display("AAAA %4d %4d arraySize", steps, ip);
+              heapAction = `Size;
               heapArray  = localMem[0];
               ip = 50;
               heapClock = ~ heapClock;
@@ -913,63 +817,49 @@ end
 
          50 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[10] = heapOut;
               ip = 51;
         end
 
          51 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 52;
         end
 
          52 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[11] = 0;
               ip = 53;
         end
 
          53 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 54;
         end
 
          54 :
         begin                                                                   // jGe
-if (0) begin
-  $display("AAAA %4d %4d jGe", steps, ip);
-end
+          //$display("AAAA %4d %4d jGe", steps, ip);
               ip = localMem[11] >= localMem[10] ? 62 : 55;
         end
 
          55 :
         begin                                                                   // movRead1
-if (0) begin
-  $display("AAAA %4d %4d movRead1", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = localMem[11];                                                  // Address of the item we wish to read from heap memory
-              heapAction = heap.Read;                                           // Request a read, not a write
+              heapAction = `Read;                                           // Request a read, not a write
               ip = 56;
               heapClock = ~ heapClock;
         end
 
          56 :
         begin                                                                   // movRead2
-if (0) begin
-  $display("AAAA %4d %4d movRead2", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead2", steps, ip);
               localMem[20] = heapOut;                                                     // Data retrieved from heap memory
               ip = 57;
               heapClock = ~ heapClock;
@@ -977,18 +867,14 @@ end
 
          57 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[12] = localMem[20];
               ip = 58;
         end
 
          58 :
         begin                                                                   // out
-if (0) begin
-  $display("AAAA %4d %4d out", steps, ip);
-end
+          //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[12];
               outMemPos = outMemPos + 1;
               ip = 59;
@@ -996,43 +882,33 @@ end
 
          59 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 60;
         end
 
          60 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[11] = localMem[11] + 1;
               ip = 61;
         end
 
          61 :
         begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
+          //$display("AAAA %4d %4d jmp", steps, ip);
               ip = 53;
         end
 
          62 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 63;
         end
 
          63 :
         begin                                                                   // arraySize
-if (0) begin
-  $display("AAAA %4d %4d arraySize", steps, ip);
-end
-              heapAction = heap.Size;
+          //$display("AAAA %4d %4d arraySize", steps, ip);
+              heapAction = `Size;
               heapArray  = localMem[1];
               ip = 64;
               heapClock = ~ heapClock;
@@ -1040,63 +916,49 @@ end
 
          64 :
         begin                                                                   // movHeapOut
-if (0) begin
-  $display("AAAA %4d %4d movHeapOut", steps, ip);
-end
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[13] = heapOut;
               ip = 65;
         end
 
          65 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 66;
         end
 
          66 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[14] = 0;
               ip = 67;
         end
 
          67 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 68;
         end
 
          68 :
         begin                                                                   // jGe
-if (0) begin
-  $display("AAAA %4d %4d jGe", steps, ip);
-end
+          //$display("AAAA %4d %4d jGe", steps, ip);
               ip = localMem[14] >= localMem[13] ? 76 : 69;
         end
 
          69 :
         begin                                                                   // movRead1
-if (0) begin
-  $display("AAAA %4d %4d movRead1", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[1];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = localMem[14];                                                  // Address of the item we wish to read from heap memory
-              heapAction = heap.Read;                                           // Request a read, not a write
+              heapAction = `Read;                                           // Request a read, not a write
               ip = 70;
               heapClock = ~ heapClock;
         end
 
          70 :
         begin                                                                   // movRead2
-if (0) begin
-  $display("AAAA %4d %4d movRead2", steps, ip);
-end
+          //$display("AAAA %4d %4d movRead2", steps, ip);
               localMem[21] = heapOut;                                                     // Data retrieved from heap memory
               ip = 71;
               heapClock = ~ heapClock;
@@ -1104,18 +966,14 @@ end
 
          71 :
         begin                                                                   // mov
-if (0) begin
-  $display("AAAA %4d %4d mov", steps, ip);
-end
+          //$display("AAAA %4d %4d mov", steps, ip);
               localMem[15] = localMem[21];
               ip = 72;
         end
 
          72 :
         begin                                                                   // out
-if (0) begin
-  $display("AAAA %4d %4d out", steps, ip);
-end
+          //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[15];
               outMemPos = outMemPos + 1;
               ip = 73;
@@ -1123,42 +981,29 @@ end
 
          73 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 74;
         end
 
          74 :
         begin                                                                   // add
-if (0) begin
-  $display("AAAA %4d %4d add", steps, ip);
-end
+          //$display("AAAA %4d %4d add", steps, ip);
               localMem[14] = localMem[14] + 1;
               ip = 75;
         end
 
          75 :
         begin                                                                   // jmp
-if (0) begin
-  $display("AAAA %4d %4d jmp", steps, ip);
-end
+          //$display("AAAA %4d %4d jmp", steps, ip);
               ip = 67;
         end
 
          76 :
         begin                                                                   // label
-if (0) begin
-  $display("AAAA %4d %4d label", steps, ip);
-end
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 77;
         end
       endcase
-      if (0 && 0) begin
-        for(i = 0; i < 200; i = i + 1) $write("%2d",   localMem[i]); $display("");
-        for(i = 0; i < 200; i = i + 1) $write("%2d",    heapMem[i]); $display("");
-        for(i = 0; i < 200; i = i + 1) $write("%2d", arraySizes[i]); $display("");
-      end
       success  = 1;
       success  = success && outMem[0] == 0;
       success  = success && outMem[1] == 1;
