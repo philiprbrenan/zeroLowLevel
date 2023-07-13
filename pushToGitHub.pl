@@ -165,6 +165,17 @@ sub yosys {<<END}                                                               
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+END
+
+sub yosys22 {<<END}                                                               # Install yosys
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
     - name: Memory fallocate
       run: |
