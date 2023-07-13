@@ -15,7 +15,7 @@ use Carp qw(confess);
 use Data::Dump qw(dump);
 use Data::Table::Text qw(:all);
 use Zero::Emulator qw(:all);
-eval "use Test::More tests=>128" unless caller;
+eval "use Test::More tests=>129" unless caller;
 
 makeDieConfess;
 
@@ -1391,7 +1391,7 @@ if (1)
   $e->compileToVerilog("BTree/in/1");
  }
 
-latest:;
+#latest:;
 if (1)                                                                          ##New ##Insert ##Find ##FindResult_cmp
  {my $W = 3; my $N = 66;
 
