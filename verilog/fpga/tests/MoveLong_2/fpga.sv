@@ -1112,27 +1112,7 @@ module fpga                                                                     
               ip = 86;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 11;
-      success  = success && outMem[1] == 22;
-      success  = success && outMem[2] == 33;
-      success  = success && outMem[3] == 44;
-      success  = success && outMem[4] == 55;
-      success  = success && outMem[5] == 66;
-      success  = success && outMem[6] == 77;
-      success  = success && outMem[7] == 88;
-      success  = success && outMem[8] == 99;
-      success  = success && outMem[9] == 101;
-      success  = success && outMem[10] == 11;
-      success  = success && outMem[11] == 88;
-      success  = success && outMem[12] == 99;
-      success  = success && outMem[13] == 44;
-      success  = success && outMem[14] == 55;
-      success  = success && outMem[15] == 66;
-      success  = success && outMem[16] == 77;
-      success  = success && outMem[17] == 88;
-      success  = success && outMem[18] == 99;
-      success  = success && outMem[19] == 101;
+      success = outMem[0] == 11 && outMem[1] == 22 && outMem[2] == 33 && outMem[3] == 44 && outMem[4] == 55 && outMem[5] == 66 && outMem[6] == 77 && outMem[7] == 88 && outMem[8] == 99 && outMem[9] == 101 && outMem[10] == 11 && outMem[11] == 88 && outMem[12] == 99 && outMem[13] == 44 && outMem[14] == 55 && outMem[15] == 66 && outMem[16] == 77 && outMem[17] == 88 && outMem[18] == 99 && outMem[19] == 101;
       finished = steps >    239;
     end
   end
