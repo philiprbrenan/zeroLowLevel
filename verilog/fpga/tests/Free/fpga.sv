@@ -560,9 +560,9 @@ module fpga                                                                     
               heapClock = ~ heapClock;
         end
       endcase
-      //success = outMem[0] == 0 && outMem[1] == 0 && outMem[2] == 0;
-      //steps = steps + 1;
-      //finished = steps >     15;
+      success = outMem[0] == 0 && outMem[1] == 0 && outMem[2] == 0;
+      steps = steps + 1;
+      finished = steps >     15;
     end
   end
 
