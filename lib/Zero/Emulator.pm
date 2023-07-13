@@ -3796,12 +3796,12 @@ END
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
-//      ip             = 0;
-//      steps          = 0;
-//      inMemPos       = 0;
-//      outMemPos      = 0;
-//      finished       = 0;
-//      success        = 0;
+      ip             = 0;
+      steps          = 0;
+      inMemPos       = 0;
+      outMemPos      = 0;
+      finished       = 0;
+      success        = 0;
 
 END
 
@@ -3809,14 +3809,14 @@ END
     for my $i(keys @i)
      {my $I = $i[$i];
       push @c, <<END;
-//      inMem[$i] = $I;
+      inMem[$i] = $I;
 END
      }
+
 
     push @c, <<END;
     end
     else begin
-//      steps = steps + 1;
       case(ip)
 END
    }
@@ -3859,23 +3859,24 @@ END
       endcase
 END
 
-  if (1)                                                                        # Check output queue matches out expectations
-   {my @o = $exec->outLines->@*;
-    @o or confess "Output needed for test $name";                               # Create some output during the test so we have something to test
-
-    my @b;
+  if (my @o = $exec->outLines->@*)                                              # Check output queue matches out expectations
+   {my @b;
     for my $o(keys @o)
      {my $O = $o[$o];
       push @b, "outMem[$o] == $O";
      }
     my $b = join " && ", @b;
     push @c, <<END;
-      success = $b;
+      //success = $b;
 END
+   }
+  else
+   {confess "Output needed for test $name";                                     # Create some output during the test so we have something to test
    }
 
   push @c, <<END;                                                               # End of module
-      finished = steps > $steps;
+      //steps = steps + 1;
+      //finished = steps > $steps;
     end
   end
 
