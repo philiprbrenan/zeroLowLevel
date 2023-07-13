@@ -3867,7 +3867,7 @@ END
      }
     my $b = join " && ", @b;
     push @c, <<END;
-      //success = $b;
+      success = $b;
 END
    }
   else
@@ -3875,8 +3875,8 @@ END
    }
 
   push @c, <<END;                                                               # End of module
-      //steps = steps + 1;
-      //finished = steps > $steps;
+      steps = steps + 1;
+      finished = steps > $steps;
     end
   end
 
