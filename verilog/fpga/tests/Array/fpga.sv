@@ -633,9 +633,9 @@ module fpga                                                                     
               ip = 22;
         end
       endcase
-      //success = outMem[0] == 11 && outMem[1] == 22 && outMem[2] == 33;
-      //steps = steps + 1;
-      //finished = steps >     23;
+      success = outMem[0] == 11 && outMem[1] == 22 && outMem[2] == 33;
+      steps = steps + 1;
+      finished = steps >     23;
     end
   end
 
