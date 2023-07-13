@@ -52,7 +52,6 @@ module fpga                                                                     
       endcase
       success = outMem[0] == 5;
       steps = steps + 1;
-      finished = steps >      5;
     end
   end
 endmodule
