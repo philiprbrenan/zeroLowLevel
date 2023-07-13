@@ -221,7 +221,6 @@ Create a variable referring to a new tree descriptor.
         Out FindResult_data(Find($t, $j));
        } $N;
     
-      Out FindResult_cmp(Find($t, -1));                                             # Should not be present
       Out FindResult_cmp(Find($t, $N));
     
       my $e = Execute(suppressOutput=>1);
@@ -229,7 +228,7 @@ Create a variable referring to a new tree descriptor.
     [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
       40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
       78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
-      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 2,
     ];
     
       $e->compileToVerilog("BTree/insert/66");
@@ -508,9 +507,6 @@ Get comparison from find result.
        } $N;
     
     
-      Out FindResult_cmp(Find($t, -1));                                             # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
-
-    
       Out FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
@@ -519,7 +515,7 @@ Get comparison from find result.
     [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
       40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
       78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
-      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 2,
     ];
     
       $e->compileToVerilog("BTree/insert/66");
@@ -1042,9 +1038,6 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
        } $N;
     
     
-      Out FindResult_cmp(Find($t, -1));                                             # Should not be present  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
-
-    
       Out FindResult_cmp(Find($t, $N));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
@@ -1053,7 +1046,7 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
     [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
       40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
       78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
-      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 2,
     ];
     
       $e->compileToVerilog("BTree/insert/66");
@@ -1506,7 +1499,6 @@ Insert a key and its associated data into a tree.
         Out FindResult_data(Find($t, $j));
        } $N;
     
-      Out FindResult_cmp(Find($t, -1));                                             # Should not be present
       Out FindResult_cmp(Find($t, $N));
     
       my $e = Execute(suppressOutput=>1);
@@ -1514,7 +1506,7 @@ Insert a key and its associated data into a tree.
     [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
       40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
       78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110,
-      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 0, 2,
+      112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 2,
     ];
     
       $e->compileToVerilog("BTree/insert/66");
