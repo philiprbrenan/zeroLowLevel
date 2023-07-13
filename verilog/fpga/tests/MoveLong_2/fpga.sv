@@ -438,16 +438,15 @@ module fpga                                                                     
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
     if (reset) begin
-//      ip             = 0;
-//      steps          = 0;
-//      inMemPos       = 0;
-//      outMemPos      = 0;
-//      finished       = 0;
-//      success        = 0;
+      ip             = 0;
+      steps          = 0;
+      inMemPos       = 0;
+      outMemPos      = 0;
+      finished       = 0;
+      success        = 0;
 
     end
     else begin
-//      steps = steps + 1;
       case(ip)
 
           0 :
@@ -1112,8 +1111,9 @@ module fpga                                                                     
               ip = 86;
         end
       endcase
-      success = outMem[0] == 11 && outMem[1] == 22 && outMem[2] == 33 && outMem[3] == 44 && outMem[4] == 55 && outMem[5] == 66 && outMem[6] == 77 && outMem[7] == 88 && outMem[8] == 99 && outMem[9] == 101 && outMem[10] == 11 && outMem[11] == 88 && outMem[12] == 99 && outMem[13] == 44 && outMem[14] == 55 && outMem[15] == 66 && outMem[16] == 77 && outMem[17] == 88 && outMem[18] == 99 && outMem[19] == 101;
-      finished = steps >    239;
+      //success = outMem[0] == 11 && outMem[1] == 22 && outMem[2] == 33 && outMem[3] == 44 && outMem[4] == 55 && outMem[5] == 66 && outMem[6] == 77 && outMem[7] == 88 && outMem[8] == 99 && outMem[9] == 101 && outMem[10] == 11 && outMem[11] == 88 && outMem[12] == 99 && outMem[13] == 44 && outMem[14] == 55 && outMem[15] == 66 && outMem[16] == 77 && outMem[17] == 88 && outMem[18] == 99 && outMem[19] == 101;
+      //steps = steps + 1;
+      //finished = steps >    239;
     end
   end
 
