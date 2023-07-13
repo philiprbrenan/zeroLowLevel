@@ -92,6 +92,7 @@ module Memory
       for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
         //$display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
       end
+      //$display("    %2d %2d %2d", allocations[0], allocations[1], allocations[2]);
     end
   endtask
 
@@ -300,7 +301,7 @@ module Memory
         checkWriteable(10000150);
         if (!error) begin
           freedArrays[freedArraysTop] = array;                                  // Relies on the user not re freeing a freed array - we should probably hve another array to prevent this
-          allocations[freedArraysTop] = 0;                                      // No longer allocated
+          allocations[array]          = 0;                                      // No longer allocated
           freedArraysTop = freedArraysTop + 1;
         end
       end
