@@ -15390,13 +15390,7 @@ module fpga                                                                     
               ip = 2313;
         end
       endcase
-      success  = 1;
-      success  = success && outMem[0] == 0;
-      success  = success && outMem[1] == 1;
-      success  = success && outMem[2] == 22;
-      success  = success && outMem[3] == 0;
-      success  = success && outMem[4] == 1;
-      success  = success && outMem[5] == 33;
+      success = outMem[0] == 0 && outMem[1] == 1 && outMem[2] == 22 && outMem[3] == 0 && outMem[4] == 1 && outMem[5] == 33;
       finished = steps >    880;
     end
   end
