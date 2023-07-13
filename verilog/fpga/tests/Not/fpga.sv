@@ -509,9 +509,9 @@ module fpga                                                                     
               ip = 8;
         end
       endcase
-      //success = outMem[0] == 3 && outMem[1] == 0 && outMem[2] == 1;
-      //steps = steps + 1;
-      //finished = steps >      9;
+      success = outMem[0] == 3 && outMem[1] == 0 && outMem[2] == 1;
+      steps = steps + 1;
+      finished = steps >      9;
     end
   end
 
