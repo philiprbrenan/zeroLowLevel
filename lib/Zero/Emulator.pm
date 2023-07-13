@@ -3318,7 +3318,7 @@ END
     array=> sub                                                                 # Array
      {my ($i) = @_;                                                             # Instruction
       push @c, <<END.nextInstruction($i).transitionHeapClock;
-              heapAction = `heapAlloc;
+              heapAction = `Alloc;
 END
      },
 
