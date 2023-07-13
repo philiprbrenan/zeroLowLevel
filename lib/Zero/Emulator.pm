@@ -3862,6 +3862,8 @@ END
 
   if (1)                                                                        # Check output queue matches out expectations
    {my @o = $exec->outLines->@*;
+    @o or confess "Output needed for test $name";                               # Create some output during the test so we have something to test
+
     my @b;
     for my $o(keys @o)
      {my $O = $o[$o];
