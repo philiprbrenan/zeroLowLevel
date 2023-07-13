@@ -263,7 +263,7 @@ sub fpgaLowLevelTestsYosys                                                      
       if: \${{ always() }}
       run: |
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog -nomem2reg $v;"
+        yosys -d -Q -p "read_verilog -nomem2reg $v;"
 
 END
    }
