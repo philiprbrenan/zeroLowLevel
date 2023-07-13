@@ -1,4 +1,4 @@
-# Test 2023-07-13 at 05:29:58
+# Test 2023-07-13 at 05:33:15
 
 name: Test
 
@@ -330,24 +330,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Add_
       if: ${{ always() }}
       run: |
@@ -378,24 +360,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Array_
       if: ${{ always() }}
@@ -428,24 +392,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_ArrayAdd_
       if: ${{ always() }}
       run: |
@@ -476,24 +422,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_ArrayCountGreaterIndex_
       if: ${{ always() }}
@@ -526,24 +454,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_ArrayCountLess_
       if: ${{ always() }}
       run: |
@@ -574,24 +484,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_ArrayIndex_
       if: ${{ always() }}
@@ -624,24 +516,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Array_scans_
       if: ${{ always() }}
       run: |
@@ -672,24 +546,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_basic_1_
       if: ${{ always() }}
@@ -722,24 +578,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_basic_2_
       if: ${{ always() }}
       run: |
@@ -770,24 +608,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_basic_3_
       if: ${{ always() }}
@@ -820,24 +640,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_basic_4_
       if: ${{ always() }}
       run: |
@@ -868,24 +670,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_basic_5_
       if: ${{ always() }}
@@ -918,24 +702,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_basic_6_
       if: ${{ always() }}
       run: |
@@ -966,24 +732,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_basic_7_
       if: ${{ always() }}
@@ -1016,24 +764,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_in_1_
       if: ${{ always() }}
       run: |
@@ -1064,24 +794,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_in_2_
       if: ${{ always() }}
@@ -1114,24 +826,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_in_3_
       if: ${{ always() }}
       run: |
@@ -1162,24 +856,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_in_4_
       if: ${{ always() }}
@@ -1212,24 +888,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_insert_01_
       if: ${{ always() }}
       run: |
@@ -1260,24 +918,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_insert_02_
       if: ${{ always() }}
@@ -1310,24 +950,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_insert_03_
       if: ${{ always() }}
       run: |
@@ -1358,24 +980,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_insert_04_
       if: ${{ always() }}
@@ -1408,24 +1012,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_insert_05_
       if: ${{ always() }}
       run: |
@@ -1456,24 +1042,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_BTree_insert_06_
       if: ${{ always() }}
@@ -1506,24 +1074,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_BTree_insert_66_
       if: ${{ always() }}
       run: |
@@ -1554,24 +1104,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_ForIn_
       if: ${{ always() }}
@@ -1604,24 +1136,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Free_
       if: ${{ always() }}
       run: |
@@ -1652,24 +1166,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_In_
       if: ${{ always() }}
@@ -1702,24 +1198,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_InSize_
       if: ${{ always() }}
       run: |
@@ -1750,24 +1228,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_JFalse_
       if: ${{ always() }}
@@ -1800,24 +1260,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Jeq_
       if: ${{ always() }}
       run: |
@@ -1848,24 +1290,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Jmp_
       if: ${{ always() }}
@@ -1898,24 +1322,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Mov_
       if: ${{ always() }}
       run: |
@@ -1946,24 +1352,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Mov2_
       if: ${{ always() }}
@@ -1996,24 +1384,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_MoveLong_1_
       if: ${{ always() }}
       run: |
@@ -2044,24 +1414,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_MoveLong_2_
       if: ${{ always() }}
@@ -2094,24 +1446,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Not_
       if: ${{ always() }}
       run: |
@@ -2142,24 +1476,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Pop_
       if: ${{ always() }}
@@ -2192,24 +1508,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Push_
       if: ${{ always() }}
       run: |
@@ -2240,24 +1538,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_ShiftLeft_
       if: ${{ always() }}
@@ -2290,24 +1570,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_ShiftRight_
       if: ${{ always() }}
       run: |
@@ -2338,24 +1600,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Shift_up_
       if: ${{ always() }}
@@ -2388,24 +1632,6 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
-
     - name: Yosys_Shift_up_2_
       if: ${{ always() }}
       run: |
@@ -2436,24 +1662,6 @@ jobs:
 
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Memory fallocate
-      run: |
-        sudo fallocate -l 20G swapfile
-        sudo chmod 600        swapfile
-        sudo ls -la           swapfile
-        sudo mkswap           swapfile
-        sudo swapon           swapfile
-        free -h
-
-    - name: Memory fallocate2
-      run: |
-        sudo fallocate -l  8G /mnt/swapfile2
-        sudo chmod 600        /mnt/swapfile2
-        sudo ls -la           /mnt/swapfile2
-        sudo mkswap           /mnt/swapfile2
-        sudo swapon           /mnt/swapfile2
-        free -h
 
     - name: Yosys_Subtract_
       if: ${{ always() }}
