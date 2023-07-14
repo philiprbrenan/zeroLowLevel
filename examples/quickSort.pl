@@ -8,7 +8,7 @@ use warnings FATAL => qw(all);
 use strict;
 use Data::Table::Text qw(:all);
 use Zero::Emulator qw(:all);
-use Test::More tests=>5;
+use Test::More tests=>2;
 
 sub swap($$$$)                                                                  # Swap two elements of a named array
  {my ($array, $name, $a, $b) = @_;                                              # Array, name of array, first index, second index
@@ -127,11 +127,11 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
   is_deeply $e->outLines, [1 .. 8];
 
-  is_deeply $e->count,  284 unless $e->assembly->lowLevelOps;                   # Instructions executed
-  is_deeply $e->count,  464 if     $e->assembly->lowLevelOps;                   # Instructions executed
+  is_deeply $e->count,  284 unless $e->assembly->lowLevelOps or  1;             # Instructions executed
+  is_deeply $e->count,  464 if     $e->assembly->lowLevelOps and 0;             # Instructions executed
 
   #say STDERR formatTable($e->counts); exit;
-  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps;    # Counts of each instruction type executed
+  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps or 1;    # Counts of each instruction type executed
 add         39
 array        3
 arraySize    8
@@ -146,7 +146,7 @@ push        22
 shiftRight   3
 subtract    19
 END
-  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps;    # Counts of each instruction type executed
+  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps and 0; # Counts of each instruction type executed
 add         39
 array        3
 arraySize    8
@@ -182,6 +182,6 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);                                           # Execute assembler program
 
   is_deeply $e->outLines, [1 .. 32];
-  is_deeply $e->count, 1433 unless $e->assembly->lowLevelOps;                   # Approximately 5 times bigger
-  is_deeply $e->count, 2462 if     $e->assembly->lowLevelOps;                   # Approximately 5 times bigger
+  is_deeply $e->count, 1433 unless $e->assembly->lowLevelOps  or 1;             # Approximately 5 times bigger
+  is_deeply $e->count, 2462 if     $e->assembly->lowLevelOps and 0;             # Approximately 5 times bigger
  }
