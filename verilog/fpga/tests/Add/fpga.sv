@@ -8,7 +8,7 @@ module Memory
  (input wire                    clock,                                          // Clock to drive array operations
   input wire[7:0]               action,                                         // Operation to be performed on array
   input wire [ADDRESS_BITS-1:0] array,                                          // The number of the array to work on
-  output reg [DATA_BITS   -1:0] out)                                            // Output data
+  output reg [DATA_BITS   -1:0] out);                                           // Output data
 
   parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
   parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
