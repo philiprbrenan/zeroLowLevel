@@ -3809,7 +3809,7 @@ Shift an element up one in an area.
       my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
       is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-      is_deeply [$e->timeParallel, $e->timeSequential], [10,16] if     $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
       #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
@@ -4243,7 +4243,7 @@ Runs its sub sections in simulated parallel so that we can prove that the sectio
       my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
       is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-      is_deeply [$e->timeParallel, $e->timeSequential], [10,16] if     $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
       #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
@@ -5090,9 +5090,9 @@ Compile a reference in assembler format to a corresponding verilog expression
 
 23 [Call](#call) - Call the subroutine at the target address.
 
-24 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
+24 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
 
-25 [CompileToVerilog](#compiletoverilog) - Execution environment for a block of code.
+25 [compileToVerilog](#compiletoverilog) - Compile each sub sequence of instructions into equivalent verilog.
 
 26 [Confess](#confess) - Confess with a stack trace showing the location both in the emulated code and in the code that produced the emulated code.
 
