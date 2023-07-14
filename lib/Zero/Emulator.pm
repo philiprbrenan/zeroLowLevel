@@ -30,7 +30,7 @@ makeDieConfess;
 my $traceExecution               =   0;                                         # Trace execution step by step printing memory at each step
 my $runLowLevel                  =   1;                                         # Run low level assembly code
 my $memoryPrintWidth             = 200;                                         # How much memory to print
-my $maximumInstructionsToExecute = 1e6;                                         # Maximum number of subroutines to execute
+my $maximumInstructionsToExecute = 1e7;                                         # Maximum number of subroutines to execute
 my $memoryImplementationFile     = fpe qw(verilog memory memory sv);            # Verilog implemetation of array memory
 
 our $memoryTechnique;                                                           # Undef or the address of a sub that loads the memory handlers into an execution environment.
