@@ -84,7 +84,6 @@ module Memory
       end
 
       `Down: begin                                                              // Down
-        checkWriteable(10000270);
         if (!error) begin
           size   = arraySizes[array];
           if (size > 0) begin
