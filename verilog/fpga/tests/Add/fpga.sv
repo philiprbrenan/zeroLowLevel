@@ -78,11 +78,11 @@ module Memory
 
   task checkReadable(input integer err);                                        // Check a memory locationis readable
     begin
-       /checkWriteable(err);
-       /if (index >= arraySizes[array]) begin
-       /  //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
-       /  error = err + 2;
-       /end
+       //checkWriteable(err);
+       //if (index >= arraySizes[array]) begin
+       //  //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
+       //  error = err + 2;
+       //end
     end
   endtask
 
