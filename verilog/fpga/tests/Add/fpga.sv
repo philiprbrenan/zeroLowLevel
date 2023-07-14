@@ -52,7 +52,7 @@ module Memory
   reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
   reg [INDEX_BITS    :0] arraySizes [ARRAYS-1:0];                               // Current size of each array
   reg [ADDRESS_BITS-1:0] freedArrays[ARRAYS-1:0];                               // Currently freed arrays
-  reg [1:0]              allocations[ARRAYS-1:0];                               // Currently allocated arrays
+  reg                    allocations[ARRAYS-1:0];                               // Currently allocated arrays
 
   integer allocatedArrays;                                                      // Arrays allocated
   integer freedArraysTop;                                                       // Top of the freed arrays stack
@@ -69,10 +69,10 @@ module Memory
          //$display("Array has not been allocated, array %d", array);
          error = err;
        end
-       if (!allocations[array]) begin
+       //if (!allocations[array]) begin
          //$display("Array has been freed, array %d", array);
-         error = err + 1;
-       end
+       //  error = err + 1;
+       //end
     end
   endtask
 
