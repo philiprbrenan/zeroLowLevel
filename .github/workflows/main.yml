@@ -1,9 +1,13 @@
-# Test $d
+# Test 2023-07-14 at 07:01:11
 
 name: Test
 
 on:
   push:
+    paths:
+      - '**.pm'
+      - '**pushToGitHub.pl'
+      - '**.yml'
 
 jobs:
 
@@ -31,6 +35,237 @@ jobs:
     - name: Verilog Version
       run:  iverilog -V
 
+    - name: Emulator
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib lib/Zero/Emulator.pm
+
+    - name: BubbleSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/bubbleSort.pl
+
+    - name: InsertionSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/insertionSort.pl
+
+    - name: QuickSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/quickSort.pl
+
+    - name: QuickSort Parallel
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/quickSortParallel.pl
+
+    - name: SelectionSort
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/selectionSort.pl
+
+    - name: TestEmulator
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/testEmulator.pl
+
+    - name: BTree
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib lib/Zero/BTree.pm
+
+    - name: TestBTree - last as it is longest
+      run:  perl -I$GITHUB_WORKSPACE/dtt/lib examples/testBTree.pl
+
+  fpga:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Ubuntu update
+      run:  sudo apt update
+
+    - name: Verilog
+      run:  sudo apt -y install iverilog
+
+    - name: Verilog Version
+      run:  iverilog -V
+    - name: verilog/fpga/tests/Add/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Add/fpga.tb verilog/fpga/tests/Add/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Array/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Array/fpga.tb verilog/fpga/tests/Array/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ArrayAdd/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayAdd/fpga.tb verilog/fpga/tests/ArrayAdd/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayCountGreaterIndex/fpga.tb verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ArrayCountLess/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayCountLess/fpga.tb verilog/fpga/tests/ArrayCountLess/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ArrayIndex/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ArrayIndex/fpga.tb verilog/fpga/tests/ArrayIndex/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Array_scans/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Array_scans/fpga.tb verilog/fpga/tests/Array_scans/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/basic/1/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/1/fpga.tb verilog/fpga/tests/BTree/basic/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/basic/2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/basic/2/fpga.tb verilog/fpga/tests/BTree/basic/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/in/1/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/1/fpga.tb verilog/fpga/tests/BTree/in/1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/in/2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/2/fpga.tb verilog/fpga/tests/BTree/in/2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/in/3/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/3/fpga.tb verilog/fpga/tests/BTree/in/3/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/in/4/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/in/4/fpga.tb verilog/fpga/tests/BTree/in/4/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/BTree/insert/66/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/BTree/insert/66/fpga.tb verilog/fpga/tests/BTree/insert/66/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ForIn/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ForIn/fpga.tb verilog/fpga/tests/ForIn/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Free/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Free/fpga.tb verilog/fpga/tests/Free/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/In/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/In/fpga.tb verilog/fpga/tests/In/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/InSize/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/InSize/fpga.tb verilog/fpga/tests/InSize/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/JFalse/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/JFalse/fpga.tb verilog/fpga/tests/JFalse/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Jeq/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Jeq/fpga.tb verilog/fpga/tests/Jeq/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Jmp/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Jmp/fpga.tb verilog/fpga/tests/Jmp/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Mov/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Mov/fpga.tb verilog/fpga/tests/Mov/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Mov2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Mov2/fpga.tb verilog/fpga/tests/Mov2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/MoveLong_1/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/MoveLong_1/fpga.tb verilog/fpga/tests/MoveLong_1/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/MoveLong_2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/MoveLong_2/fpga.tb verilog/fpga/tests/MoveLong_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Not/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Not/fpga.tb verilog/fpga/tests/Not/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Pop/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Pop/fpga.tb verilog/fpga/tests/Pop/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Push/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Push/fpga.tb verilog/fpga/tests/Push/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ShiftLeft/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ShiftLeft/fpga.tb verilog/fpga/tests/ShiftLeft/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/ShiftRight/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/ShiftRight/fpga.tb verilog/fpga/tests/ShiftRight/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Shift_up/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Shift_up/fpga.tb verilog/fpga/tests/Shift_up/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Shift_up_2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Shift_up_2/fpga.tb verilog/fpga/tests/Shift_up_2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Subtract/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Subtract/fpga.tb verilog/fpga/tests/Subtract/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+
+  Yosys_Add_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
     - name: Yosys
       run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
 
@@ -45,3 +280,996 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Add/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Add/fpga.json"
+
+
+  Yosys_Array_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Array_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Array/fpga.json"
+
+
+  Yosys_ArrayAdd_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ArrayAdd_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayAdd/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ArrayAdd/fpga.json"
+
+
+  Yosys_ArrayCountGreaterIndex_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ArrayCountGreaterIndex_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountGreaterIndex/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ArrayCountGreaterIndex/fpga.json"
+
+
+  Yosys_ArrayCountLess_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ArrayCountLess_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayCountLess/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ArrayCountLess/fpga.json"
+
+
+  Yosys_ArrayIndex_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ArrayIndex_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ArrayIndex/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ArrayIndex/fpga.json"
+
+
+  Yosys_Array_scans_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Array_scans_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array_scans/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Array_scans/fpga.json"
+
+
+  Yosys_BTree_basic_1_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_basic_1_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/1/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/basic/1/fpga.json"
+
+
+  Yosys_BTree_basic_2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_basic_2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/basic/2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/basic/2/fpga.json"
+
+
+  Yosys_BTree_in_1_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_in_1_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/1/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/in/1/fpga.json"
+
+
+  Yosys_BTree_in_2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_in_2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/in/2/fpga.json"
+
+
+  Yosys_BTree_in_3_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_in_3_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/3/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/in/3/fpga.json"
+
+
+  Yosys_BTree_in_4_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_in_4_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/in/4/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/in/4/fpga.json"
+
+
+  Yosys_BTree_insert_66_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_BTree_insert_66_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/BTree/insert/66/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/BTree/insert/66/fpga.json"
+
+
+  Yosys_ForIn_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ForIn_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ForIn/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ForIn/fpga.json"
+
+
+  Yosys_Free_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Free_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Free/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Free/fpga.json"
+
+
+  Yosys_In_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_In_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/In/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/In/fpga.json"
+
+
+  Yosys_InSize_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_InSize_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/InSize/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/InSize/fpga.json"
+
+
+  Yosys_JFalse_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_JFalse_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/JFalse/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/JFalse/fpga.json"
+
+
+  Yosys_Jeq_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Jeq_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jeq/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Jeq/fpga.json"
+
+
+  Yosys_Jmp_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Jmp_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Jmp/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Jmp/fpga.json"
+
+
+  Yosys_Mov_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Mov_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Mov/fpga.json"
+
+
+  Yosys_Mov2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Mov2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Mov2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Mov2/fpga.json"
+
+
+  Yosys_MoveLong_1_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_MoveLong_1_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_1/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/MoveLong_1/fpga.json"
+
+
+  Yosys_MoveLong_2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_MoveLong_2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/MoveLong_2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/MoveLong_2/fpga.json"
+
+
+  Yosys_Not_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Not_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Not/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Not/fpga.json"
+
+
+  Yosys_Pop_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Pop_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Pop/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Pop/fpga.json"
+
+
+  Yosys_Push_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Push_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Push/fpga.json"
+
+
+  Yosys_ShiftLeft_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ShiftLeft_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftLeft/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ShiftLeft/fpga.json"
+
+
+  Yosys_ShiftRight_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_ShiftRight_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/ShiftRight/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/ShiftRight/fpga.json"
+
+
+  Yosys_Shift_up_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Shift_up_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Shift_up/fpga.json"
+
+
+  Yosys_Shift_up_2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Shift_up_2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Shift_up_2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Shift_up_2/fpga.json"
+
+
+  Yosys_Subtract_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Subtract_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Subtract/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Subtract/fpga.json"
+
