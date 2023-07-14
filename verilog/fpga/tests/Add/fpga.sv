@@ -140,24 +140,6 @@ module Memory
           out = result;
         end
       end
-
-      `Down: begin                                                              // Down
-        checkWriteable(10000270);
-        if (!error) begin
-          size   = arraySizes[array];
-          if (size > 0) begin
-            for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i]; // Copy source array
-            for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                       // Move original array up
-              if (i > index && i <= size) begin
-                memory[array][i-1] = copy[i];
-              end
-            end
-            out = copy[index];                                                  // Return replaced value
-            arraySizes[array] = arraySizes[array] - 1;                          // Decrease array size
-          end
-          else error = 100000274;                                               // Orignal array was emoty so we cannot shift it down
-        end
-      end
     endcase
   end
 endmodule
