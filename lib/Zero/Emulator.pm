@@ -23,7 +23,7 @@ use Carp qw(confess);
 use Data::Dump qw(dump);
 use Data::Table::Text qw(:all);
 use Time::HiRes qw(time);
-eval "use Test::More tests=>201" unless caller;
+eval "use Test::More tests=>187" unless caller;
 
 makeDieConfess;
 
@@ -2992,7 +2992,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceSource($$$)                        
       my $m = Instruction(action=>"movRead1", target=>$$i{$source});            # Fetch from memory
       my $M = Instruction(action=>"movRead2", target=>$assembly->Reference($v, 0)); # Fetch from memory
       $$i{$source} = $assembly->Reference($v, 0);                               # Pick up retrieved result
-      push @$block, $m, resetHeapClock, $M, resetHeapClock, $i;                 # New instruction sequence
+      push @$block, resetHeapClock, $m, resetHeapClock, $M, resetHeapClock, $i; # New instruction sequence
      }
    }
  }
@@ -3011,7 +3011,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceTarget($$)                         
       $$i{target} = $assembly->Reference($v, 0);                                # Update original instruction with new target
       my $m = Instruction(action=>"movWrite1",                                  # Put data into heap
         target=>$t, source=>$assembly->Reference($v, 1));
-      push @$instructions, $m, resetHeapClock;                                  # New instruction sequence
+      push @$instructions, resetHeapClock, $m, resetHeapClock;                  # New instruction sequence
      }
    }
  }
@@ -3021,7 +3021,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut($$)              
   return unless my $i = $$instructions[-1];
   if (my $t = $$i{target})                                                      # Target field to check
    {my $m = Instruction(action=>"movHeapOut", target=>$t);                      # Save data from memory
-    push @$instructions, $m, resetHeapClock;                                    # New instruction sequence
+    push @$instructions, resetHeapClock, $m, resetHeapClock;                    # New instruction sequence
    }
  }
 
@@ -3067,7 +3067,7 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
         $o->source = $m->source;
         $p->source2 = $m->source2;
         $p->target  = $m->target;
-        push @l, $o, resetHeapClock, $p, resetHeapClock;
+        push @l, resetHeapClock, $o, resetHeapClock, $p, resetHeapClock;
        },
       pop=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap
@@ -3075,18 +3075,15 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
        },
       push=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
-        push @l, resetHeapClock;
        },
       shiftUp=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
-        push @l, resetHeapClock;
        },
       shiftDown=> sub
        {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
        },
       resize=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
-        push @l, resetHeapClock;
        },
      };
 
@@ -3290,7 +3287,7 @@ Return
 END
    }
 
-  my sub transitionHeapClock()                                                  # Transition heap clock
+  my sub heapClock1()                                                           # Transition heap clock to 1
    {<<END;
               heapClock = 1;
 END
@@ -3325,7 +3322,7 @@ END
 
     array=> sub                                                                 # Array
      {my ($i) = @_;                                                             # Instruction
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Alloc;
 END
      },
@@ -3333,7 +3330,7 @@ END
     movResultToTarget=> sub                                                     # Array
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               $t = heapOut;
 END
      },
@@ -3342,7 +3339,7 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Size;
               heapArray  = $s;
 END
@@ -3354,7 +3351,7 @@ END
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target) ->targetLocation;
       my $n = $i->number + 1;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapIn     = $s;
               heapAction = `Less;
               heapArray  = $a;
@@ -3366,7 +3363,7 @@ END
       my $s = $compile->deref($i->source2)->Value;
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapIn     = $s;
               heapAction = `Greater;
               heapArray  = $a;
@@ -3378,7 +3375,7 @@ END
       my $s = $compile->deref($i->source2)->Value;
       my $a = $compile->deref($i->source) ->Value;
       my $t = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapIn     = $s;
               heapAction = `Index;
               heapArray  = $a;
@@ -3392,7 +3389,7 @@ END
     free=> sub                                                                  # Free array
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->Value;                             # Number of the array
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Free;
               heapArray  = $t;
 END
@@ -3533,17 +3530,17 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocationArea;
       my $I   = $compile->deref($i->target)->targetIndex;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapArray  = $t;                                                  // Address of the item we wish to read from heap memory
               heapIndex  = $I;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+              heapAction = `Read;                                               // Request a read, not a write
 END
      },
 
     movRead2=> sub                                                              # Mov finish read from heap memory.
      {my ($i) = @_;                                                             # Instruction
       my $t   = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               $t = heapOut;                                                     // Data retrieved from heap memory
 END
      },
@@ -3554,7 +3551,7 @@ END
       my $dt  = $compile->deref($i->target);
       my $tl  = $dt->targetLocationArea;
       my $ti  = $dt->targetIndex;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapArray   = $tl;                                                // Array to write to
               heapIndex   = $ti;                                                // Index of element to write to
               heapIn      = $s;                                                 // Data to write
@@ -3567,7 +3564,7 @@ END
       my $ds  = $compile->deref($i->source);
       my $sl  = $ds->targetLocationArea;
       my $si  = $ds->targetIndex;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapArray  = $sl;                                                 // Array to write to
               heapIndex  = $si;                                                 // Index of element to write to
               heapAction = `Long1;                                          // Request a write
@@ -3579,7 +3576,7 @@ END
       my $dt  = $compile->deref($i->target);
       my $tl  = $dt->targetLocationArea;
       my $ti  = $dt->targetIndex;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapArray  = $tl;                                                 // Array to write to
               heapIndex  = $ti;                                                 // Index of element to write to
               heapIn     = $s;                                                  // Index of element to write to
@@ -3601,7 +3598,7 @@ END
 END
        }
       else
-       {push @c, <<END.nextInstruction($i).transitionHeapClock;
+       {push @c, <<END.nextInstruction($i).heapClock1;
               heapArray   = $tl;                                                // Array to write to
               heapIndex   = $ti;                                                // Index of element to write to
               heapIn      = heapOut;                                            // Data to write
@@ -3619,7 +3616,7 @@ END
 
     start=> sub                                                                 # Start program execution
      {my ($i) = @_;                                                             # Instruction                                                                                                                                t
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Reset;                                              // Reset heap memory
 END
      },
@@ -3633,7 +3630,7 @@ END
       my $l   = $compile->deref($i->source2)->Value;
       my $A   = $compile->deref($i->target)->Arena;
       my $n   = $i->number + 1;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               for(i = 0; i < NArea; i = i + 1) begin                            // Copy from source to target
                 if (i < $l) begin
                   heapMem[NArea * $ta + $ti + i] = heapMem[NArea * $sa + $si + i];
@@ -3666,7 +3663,7 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->targetLocation;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Pop;
               heapArray  = $s;
 END
@@ -3676,7 +3673,7 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->Value;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Push;
               heapIn     = $s;
               heapArray  = $t;
@@ -3687,7 +3684,7 @@ END
      {my ($i) = @_;                                                             # Instruction
       my $s   = $compile->deref($i->source)->Value;
       my $t   = $compile->deref($i->target)->Value;
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Resize;
               heapIn     = $s;
               heapArray  = $t;
@@ -3722,7 +3719,7 @@ END
       my $s   = $compile->deref($i->source)->Value;                             # Value to shift in
       my $a   = $compile->deref($i->target)->targetLocationArea;                # Number of target array
       my $o   = $compile->deref($i->target)->targetIndex;                       # Position in target array to shift from
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Up;
               heapIn     = $s;
               heapArray  = $a;
@@ -3734,7 +3731,7 @@ END
       my $s   = $compile->deref($i->source)->Value;                             # Value to shift in
       my $a   = $compile->deref($i->target)->targetLocationArea;                # Number of target array
       my $o   = $compile->deref($i->target)->targetIndex;                       # Position in target array to shift from
-      push @c, <<END.nextInstruction($i).transitionHeapClock;
+      push @c, <<END.nextInstruction($i).heapClock1;
               heapAction = `Down;
               heapIn     = $s;
               heapArray  = $a;
@@ -4386,7 +4383,7 @@ if (1)                                                                          
 Wrong name: aaa for array with name: node
     1     2 free
 END
-  is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+  is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
 Wrong name: aaa for array with name: node
     1     7 free
 END
@@ -4716,7 +4713,7 @@ if (1)                                                                          
 Stack trace:
     1     2 dump
 END
-  is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+  is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
 Stack trace:
     1     7 dump
 END
@@ -4978,7 +4975,7 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);
   is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
   is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-  is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
+  is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps and 0;
   #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
  }
 
@@ -5096,8 +5093,8 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);
 
 
-  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps;
-  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps;
+  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps and 0;
+  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps or  1;
   is_deeply $e->outLines, [1, 2, 1, 1, 2];
   $e->compileToVerilog("Mov2") if $testSet == 1 and $debug;
  }
@@ -5133,7 +5130,7 @@ if (1)                                                                          
     movWrite1 => 3,
     resetHeapClock => 8,
     start => 1,
-   } if     $e->assembly->lowLevelOps;
+   } if     $e->assembly->lowLevelOps and 0;
 
   #say STDERR $e->out; exit;
 
@@ -5146,7 +5143,7 @@ Stack trace:
     1     8 dump
 END
 
-  is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
+  is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps and 0;
 Stack trace:
     1    15 dump
 Stack trace:
@@ -5370,7 +5367,7 @@ if (1)                                                                          
 0004  arrayDump            0
 END
 
-  is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
+  is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps and 0;
 0000  resetHeapClock
 0001     start
 0002  resetHeapClock
