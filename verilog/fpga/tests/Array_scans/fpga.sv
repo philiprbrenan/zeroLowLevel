@@ -579,392 +579,399 @@ module fpga                                                                     
         end
 
          16 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 17;
+        end
+
+         17 :
         begin                                                                   // arrayIndex
           //$display("AAAA %4d %4d arrayIndex", steps, ip);
               heapIn     = 30;
               heapAction = `Index;
               heapArray  = localMem[0];
-              ip = 17;
+              ip = 18;
               heapClock = 1;
         end
 
-         17 :
+         18 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[1] = heapOut;
-              ip = 18;
-        end
-
-         18 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 19;
         end
 
          19 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[1];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 20;
         end
 
          20 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[1];
+              outMemPos = outMemPos + 1;
+              ip = 21;
+        end
+
+         21 :
         begin                                                                   // arrayIndex
           //$display("AAAA %4d %4d arrayIndex", steps, ip);
               heapIn     = 20;
               heapAction = `Index;
               heapArray  = localMem[0];
-              ip = 21;
+              ip = 22;
               heapClock = 1;
         end
 
-         21 :
+         22 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[2] = heapOut;
-              ip = 22;
-        end
-
-         22 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 23;
         end
 
          23 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[2];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 24;
         end
 
          24 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[2];
+              outMemPos = outMemPos + 1;
+              ip = 25;
+        end
+
+         25 :
         begin                                                                   // arrayIndex
           //$display("AAAA %4d %4d arrayIndex", steps, ip);
               heapIn     = 10;
               heapAction = `Index;
               heapArray  = localMem[0];
-              ip = 25;
+              ip = 26;
               heapClock = 1;
         end
 
-         25 :
+         26 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[3] = heapOut;
-              ip = 26;
-        end
-
-         26 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 27;
         end
 
          27 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[3];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 28;
         end
 
          28 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[3];
+              outMemPos = outMemPos + 1;
+              ip = 29;
+        end
+
+         29 :
         begin                                                                   // arrayIndex
           //$display("AAAA %4d %4d arrayIndex", steps, ip);
               heapIn     = 15;
               heapAction = `Index;
               heapArray  = localMem[0];
-              ip = 29;
+              ip = 30;
               heapClock = 1;
         end
 
-         29 :
+         30 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[4] = heapOut;
-              ip = 30;
-        end
-
-         30 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 31;
         end
 
          31 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[4];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 32;
         end
 
          32 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[4];
+              outMemPos = outMemPos + 1;
+              ip = 33;
+        end
+
+         33 :
         begin                                                                   // arrayCountLess
           //$display("AAAA %4d %4d arrayCountLess", steps, ip);
               heapIn     = 35;
               heapAction = `Less;
               heapArray  = localMem[0];
-              ip = 33;
+              ip = 34;
               heapClock = 1;
         end
 
-         33 :
+         34 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[5] = heapOut;
-              ip = 34;
-        end
-
-         34 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 35;
         end
 
          35 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[5];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 36;
         end
 
          36 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[5];
+              outMemPos = outMemPos + 1;
+              ip = 37;
+        end
+
+         37 :
         begin                                                                   // arrayCountLess
           //$display("AAAA %4d %4d arrayCountLess", steps, ip);
               heapIn     = 25;
               heapAction = `Less;
               heapArray  = localMem[0];
-              ip = 37;
+              ip = 38;
               heapClock = 1;
         end
 
-         37 :
+         38 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[6] = heapOut;
-              ip = 38;
-        end
-
-         38 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 39;
         end
 
          39 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[6];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 40;
         end
 
          40 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[6];
+              outMemPos = outMemPos + 1;
+              ip = 41;
+        end
+
+         41 :
         begin                                                                   // arrayCountLess
           //$display("AAAA %4d %4d arrayCountLess", steps, ip);
               heapIn     = 15;
               heapAction = `Less;
               heapArray  = localMem[0];
-              ip = 41;
+              ip = 42;
               heapClock = 1;
         end
 
-         41 :
+         42 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[7] = heapOut;
-              ip = 42;
-        end
-
-         42 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 43;
         end
 
          43 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[7];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 44;
         end
 
          44 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[7];
+              outMemPos = outMemPos + 1;
+              ip = 45;
+        end
+
+         45 :
         begin                                                                   // arrayCountLess
           //$display("AAAA %4d %4d arrayCountLess", steps, ip);
               heapIn     = 5;
               heapAction = `Less;
               heapArray  = localMem[0];
-              ip = 45;
+              ip = 46;
               heapClock = 1;
         end
 
-         45 :
+         46 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[8] = heapOut;
-              ip = 46;
-        end
-
-         46 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 47;
         end
 
          47 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[8];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 48;
         end
 
          48 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[8];
+              outMemPos = outMemPos + 1;
+              ip = 49;
+        end
+
+         49 :
         begin                                                                   // arrayCountGreater
           //$display("AAAA %4d %4d arrayCountGreater", steps, ip);
               heapIn     = 35;
               heapAction = `Greater;
               heapArray  = localMem[0];
-              ip = 49;
+              ip = 50;
               heapClock = 1;
         end
 
-         49 :
+         50 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[9] = heapOut;
-              ip = 50;
-        end
-
-         50 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 51;
         end
 
          51 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[9];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 52;
         end
 
          52 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[9];
+              outMemPos = outMemPos + 1;
+              ip = 53;
+        end
+
+         53 :
         begin                                                                   // arrayCountGreater
           //$display("AAAA %4d %4d arrayCountGreater", steps, ip);
               heapIn     = 25;
               heapAction = `Greater;
               heapArray  = localMem[0];
-              ip = 53;
+              ip = 54;
               heapClock = 1;
         end
 
-         53 :
+         54 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[10] = heapOut;
-              ip = 54;
-        end
-
-         54 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 55;
         end
 
          55 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[10];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 56;
         end
 
          56 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[10];
+              outMemPos = outMemPos + 1;
+              ip = 57;
+        end
+
+         57 :
         begin                                                                   // arrayCountGreater
           //$display("AAAA %4d %4d arrayCountGreater", steps, ip);
               heapIn     = 15;
               heapAction = `Greater;
               heapArray  = localMem[0];
-              ip = 57;
+              ip = 58;
               heapClock = 1;
         end
 
-         57 :
+         58 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[11] = heapOut;
-              ip = 58;
-        end
-
-         58 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 59;
         end
 
          59 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[11];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 60;
         end
 
          60 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[11];
+              outMemPos = outMemPos + 1;
+              ip = 61;
+        end
+
+         61 :
         begin                                                                   // arrayCountGreater
           //$display("AAAA %4d %4d arrayCountGreater", steps, ip);
               heapIn     = 5;
               heapAction = `Greater;
               heapArray  = localMem[0];
-              ip = 61;
+              ip = 62;
               heapClock = 1;
         end
 
-         61 :
+         62 :
         begin                                                                   // movHeapOut
           //$display("AAAA %4d %4d movHeapOut", steps, ip);
               localMem[12] = heapOut;
-              ip = 62;
-        end
-
-         62 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 63;
         end
 
          63 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 64;
+        end
+
+         64 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[12];
               outMemPos = outMemPos + 1;
-              ip = 64;
+              ip = 65;
         end
       endcase
       success = outMem[0] == 3 && outMem[1] == 2 && outMem[2] == 1 && outMem[3] == 0 && outMem[4] == 3 && outMem[5] == 2 && outMem[6] == 1 && outMem[7] == 0 && outMem[8] == 0 && outMem[9] == 1 && outMem[10] == 2 && outMem[11] == 3;
       steps = steps + 1;
-      finished = steps >     65;
+      finished = steps >     66;
     end
   end
 
