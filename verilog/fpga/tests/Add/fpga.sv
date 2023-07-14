@@ -8,10 +8,7 @@ module Memory
  (input wire                    clock,                                          // Clock to drive array operations
   input wire[7:0]               action,                                         // Operation to be performed on array
   input wire [ADDRESS_BITS-1:0] array,                                          // The number of the array to work on
-  input wire [INDEX_BITS  -1:0] index,                                          // Index within array
-  input wire [DATA_BITS   -1:0] in,                                             // Input data
-  output reg [DATA_BITS   -1:0] out,                                            // Output data
-  output reg [31:0]             error);                                         // Error
+  output reg [DATA_BITS   -1:0] out)                                            // Output data
 
   parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
   parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
@@ -52,10 +49,7 @@ module fpga                                                                     
   reg                heapClock;                                                 // Clock to drive array operations
   reg [7:0]          heapAction;                                                // Operation to be performed on array
   reg [       2-1:0] heapArray;                                         // The number of the array to work on
-  reg [       1-1:0] heapIndex;                                         // Index within array
-  reg [      12-1:0] heapIn;                                            // Input data
   reg [      12-1:0] heapOut;                                           // Output data
-  reg [31        :0] heapError;                                                 // Error on heap operation if not zero
 
   Memory                                                                        // Memory module
    #(       2,        1,       12)                          // Address bits, index bits, data bits
@@ -63,9 +57,6 @@ module fpga                                                                     
     .clock  (heapClock),
     .action (heapAction),
     .array  (heapArray),
-    .index  (heapIndex),
-    .in     (heapIn),
-    .out    (heapOut),
-    .error  (heapError)
+    .out    (heapOut)
   );
 endmodule
