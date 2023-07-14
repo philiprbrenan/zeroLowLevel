@@ -64,13 +64,13 @@ module Memory
 
   task checkWriteable(input integer err);                                       // Check a memory is writable
     begin
-       error = 0;
-       if (array >= allocatedArrays) begin
-         //$display("Array has not been allocated, array %d", array);
-         error = err;
-       end
+       //error = 0;
+       //if (array >= allocatedArrays) begin
+       //  //$display("Array has not been allocated, array %d", array);
+       //  error = err;
+       //end
        //if (!allocations[array]) begin
-         //$display("Array has been freed, array %d", array);
+       //  //$display("Array has been freed, array %d", array);
        //  error = err + 1;
        //end
     end
@@ -78,11 +78,11 @@ module Memory
 
   task checkReadable(input integer err);                                        // Check a memory locationis readable
     begin
-       checkWriteable(err);
-       if (index >= arraySizes[array]) begin
-         //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
-         error = err + 2;
-       end
+       //checkWriteable(err);
+       //if (index >= arraySizes[array]) begin
+       //  //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
+       //  error = err + 2;
+       //end
     end
   endtask
 
@@ -292,7 +292,7 @@ module Memory
         else begin
           //$display("Out of memory, cannot allocate a new array"); error = 10000270;
         end
-        //allocations[result] = 1;                                                // Allocated
+        allocations[result] = 1;                                                // Allocated
         arraySizes[result] = 0;                                                 // Empty array
         out = result;
       end
@@ -301,7 +301,7 @@ module Memory
         checkWriteable(10000150);
         if (!error) begin
           freedArrays[freedArraysTop] = array;                                  // Relies on the user not re freeing a freed array - we should probably hve another array to prevent this
-          //allocations[array]          = 0;                                      // No longer allocated
+          allocations[array]          = 0;                                      // No longer allocated
           freedArraysTop = freedArraysTop + 1;
         end
       end
