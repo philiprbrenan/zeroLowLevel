@@ -127,17 +127,6 @@ module Memory
           out = arraySizes[array];
         end
       end
-        checkWriteable(10000070);
-        if (!error) begin
-          result = 0;
-          size   = arraySizes[array];
-          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-            if (i < size && memory[array][i] < in) result = result + 1;
-////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
-          end
-          out = result;
-        end
-      end
 
       `Greater: begin                                                           // Count greater
         checkWriteable(10000080);
