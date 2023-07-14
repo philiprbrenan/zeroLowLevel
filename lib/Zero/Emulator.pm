@@ -1915,10 +1915,10 @@ sub Zero::Emulator::Assembly::execute($%)                                       
       assign($exec, $T, $v);
      },
 
-    start=> sub                                                                 # Start execution of a program
+    resetHeapClock=> sub                                                        # Reset heap clock
      {},
 
-    start2=> sub                                                                # Start execution of a program
+    start=> sub                                                                 # Start execution of a program
      {},
 
     tally=> sub                                                                 # Tally instruction usage
@@ -2843,8 +2843,9 @@ sub Start($)                                                                    
  {my ($version) = @_;                                                           # Version desired - at the moment only 1
   $version == 1 or confess "Version 1 is currently the only version available";
   Assembly();
+  $assembly->instruction(action=>"resetHeapClock");
   $assembly->instruction(action=>"start");
-  $assembly->instruction(action=>"start2");
+  $assembly->instruction(action=>"resetHeapClock");
  }
 
 sub Subtract($$;$)                                                              #i Subtract the second source operand value from the first source operand value and store the result in the target area.
@@ -2977,6 +2978,10 @@ sub CompileToVerilog(%)                                                         
    );
  }
 
+sub resetHeapClock()                                                            #P Instruction to reset the heap clock
+ {Instruction(action=>"resetHeapClock");
+ }
+
 sub Zero::Emulator::Assembly::lowLevelReplaceSource($$$)                        #P Convert a memory read from a source heap array into a move operation so that we can use a separate heap memory on the fpga. The instruction under consideration is at the top of the supplied instruction list. Add the move instruction and modify the original instruction if the source field can be replaced
  {my ($assembly, $block, $source) = @_;                                         # Assembly options, instructions, source field
   return unless my $i = $$block[-1];
@@ -2987,7 +2992,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceSource($$$)                        
       my $m = Instruction(action=>"movRead1", target=>$$i{$source});            # Fetch from memory
       my $M = Instruction(action=>"movRead2", target=>$assembly->Reference($v, 0)); # Fetch from memory
       $$i{$source} = $assembly->Reference($v, 0);                               # Pick up retrieved result
-      push @$block, $m, $M, $i;                                                 # New instruction sequence
+      push @$block, $m, resetHeapClock, $M, resetHeapClock, $i;                 # New instruction sequence
      }
    }
  }
@@ -3006,7 +3011,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceTarget($$)                         
       $$i{target} = $assembly->Reference($v, 0);                                # Update original instruction with new target
       my $m = Instruction(action=>"movWrite1",                                  # Put data into heap
         target=>$t, source=>$assembly->Reference($v, 1));
-      push @$instructions, $m;                                                  # New instruction sequence
+      push @$instructions, $m, resetHeapClock;                                  # New instruction sequence
      }
    }
  }
@@ -3016,7 +3021,7 @@ sub Zero::Emulator::Assembly::lowLevelReplaceTargetFromHeapOut($$)              
   return unless my $i = $$instructions[-1];
   if (my $t = $$i{target})                                                      # Target field to check
    {my $m = Instruction(action=>"movHeapOut", target=>$t);                      # Save data from memory
-    push @$instructions, $m;                                                    # New instruction sequence
+    push @$instructions, $m, resetHeapClock;                                    # New instruction sequence
    }
  }
 
@@ -3284,7 +3289,7 @@ END
 
   my sub transitionHeapClock()                                                  # Transition heap clock
    {<<END;
-              heapClock = ~ heapClock;
+              heapClock = 1;
 END
    }
 
@@ -3602,17 +3607,17 @@ END
        }
      },
 
-    start=> sub                                                                 # Start program execution
+    resetHeapClock=> sub                                                        # Reset heap clock
      {my ($i) = @_;                                                             # Instruction                                                                                                                                t
       push @c, <<END.nextInstruction($i);
-              heapClock = 0;                                                    // Ready for next operation
+              heapClock = 0;
 END
      },
 
-    start2=> sub                                                                # Start program execution
+    start=> sub                                                                 # Start program execution
      {my ($i) = @_;                                                             # Instruction                                                                                                                                t
       push @c, <<END.nextInstruction($i).transitionHeapClock;
-              heapAction = `Reset;                                          // Ready for next operation
+              heapAction = `Reset;                                              // Reset heap memory
 END
      },
 
@@ -3794,7 +3799,7 @@ END
   if (1)                                                                        # A case statement to select each instruction to be executed in order
    {push @c, <<END;
 
-  always @(posedge clock, negedge clock) begin                                  // Each instruction
+  always @(posedge clock) begin                                                 // Each instruction
     if (reset) begin
       ip             = 0;
       steps          = 0;
@@ -4296,8 +4301,8 @@ Confess at:
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Confess at:
-    2     5 confess
-    1     8 call
+    2     6 confess
+    1     9 call
 END
  }
 
@@ -4380,7 +4385,7 @@ Wrong name: aaa for array with name: node
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Wrong name: aaa for array with name: node
-    1     5 free
+    1     7 free
 END
  }
 
@@ -4532,7 +4537,7 @@ Assert failed
 END
   is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
 Assert failed
-    1     3 assert
+    1     4 assert
 END
  }
 
@@ -4548,7 +4553,7 @@ Assert 1 == 2 failed
 END
   is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
 Assert 1 == 2 failed
-    1     4 assertEq
+    1     5 assertEq
 END
  }
 
@@ -4564,7 +4569,7 @@ Assert 1 != 1 failed
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Assert 1 != 1 failed
-    1     4 assertNe
+    1     5 assertNe
 END
  }
 
@@ -4580,7 +4585,7 @@ Assert 1 <  0 failed
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Assert 1 <  0 failed
-    1     4 assertLt
+    1     5 assertLt
 END
  }
 
@@ -4596,7 +4601,7 @@ Assert 1 <= 0 failed
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Assert 1 <= 0 failed
-    1     4 assertLe
+    1     5 assertLe
 END
  }
 
@@ -4612,7 +4617,7 @@ Assert 1 >  2 failed
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Assert 1 >  2 failed
-    1     4 assertGt
+    1     5 assertGt
 END
  }
 
@@ -4628,7 +4633,7 @@ Assert 1 >= 2 failed
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Assert 1 >= 2 failed
-    1     4 assertGe
+    1     5 assertGe
 END
  }
 
@@ -4638,7 +4643,7 @@ if (1)                                                                          
   AssertFalse 0;
   AssertTrue  0;
   my $e = Execute(suppressOutput=>1, trace=>1);
-# say STDERR $e->out; exit;
+  #say STDERR $e->out; exit;
 
   is_deeply $e->out, <<END unless $e->assembly->lowLevelOps;
     1     0     0    10   assertFalse
@@ -4648,12 +4653,13 @@ AssertTrue 0 failed
 END
 
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
-    1     0     1    66         start
-    2     1     1    67        start2
-    3     2     0    10   assertFalse
+    1     0     1    58  resetHeapClock
+    2     1     1    67         start
+    3     2     1    58  resetHeapClock
+    4     3     0    10   assertFalse
 AssertTrue 0 failed
-    1     4 assertTrue
-    4     3     0    16    assertTrue
+    1     5 assertTrue
+    5     4     0    16    assertTrue
 END
  }
 
@@ -4673,12 +4679,13 @@ AssertFalse 1 failed
 END
 
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
-    1     0     1    66         start
-    2     1     1    67        start2
-    3     2     0    16    assertTrue
+    1     0     1    58  resetHeapClock
+    2     1     1    67         start
+    3     2     1    58  resetHeapClock
+    4     3     0    16    assertTrue
 AssertFalse 1 failed
-    1     4 assertFalse
-    4     3     0    10   assertFalse
+    1     5 assertFalse
+    5     4     0    10   assertFalse
 END
  }
 
@@ -4708,7 +4715,7 @@ Stack trace:
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Stack trace:
-    1     5 dump
+    1     7 dump
 END
  }
 
@@ -4967,8 +4974,8 @@ if (1)                                                                          
 
   my $e = Execute(suppressOutput=>1);
   is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
-  is_deeply [$e->timeParallel, $e->timeSequential], [3,5]  unless $e->assembly->lowLevelOps;
-  is_deeply [$e->timeParallel, $e->timeSequential], [7,11] if     $e->assembly->lowLevelOps;
+  is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
+  is_deeply [$e->timeParallel, $e->timeSequential], [10,16] if     $e->assembly->lowLevelOps;
   #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
  }
 
@@ -5086,7 +5093,7 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);
 
 
-  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       31 instructions executed" if     $e->assembly->lowLevelOps;
+  is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps;
   is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps;
   is_deeply $e->outLines, [1, 2, 1, 1, 2];
   $e->compileToVerilog("Mov2") if $testSet == 1 and $debug;
@@ -5121,8 +5128,8 @@ if (1)                                                                          
     mov => 4,
     movHeapOut => 3,
     movWrite1 => 3,
+    resetHeapClock => 8,
     start => 1,
-    start2 => 1,
    } if     $e->assembly->lowLevelOps;
 
   #say STDERR $e->out; exit;
@@ -5138,11 +5145,11 @@ END
 
   is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
 Stack trace:
-    1    12 dump
+    1    15 dump
 Stack trace:
-    1    12 dump
+    1    15 dump
 Stack trace:
-    1    12 dump
+    1    15 dump
 END
  }
 
@@ -5206,17 +5213,17 @@ END
 
   is_deeply $e->out, <<END if $e->assembly->lowLevelOps;
 Trace: 1
-    3     2     0    70         trace
-    4     3     1    29           jNe
-    5     7     0    32         label
-    6     8     1    35           mov  [0, 3, stackArea] = 3
-    7     9     1    35           mov  [0, 4, stackArea] = 4
-    8    10     0    32         label
-    9    11     1    29           jNe
-   10    12     1    35           mov  [0, 1, stackArea] = 1
-   11    13     1    35           mov  [0, 2, stackArea] = 1
-   12    14     1    31           jmp
-   13    18     0    32         label
+    4     3     0    70         trace
+    5     4     1    29           jNe
+    6     8     0    32         label
+    7     9     1    35           mov  [0, 3, stackArea] = 3
+    8    10     1    35           mov  [0, 4, stackArea] = 4
+    9    11     0    32         label
+   10    12     1    29           jNe
+   11    13     1    35           mov  [0, 1, stackArea] = 1
+   12    14     1    35           mov  [0, 2, stackArea] = 1
+   13    15     1    31           jmp
+   14    19     0    32         label
 END
 
   is_deeply scalar($e->notExecuted->@*), 6;
@@ -5243,7 +5250,7 @@ Current value: 2 New value: 5
 END
   is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
 Change at watched arena: 2, area: 0(stackArea), address: 1
-    1     8 mov
+    1     9 mov
 Current value: 2 New value: 5
 END
  }
@@ -5361,17 +5368,22 @@ if (1)                                                                          
 END
 
   is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
-0000     start
-0001    start2
-0002     array            0             3
-0003  movHeapOut            0
-0004       mov            1             1
-0005  movWrite1 [\0, 0, 3, 0]            \1
-0006       mov            2            22
-0007  movWrite1 [\0, 1, 3, 0]            \2
-0008       mov            3           333
-0009  movWrite1 [\0, 2, 3, 0]            \3
-0010  arrayDump            0
+0000  resetHeapClock
+0001     start
+0002  resetHeapClock
+0003     array            0             3
+0004  movHeapOut            0
+0005  resetHeapClock
+0006       mov            1             1
+0007  movWrite1 [\0, 0, 3, 0]            \1
+0008  resetHeapClock
+0009       mov            2            22
+0010  movWrite1 [\0, 1, 3, 0]            \2
+0011  resetHeapClock
+0012       mov            3           333
+0013  movWrite1 [\0, 2, 3, 0]            \3
+0014  resetHeapClock
+0015  arrayDump            0
 END
 
   #say STDERR $e->assembly->codeToString; exit;
@@ -5550,31 +5562,31 @@ END
   is_deeply $e->out, <<END if $e->assembly->lowLevelOps;
 TraceLabels: 1
 Label
-    1     4 label
+    1     5 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    10 label
+    1    11 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    10 label
+    1    11 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    10 label
+    1    11 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    10 label
+    1    11 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    10 label
+    1    11 label
 Label
-    1     6 label
+    1     7 label
 Label
-    1    13 label
+    1    14 label
 END
  }
 
