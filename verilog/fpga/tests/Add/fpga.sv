@@ -127,6 +127,63 @@ module Memory
           out = arraySizes[array];
         end
       end
+        checkWriteable(10000070);
+        if (!error) begin
+          result = 0;
+          size   = arraySizes[array];
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+            if (i < size && memory[array][i] < in) result = result + 1;
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+          end
+          out = result;
+        end
+      end
+
+      `Greater: begin                                                           // Count greater
+        checkWriteable(10000080);
+        if (!error) begin
+          result = 0;
+          size   = arraySizes[array];
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+            if (i < size && memory[array][i] > in) result = result + 1;
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+          end
+          out = result;
+        end
+      end
+
+      `Down: begin                                                              // Down
+        checkWriteable(10000270);
+        if (!error) begin
+          size   = arraySizes[array];
+          if (size > 0) begin
+            for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i]; // Copy source array
+            for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                       // Move original array up
+              if (i > index && i <= size) begin
+                memory[array][i-1] = copy[i];
+              end
+            end
+            out = copy[index];                                                  // Return replaced value
+            arraySizes[array] = arraySizes[array] - 1;                          // Decrease array size
+          end
+          else error = 100000274;                                               // Orignal array was emoty so we cannot shift it down
+        end
+      end
+
+      `Up: begin                                                                // Up
+        checkWriteable(10000090);
+        if (!error) begin
+          size   = arraySizes[array];
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i];   // Copy source array
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                         // Move original array up
+            if (i > index && i <= size) begin
+              memory[array][i] = copy[i-1];
+            end
+          end
+          memory[array][index] = in;                                            // Insert new value
+          if (size < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;   // Increase array size
+        end
+      end
     endcase
   end
 endmodule
