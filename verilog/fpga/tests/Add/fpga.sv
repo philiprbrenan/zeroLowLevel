@@ -71,7 +71,6 @@ module Memory
       end
 
       `Greater: begin                                                           // Count greater
-        checkWriteable(10000080);
         if (!error) begin
           result = 0;
           size   = arraySizes[array];
