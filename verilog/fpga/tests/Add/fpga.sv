@@ -11,9 +11,7 @@ module fpga                                                                     
   integer ip;                                                                   // Instruction pointer
 
   always @(posedge clock, negedge clock) begin                                  // Each instruction
-    if (reset) begin
-      ip             = 0;
-    end
+    ip = 0;
   end
 
 endmodule
