@@ -62,44 +62,9 @@ module Memory
   integer moveLongStartIndex;                                                   // Source index of move long
   integer i, a, b;                                                              // Index
 
-  task checkWriteable(input integer err);                                       // Check a memory is writable
-    begin
-       //error = 0;
-       //if (array >= allocatedArrays) begin
-       //  //$display("Array has not been allocated, array %d", array);
-       //  error = err;
-       //end
-       //if (!allocations[array]) begin
-       //  //$display("Array has been freed, array %d", array);
-       //  error = err + 1;
-       //end
-    end
-  endtask
-
-  task checkReadable(input integer err);                                        // Check a memory locationis readable
-    begin
-       //checkWriteable(err);
-       //if (index >= arraySizes[array]) begin
-       //  //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
-       //  error = err + 2;
-       //end
-    end
-  endtask
-
-  task dump;                                                                    // Dump some memory
-    begin
-      //$display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
-      for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-        //$display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
-      end
-      //$display("    %2d %2d %2d", allocations[0], allocations[1], allocations[2]);
-    end
-  endtask
-
   always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
       `Size: begin                                                              // Size
-        checkWriteable(10000030);
         if (!error) begin
           out = arraySizes[array];
         end
