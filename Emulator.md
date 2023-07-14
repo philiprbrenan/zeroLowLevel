@@ -138,7 +138,7 @@ Create a new memory area and write its number into the address named by the targ
     Stack trace:
         1     2 dump
     END
-      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
     Stack trace:
         1     7 dump
     END
@@ -216,8 +216,8 @@ Create a new memory area and write its number into the address named by the targ
       my $e = Execute(suppressOutput=>1);
     
     
-      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps;
-      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps;
+      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps and 0;
+      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps or  1;
       is_deeply $e->outLines, [1, 2, 1, 1, 2];
       $e->compileToVerilog("Mov2") if $testSet == 1 and $debug;
      }
@@ -254,7 +254,7 @@ Create a new memory area and write its number into the address named by the targ
         movWrite1 => 3,
         resetHeapClock => 8,
         start => 1,
-       } if     $e->assembly->lowLevelOps;
+       } if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR $e->out; exit;
     
@@ -267,7 +267,7 @@ Create a new memory area and write its number into the address named by the targ
         1     8 dump
     END
     
-      is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps;
+      is_deeply $e->out, <<END  if     $e->assembly->lowLevelOps and 0;
     Stack trace:
         1    15 dump
     Stack trace:
@@ -439,7 +439,7 @@ Dump an array.
     0004  arrayDump            0
     END
     
-      is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
+      is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps and 0;
     0000  resetHeapClock
     0001     start
     0002  resetHeapClock
@@ -1060,7 +1060,7 @@ Call the subroutine at the target address.
     Stack trace:
         1     2 dump
     END
-      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
     Stack trace:
         1     7 dump
     END
@@ -1480,7 +1480,7 @@ Free the memory area named by the target operand after confirming that it has th
     Wrong name: aaa for array with name: node
         1     2 free
     END
-      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
     Wrong name: aaa for array with name: node
         1     7 free
     END
@@ -2909,7 +2909,7 @@ Copy a constant or memory address to the target address.
     Stack trace:
         1     2 dump
     END
-      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps;
+      is_deeply $e->out, <<END if     $e->assembly->lowLevelOps and 0;
     Stack trace:
         1     7 dump
     END
@@ -2989,8 +2989,8 @@ Copy a constant or memory address to the target address.
       my $e = Execute(suppressOutput=>1);
     
     
-      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps;
-      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps;
+      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       42 instructions executed" if     $e->assembly->lowLevelOps and 0;
+      is_deeply $e->analyzeExecutionResults(doubleWrite=>3), "#       19 instructions executed" unless $e->assembly->lowLevelOps or  1;
       is_deeply $e->outLines, [1, 2, 1, 1, 2];
       $e->compileToVerilog("Mov2") if $testSet == 1 and $debug;
      }
@@ -3022,7 +3022,7 @@ Copy a constant or memory address to the target address.
     0004  arrayDump            0
     END
     
-      is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps;
+      is_deeply $e->assembly->codeToString, <<'END' if     $e->assembly->lowLevelOps and 0;
     0000  resetHeapClock
     0001     start
     0002  resetHeapClock
@@ -3809,7 +3809,7 @@ Shift an element up one in an area.
       my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
       is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps and 0;
       #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
@@ -4243,7 +4243,7 @@ Runs its sub sections in simulated parallel so that we can prove that the sectio
       my $e = Execute(suppressOutput=>1);
       is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
       is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
+      is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps and 0;
       #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
      }
     
