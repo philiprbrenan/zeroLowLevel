@@ -1,37 +1,5 @@
-// Check double frees, over allocation
-// Check access to unallocated arrays or elements
-// Check push overflow, pop underflow
-// Next Message 10000280
-`define Reset        1  /* Zero all memory sizes                               */
-`define Write        2  /* Write an element                                    */
-`define Read         3  /* Read an element                                     */
 `define Size         4  /* Size of array                                       */
-`define Inc          5  /* Increment size of array if possible                 */
-`define Dec          6  /* Decrement size of array if possible                 */
-`define Index        7  /* Index of element in array                           */
-`define Less         8  /* Elements of array less than in                      */
 `define Greater      9  /* Elements of array greater than in                   */
-`define Up          10  /* Move array up                                       */
-`define Down        11  /* Move array down                                     */
-`define Long1       12  /* Move long first step                                */
-`define Long2       13  /* Move long last  step                                */
-`define Push        14  /* Push if possible                                    */
-`define Pop         15  /* Pop if possible                                     */
-`define Dump        16  /* Dump                                                */
-`define Resize      17  /* Resize an array                                     */
-`define Alloc       18  /* Allocate a new array before using it                */
-`define Free        19  /* Free an array for reuse                             */
-`define Add         20  /* Add to an element returning the new value           */
-`define AddAfter    21  /* Add to an element returning the previous value      */
-`define Subtract    22  /* Subtract to an element returning the new value      */
-`define SubAfter    23  /* Subtract to an element returning the previous value */
-`define ShiftLeft   24  /* Shift left                                          */
-`define ShiftRight  25  /* Shift right                                         */
-`define NotLogical  26  /* Not - logical                                       */
-`define Not         27  /* Not - bitwise                                       */
-`define Or          28  /* Or                                                  */
-`define Xor         29  /* Xor                                                 */
-`define And         30  /* And                                                 */
 
 module Memory
 #(parameter integer ADDRESS_BITS =  8,                                          // Number of bits in an address
