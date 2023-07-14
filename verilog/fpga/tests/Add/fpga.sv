@@ -7,7 +7,7 @@ module fpga                                                                     
 
   integer ip;                                                                   // Instruction pointer
 
-  always @(posedge clock, negedge clock) begin                                  // Each instruction
+  always @(posedge clock) begin                                  // Each instruction
     ip = 0;
   end
 
