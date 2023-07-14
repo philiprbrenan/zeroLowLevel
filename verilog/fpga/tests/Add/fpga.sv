@@ -36,11 +36,6 @@ module fpga                                                                     
       success        = 0;
 
     end
-    else begin
-      success = outMem[0] == 5;
-      steps = steps + 1;
-      finished = steps >      5;
-    end
   end
 
 endmodule
