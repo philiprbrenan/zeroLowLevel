@@ -96,7 +96,7 @@ module Memory
     end
   endtask
 
-  always @(clock) begin                                                             // Each transition
+  always @(posedge clock) begin                                                 // Each transition
     case(action)                                                                // Decode request
       `Reset: begin                                                             // Reset
         freedArraysTop = 0;                                                     // Free all arrays
@@ -436,7 +436,7 @@ module fpga                                                                     
   integer steps;                                                                // Number of steps executed so far
   integer i, j, k;                                                              // A useful counter
 
-  always @(posedge clock, negedge clock) begin                                  // Each instruction
+  always @(posedge clock) begin                                                 // Each instruction
     if (reset) begin
       ip             = 0;
       steps          = 0;
@@ -450,57 +450,53 @@ module fpga                                                                     
       case(ip)
 
           0 :
-        begin                                                                   // start
-          //$display("AAAA %4d %4d start", steps, ip);
-              heapClock = 0;                                                    // Ready for next operation
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 1;
         end
 
           1 :
-        begin                                                                   // start2
-          //$display("AAAA %4d %4d start2", steps, ip);
-              heapAction = `Reset;                                          // Ready for next operation
+        begin                                                                   // start
+          //$display("AAAA %4d %4d start", steps, ip);
+              heapAction = `Reset;                                              // Reset heap memory
               ip = 2;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
           2 :
-        begin                                                                   // array
-          //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `Alloc;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 3;
-              heapClock = ~ heapClock;
         end
 
           3 :
-        begin                                                                   // movHeapOut
-          //$display("AAAA %4d %4d movHeapOut", steps, ip);
-              localMem[0] = heapOut;
+        begin                                                                   // array
+          //$display("AAAA %4d %4d array", steps, ip);
+              heapAction = `Alloc;
               ip = 4;
+              heapClock = 1;
         end
 
           4 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[5] = 3;
+        begin                                                                   // movHeapOut
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
+              localMem[0] = heapOut;
               ip = 5;
         end
 
           5 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 2;                                                // Index of element to write to
-              heapIn      = localMem[5];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 6;
-              heapClock = ~ heapClock;
         end
 
           6 :
         begin                                                                   // mov
           //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[6] = 0;
+              localMem[5] = 3;
               ip = 7;
         end
 
@@ -508,78 +504,74 @@ module fpga                                                                     
         begin                                                                   // movWrite1
           //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 3;                                                // Index of element to write to
-              heapIn      = localMem[6];                                                 // Data to write
+              heapIndex   = 2;                                                // Index of element to write to
+              heapIn      = localMem[5];                                                 // Data to write
               heapAction  = `Write;                                         // Request a write
               ip = 8;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
           8 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[7] = 0;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 9;
         end
 
           9 :
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[6] = 0;
+              ip = 10;
+        end
+
+         10 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 3;                                                // Index of element to write to
+              heapIn      = localMem[6];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 11;
+              heapClock = 1;
+        end
+
+         11 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 12;
+        end
+
+         12 :
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[7] = 0;
+              ip = 13;
+        end
+
+         13 :
         begin                                                                   // movWrite1
           //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
               heapIndex   = 0;                                                // Index of element to write to
               heapIn      = localMem[7];                                                 // Data to write
               heapAction  = `Write;                                         // Request a write
-              ip = 10;
-              heapClock = ~ heapClock;
-        end
-
-         10 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[8] = 0;
-              ip = 11;
-        end
-
-         11 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[8];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
-              ip = 12;
-              heapClock = ~ heapClock;
-        end
-
-         12 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 3;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
-              ip = 13;
-              heapClock = ~ heapClock;
-        end
-
-         13 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[9] = heapOut;                                                     // Data retrieved from heap memory
               ip = 14;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          14 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[1] = localMem[9];
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 15;
         end
 
          15 :
         begin                                                                   // mov
           //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[10] = 1;
+              localMem[8] = 0;
               ip = 16;
         end
 
@@ -587,219 +579,198 @@ module fpga                                                                     
         begin                                                                   // movWrite1
           //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 3;                                                // Index of element to write to
-              heapIn      = localMem[10];                                                 // Data to write
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[8];                                                 // Data to write
               heapAction  = `Write;                                         // Request a write
               ip = 17;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          17 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 18;
+        end
+
+         18 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = 3;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
-              ip = 18;
-              heapClock = ~ heapClock;
-        end
-
-         18 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[11] = heapOut;                                                     // Data retrieved from heap memory
               ip = 19;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          19 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[2] = localMem[11];
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 20;
         end
 
          20 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 2;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[9] = heapOut;                                                     // Data retrieved from heap memory
               ip = 21;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          21 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[12] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 22;
-              heapClock = ~ heapClock;
         end
 
          22 :
         begin                                                                   // mov
           //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[3] = localMem[12];
+              localMem[1] = localMem[9];
               ip = 23;
         end
 
          23 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[10] = 1;
               ip = 24;
-              heapClock = ~ heapClock;
         end
 
          24 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[13] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 3;                                                // Index of element to write to
+              heapIn      = localMem[10];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
               ip = 25;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          25 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[14] = localMem[13] + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 26;
         end
 
          26 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 0;                                                // Index of element to write to
-              heapIn      = localMem[14];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
-              ip = 27;
-              heapClock = ~ heapClock;
-        end
-
-         27 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 3;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
+              ip = 27;
+              heapClock = 1;
+        end
+
+         27 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 28;
-              heapClock = ~ heapClock;
         end
 
          28 :
         begin                                                                   // movRead2
           //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[15] = heapOut;                                                     // Data retrieved from heap memory
+              localMem[11] = heapOut;                                                     // Data retrieved from heap memory
               ip = 29;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          29 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[16] = localMem[15] + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 30;
         end
 
          30 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 0;                                                // Index of element to write to
-              heapIn      = localMem[16];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[2] = localMem[11];
               ip = 31;
-              heapClock = ~ heapClock;
         end
 
          31 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 2;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
               ip = 32;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          32 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[17] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 33;
-              heapClock = ~ heapClock;
         end
 
          33 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[18] = localMem[17] + 1;
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[12] = heapOut;                                                     // Data retrieved from heap memory
               ip = 34;
+              heapClock = 1;
         end
 
          34 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 0;                                                // Index of element to write to
-              heapIn      = localMem[18];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 35;
-              heapClock = ~ heapClock;
         end
 
          35 :
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[3] = localMem[12];
+              ip = 36;
+        end
+
+         36 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
               heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
-              ip = 36;
-              heapClock = ~ heapClock;
-        end
-
-         36 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[19] = heapOut;                                                     // Data retrieved from heap memory
               ip = 37;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          37 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[19];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 38;
         end
 
          38 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[13] = heapOut;                                                     // Data retrieved from heap memory
               ip = 39;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          39 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[20] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 40;
-              heapClock = ~ heapClock;
         end
 
          40 :
         begin                                                                   // add
           //$display("AAAA %4d %4d add", steps, ip);
-              localMem[21] = localMem[20] + 1;
+              localMem[14] = localMem[13] + 1;
               ip = 41;
         end
 
@@ -807,193 +778,509 @@ module fpga                                                                     
         begin                                                                   // movWrite1
           //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[21];                                                 // Data to write
+              heapIndex   = 0;                                                // Index of element to write to
+              heapIn      = localMem[14];                                                 // Data to write
               heapAction  = `Write;                                         // Request a write
               ip = 42;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          42 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 43;
-              heapClock = ~ heapClock;
         end
 
          43 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[22] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
               ip = 44;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          44 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[23] = localMem[22] + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 45;
         end
 
          45 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[23];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[15] = heapOut;                                                     // Data retrieved from heap memory
               ip = 46;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          46 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 47;
-              heapClock = ~ heapClock;
         end
 
          47 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[24] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[16] = localMem[15] + 1;
               ip = 48;
-              heapClock = ~ heapClock;
         end
 
          48 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[25] = localMem[24] + 1;
-              ip = 49;
-        end
-
-         49 :
         begin                                                                   // movWrite1
           //$display("AAAA %4d %4d movWrite1", steps, ip);
               heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[25];                                                 // Data to write
+              heapIndex   = 0;                                                // Index of element to write to
+              heapIn      = localMem[16];                                                 // Data to write
               heapAction  = `Write;                                         // Request a write
+              ip = 49;
+              heapClock = 1;
+        end
+
+         49 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 50;
-              heapClock = ~ heapClock;
         end
 
          50 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
               ip = 51;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          51 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[26] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 52;
-              heapClock = ~ heapClock;
         end
 
          52 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[27] = localMem[26] + 1;
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[17] = heapOut;                                                     // Data retrieved from heap memory
               ip = 53;
+              heapClock = 1;
         end
 
          53 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[27];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 54;
-              heapClock = ~ heapClock;
         end
 
          54 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                           // Request a read, not a write
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[18] = localMem[17] + 1;
               ip = 55;
-              heapClock = ~ heapClock;
         end
 
          55 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[28] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 0;                                                // Index of element to write to
+              heapIn      = localMem[18];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
               ip = 56;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          56 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[29] = localMem[28] + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 57;
         end
 
          57 :
-        begin                                                                   // movWrite1
-          //$display("AAAA %4d %4d movWrite1", steps, ip);
-              heapArray   = localMem[0];                                                // Array to write to
-              heapIndex   = 1;                                                // Index of element to write to
-              heapIn      = localMem[29];                                                 // Data to write
-              heapAction  = `Write;                                         // Request a write
-              ip = 58;
-              heapClock = ~ heapClock;
-        end
-
-         58 :
         begin                                                                   // movRead1
           //$display("AAAA %4d %4d movRead1", steps, ip);
               heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
               heapAction = `Read;                                           // Request a read, not a write
+              ip = 58;
+              heapClock = 1;
+        end
+
+         58 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 59;
-              heapClock = ~ heapClock;
         end
 
          59 :
         begin                                                                   // movRead2
           //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[30] = heapOut;                                                     // Data retrieved from heap memory
+              localMem[19] = heapOut;                                                     // Data retrieved from heap memory
               ip = 60;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
          60 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[4] = localMem[30];
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 61;
         end
 
          61 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[4];
+              outMem[outMemPos] = localMem[19];
               outMemPos = outMemPos + 1;
               ip = 62;
+        end
+
+         62 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 63;
+              heapClock = 1;
+        end
+
+         63 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 64;
+        end
+
+         64 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[20] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 65;
+              heapClock = 1;
+        end
+
+         65 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 66;
+        end
+
+         66 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[21] = localMem[20] + 1;
+              ip = 67;
+        end
+
+         67 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[21];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 68;
+              heapClock = 1;
+        end
+
+         68 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 69;
+        end
+
+         69 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 70;
+              heapClock = 1;
+        end
+
+         70 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 71;
+        end
+
+         71 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[22] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 72;
+              heapClock = 1;
+        end
+
+         72 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 73;
+        end
+
+         73 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[23] = localMem[22] + 1;
+              ip = 74;
+        end
+
+         74 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[23];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 75;
+              heapClock = 1;
+        end
+
+         75 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 76;
+        end
+
+         76 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 77;
+              heapClock = 1;
+        end
+
+         77 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 78;
+        end
+
+         78 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[24] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 79;
+              heapClock = 1;
+        end
+
+         79 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 80;
+        end
+
+         80 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[25] = localMem[24] + 1;
+              ip = 81;
+        end
+
+         81 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[25];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 82;
+              heapClock = 1;
+        end
+
+         82 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 83;
+        end
+
+         83 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 84;
+              heapClock = 1;
+        end
+
+         84 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 85;
+        end
+
+         85 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[26] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 86;
+              heapClock = 1;
+        end
+
+         86 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 87;
+        end
+
+         87 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[27] = localMem[26] + 1;
+              ip = 88;
+        end
+
+         88 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[27];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 89;
+              heapClock = 1;
+        end
+
+         89 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 90;
+        end
+
+         90 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 91;
+              heapClock = 1;
+        end
+
+         91 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 92;
+        end
+
+         92 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[28] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 93;
+              heapClock = 1;
+        end
+
+         93 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 94;
+        end
+
+         94 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[29] = localMem[28] + 1;
+              ip = 95;
+        end
+
+         95 :
+        begin                                                                   // movWrite1
+          //$display("AAAA %4d %4d movWrite1", steps, ip);
+              heapArray   = localMem[0];                                                // Array to write to
+              heapIndex   = 1;                                                // Index of element to write to
+              heapIn      = localMem[29];                                                 // Data to write
+              heapAction  = `Write;                                         // Request a write
+              ip = 96;
+              heapClock = 1;
+        end
+
+         96 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 97;
+        end
+
+         97 :
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                           // Request a read, not a write
+              ip = 98;
+              heapClock = 1;
+        end
+
+         98 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 99;
+        end
+
+         99 :
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[30] = heapOut;                                                     // Data retrieved from heap memory
+              ip = 100;
+              heapClock = 1;
+        end
+
+        100 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 101;
+        end
+
+        101 :
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[4] = localMem[30];
+              ip = 102;
+        end
+
+        102 :
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[4];
+              outMemPos = outMemPos + 1;
+              ip = 103;
         end
       endcase
       success = outMem[0] == 3 && outMem[1] == 5;
       steps = steps + 1;
-      finished = steps >     63;
+      finished = steps >    104;
     end
   end
 
