@@ -64,12 +64,6 @@ module Memory
 
   always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
-      `Size: begin                                                              // Size
-        if (!error) begin
-          out = arraySizes[array];
-        end
-      end
-
       `Greater: begin                                                           // Count greater
         if (!error) begin
           result = 0;
