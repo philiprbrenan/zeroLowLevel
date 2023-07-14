@@ -292,7 +292,7 @@ module Memory
         else begin
           //$display("Out of memory, cannot allocate a new array"); error = 10000270;
         end
-        allocations[result] = 1;                                                // Allocated
+        //allocations[result] = 1;                                                // Allocated
         arraySizes[result] = 0;                                                 // Empty array
         out = result;
       end
@@ -301,7 +301,7 @@ module Memory
         checkWriteable(10000150);
         if (!error) begin
           freedArrays[freedArraysTop] = array;                                  // Relies on the user not re freeing a freed array - we should probably hve another array to prevent this
-          allocations[array]          = 0;                                      // No longer allocated
+          //allocations[array]          = 0;                                      // No longer allocated
           freedArraysTop = freedArraysTop + 1;
         end
       end
