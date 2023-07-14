@@ -49,20 +49,13 @@ module Memory
   parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
 
   reg [DATA_BITS   -1:0] memory     [ARRAYS-1:0][ARRAY_LENGTH-1:0];             // Memory containing arrays in fixed blocks
-  reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
   reg [INDEX_BITS    :0] arraySizes [ARRAYS-1:0];                               // Current size of each array
-  reg [ADDRESS_BITS-1:0] freedArrays[ARRAYS-1:0];                               // Currently freed arrays
-  reg                    allocations[ARRAYS-1:0];                               // Currently allocated arrays
 
-  integer allocatedArrays;                                                      // Arrays allocated
-  integer freedArraysTop;                                                       // Top of the freed arrays stack
   integer result;                                                               // Result of each array operation
   integer size;                                                                 // Size of current array
-  integer moveLongStartArray;                                                   // Source array of move long
-  integer moveLongStartIndex;                                                   // Source index of move long
-  integer i, a, b;                                                              // Index
+  integer i;                                                                    // Index
 
-  always @(clock) begin                                                             // Each transition
+  always @(clock) begin                                                         // Each transition
     case(action)                                                                // Decode request
       `Size: begin                                                              // Size
         out = arraySizes[array];
