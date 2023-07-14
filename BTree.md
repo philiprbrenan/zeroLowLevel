@@ -398,7 +398,7 @@ Get the number of keys in the tree..
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
@@ -691,7 +691,7 @@ Get data field from find results.
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
@@ -939,7 +939,7 @@ Get key field from find results.
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
@@ -1231,7 +1231,7 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
     END
     
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     add              497
     arrayCountLess   223
@@ -1709,7 +1709,7 @@ Iterate over a tree.
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
@@ -1963,7 +1963,7 @@ Print the keys held in a tree.
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
@@ -2211,7 +2211,7 @@ Print the data held in a tree.
     subtract         574
     END
     
-      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps;                           # Find tally
+      is_deeply formatTable($e->tallyCounts->{2}), <<END if     $e->assembly->lowLevelOps and 0;                           # Find tally
     add              497
     arrayCountLess   223
     arrayIndex       330
