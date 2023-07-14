@@ -37,38 +37,6 @@ module fpga                                                                     
 
     end
     else begin
-      case(ip)
-
-          0 :
-        begin                                                                   // start
-          //$display("AAAA %4d %4d start", steps, ip);
-              heapClock = 0;                                                    // Ready for next operation
-              ip = 1;
-        end
-
-          1 :
-        begin                                                                   // start2
-          //$display("AAAA %4d %4d start2", steps, ip);
-              heapAction = 0;                                          // Ready for next operation
-              ip = 2;
-              heapClock = ~ heapClock;
-        end
-
-          2 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[0] = 3 + 2;
-              ip = 3;
-        end
-
-          3 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[0];
-              outMemPos = outMemPos + 1;
-              ip = 4;
-        end
-      endcase
       success = outMem[0] == 5;
       steps = steps + 1;
       finished = steps >      5;
