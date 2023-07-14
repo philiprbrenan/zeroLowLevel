@@ -70,20 +70,15 @@ module Memory
         end
       end
 
-      `Down: begin                                                              // Down
+      `Greater: begin                                                           // Count greater
         if (!error) begin
+          result = 0;
           size   = arraySizes[array];
-          if (size > 0) begin
-            for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i]; // Copy source array
-            for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                       // Move original array up
-              if (i > index && i <= size) begin
-                memory[array][i-1] = copy[i];
-              end
-            end
-            out = copy[index];                                                  // Return replaced value
-            arraySizes[array] = arraySizes[array] - 1;                          // Decrease array size
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+            if (i < size && memory[array][i] > in) result = result + 1;
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
-          else error = 100000274;                                               // Orignal array was emoty so we cannot shift it down
+          out = result;
         end
       end
     endcase
