@@ -69,13 +69,10 @@ module Memory
       end
 
       `Greater: begin                                                           // Count greater
-          result = 0;
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] > in) result = result + 1;
-////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
-          out = result;
       end
     endcase
   end
