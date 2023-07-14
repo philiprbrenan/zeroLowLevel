@@ -20,7 +20,7 @@ module Memory
   integer size;                                                                 // Size of current array
   integer i;                                                                    // Index
 
-  always @(clock) begin                                                         // Each transition
+  always @(posedge clock) begin                                                         // Each transition
     case(action)                                                                // Decode request
       `Size: begin                                                              // Size
         out = arraySizes[array];
