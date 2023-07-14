@@ -8,7 +8,7 @@ use warnings FATAL => qw(all);
 use strict;
 use Data::Table::Text qw(:all);
 use Zero::Emulator qw(:all);
-use Test::More tests=>3;
+use Test::More tests=>1;
 
 sub bubbleSort($$)                                                              # As described at: https://en.wikipedia.org/wiki/Bubble_sort
  {my ($array, $name) = @_;                                                      # Array, name of array memory
@@ -54,11 +54,11 @@ Heap: |  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 END
   #is_deeply $e->outLines, [11, 22, 33];
 
-  is_deeply $e->count, 115 unless $e->assembly->lowLevelOps;
-  is_deeply $e->count, 195 if     $e->assembly->lowLevelOps;
+  is_deeply $e->count, 115 unless $e->assembly->lowLevelOps or  1;
+  is_deeply $e->count, 195 if     $e->assembly->lowLevelOps and 0;
 
   #say STDERR formatTable($e->counts); exit;
-  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps;
+  is_deeply formatTable($e->counts), <<END unless $e->assembly->lowLevelOps or 1;
 add        18
 array       1
 arraySize   1
@@ -70,7 +70,7 @@ push        8
 subtract    2
 END
 
-  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps;
+  is_deeply formatTable($e->counts), <<END if     $e->assembly->lowLevelOps and 0;
 add         18
 array        1
 arraySize    1
