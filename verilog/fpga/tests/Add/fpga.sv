@@ -65,15 +65,17 @@ module Memory
   always @(clock) begin                                                             // Each transition
     case(action)                                                                // Decode request
       `Size: begin                                                              // Size
-        if (!error) begin
-          out = arraySizes[array];
-        end
+        out = arraySizes[array];
       end
 
       `Greater: begin                                                           // Count greater
         if (!error) begin
           result = 0;
           size   = arraySizes[array];
+          for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
+            if (i < size && memory[array][i] > in) result = result + 1;
+////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+          end
           out = result;
         end
       end
