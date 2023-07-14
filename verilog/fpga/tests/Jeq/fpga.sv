@@ -96,7 +96,7 @@ module Memory
     end
   endtask
 
-  always @(clock) begin                                                             // Each transition
+  always @(posedge clock) begin                                                 // Each transition
     case(action)                                                                // Decode request
       `Reset: begin                                                             // Reset
         freedArraysTop = 0;                                                     // Free all arrays
@@ -436,7 +436,7 @@ module fpga                                                                     
   integer steps;                                                                // Number of steps executed so far
   integer i, j, k;                                                              // A useful counter
 
-  always @(posedge clock, negedge clock) begin                                  // Each instruction
+  always @(posedge clock) begin                                                 // Each instruction
     if (reset) begin
       ip             = 0;
       steps          = 0;
@@ -450,89 +450,90 @@ module fpga                                                                     
       case(ip)
 
           0 :
-        begin                                                                   // start
-          //$display("AAAA %4d %4d start", steps, ip);
-              heapClock = 0;                                                    // Ready for next operation
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 1;
         end
 
           1 :
-        begin                                                                   // start2
-          //$display("AAAA %4d %4d start2", steps, ip);
-              heapAction = `Reset;                                          // Ready for next operation
+        begin                                                                   // start
+          //$display("AAAA %4d %4d start", steps, ip);
+              heapAction = `Reset;                                              // Reset heap memory
               ip = 2;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
           2 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 3;
         end
 
           3 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[0] = 1;
+        begin                                                                   // label
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 4;
         end
 
           4 :
         begin                                                                   // mov
           //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[1] = 2;
+              localMem[0] = 1;
               ip = 5;
         end
 
           5 :
-        begin                                                                   // jEq
-          //$display("AAAA %4d %4d jEq", steps, ip);
-              ip = localMem[0] == localMem[1] ? 10 : 6;
+        begin                                                                   // mov
+          //$display("AAAA %4d %4d mov", steps, ip);
+              localMem[1] = 2;
+              ip = 6;
         end
 
           6 :
+        begin                                                                   // jEq
+          //$display("AAAA %4d %4d jEq", steps, ip);
+              ip = localMem[0] == localMem[1] ? 11 : 7;
+        end
+
+          7 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = 111;
               outMemPos = outMemPos + 1;
-              ip = 7;
-        end
-
-          7 :
-        begin                                                                   // jEq
-          //$display("AAAA %4d %4d jEq", steps, ip);
-              ip = localMem[0] == localMem[0] ? 10 : 8;
+              ip = 8;
         end
 
           8 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-          // $display("Should not be executed     8");
+        begin                                                                   // jEq
+          //$display("AAAA %4d %4d jEq", steps, ip);
+              ip = localMem[0] == localMem[0] ? 11 : 9;
         end
 
           9 :
-        begin                                                                   // jmp
-          //$display("AAAA %4d %4d jmp", steps, ip);
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
           // $display("Should not be executed     9");
         end
 
          10 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
-              ip = 11;
+        begin                                                                   // jmp
+          //$display("AAAA %4d %4d jmp", steps, ip);
+          // $display("Should not be executed    10");
         end
 
          11 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = 333;
-              outMemPos = outMemPos + 1;
+        begin                                                                   // label
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 12;
         end
 
          12 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = 333;
+              outMemPos = outMemPos + 1;
               ip = 13;
         end
 
@@ -541,10 +542,16 @@ module fpga                                                                     
           //$display("AAAA %4d %4d label", steps, ip);
               ip = 14;
         end
+
+         14 :
+        begin                                                                   // label
+          //$display("AAAA %4d %4d label", steps, ip);
+              ip = 15;
+        end
       endcase
       success = outMem[0] == 111 && outMem[1] == 333;
       steps = steps + 1;
-      finished = steps >     13;
+      finished = steps >     14;
     end
   end
 
