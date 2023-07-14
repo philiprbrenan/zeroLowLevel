@@ -3067,7 +3067,7 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
         $o->source = $m->source;
         $p->source2 = $m->source2;
         $p->target  = $m->target;
-        push @l, $o, $p;
+        push @l, $o, resetHeapClock, $p, resetHeapClock;
        },
       pop=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap
@@ -3075,15 +3075,18 @@ sub Zero::Emulator::Assembly::lowLevel($)                                       
        },
       push=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
+        push @l, resetHeapClock;
        },
       shiftUp=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
+        push @l, resetHeapClock;
        },
       shiftDown=> sub
        {$assembly->lowLevelReplaceTargetFromHeapOut(\@l);                       # Target might be in the heap
        },
       resize=> sub
        {$assembly->lowLevelReplaceSource(\@l, q(source));                       # Source might come from the heap and we get nothing from the target
+        push @l, resetHeapClock;
        },
      };
 
@@ -4975,7 +4978,7 @@ if (1)                                                                          
   my $e = Execute(suppressOutput=>1);
   is_deeply $e->Heap->($e, 0), [0, 1, 2, 99];
   is_deeply [$e->timeParallel, $e->timeSequential], [3, 5]  unless $e->assembly->lowLevelOps;
-  is_deeply [$e->timeParallel, $e->timeSequential], [10,16] if     $e->assembly->lowLevelOps;
+  is_deeply [$e->timeParallel, $e->timeSequential], [11,17] if     $e->assembly->lowLevelOps;
   #say STDERR dump($e->timeParallel, $e->timeSequential); exit;
  }
 
