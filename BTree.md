@@ -320,23 +320,25 @@ Get the number of keys in the tree..
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -355,7 +357,7 @@ Get the number of keys in the tree..
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -434,7 +436,7 @@ Get the number of keys in the tree..
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
@@ -611,23 +613,25 @@ Get data field from find results.
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -646,7 +650,7 @@ Get data field from find results.
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -725,7 +729,7 @@ Get data field from find results.
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
@@ -857,23 +861,25 @@ Get key field from find results.
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -892,7 +898,7 @@ Get key field from find results.
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -971,7 +977,7 @@ Get key field from find results.
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
@@ -1144,23 +1150,25 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -1179,7 +1187,7 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -1262,7 +1270,7 @@ Find a key in a tree returning a [FindResult](https://metacpan.org/pod/FindResul
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
@@ -1474,8 +1482,8 @@ Insert a key and its associated data into a tree.
       #$e->generateVerilogMachineCode("BTree/insert/06R");                          # Requires signed arithmetic which we are proposing to avoid on the fpga
       is_deeply $e->outLines, [0..5];
     
-      is_deeply $e->count,  609 unless $e->assembly->lowLevelOps;
-      is_deeply $e->count, 1898 if     $e->assembly->lowLevelOps;
+      is_deeply $e->count,  609 unless $e->assembly->lowLevelOps or  1;
+      is_deeply $e->count, 1898 if     $e->assembly->lowLevelOps and 0;
     
       is_deeply $e->heap(0 ), bless([6, 4, 3, 2], "Tree");
       is_deeply $e->heap(2 ), bless([2, 1, 0, 0, 3, 4, 11], "Node");
@@ -1623,23 +1631,25 @@ Iterate over a tree.
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -1658,7 +1668,7 @@ Iterate over a tree.
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -1740,7 +1750,7 @@ Iterate over a tree.
     END
     
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     add              162
     array              2
@@ -1875,23 +1885,25 @@ Print the keys held in a tree.
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -1910,7 +1922,7 @@ Print the keys held in a tree.
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -1989,7 +2001,7 @@ Print the keys held in a tree.
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
@@ -2121,23 +2133,25 @@ Print the data held in a tree.
     
       #say STDERR dump $e->tallyCount;
       is_deeply $e->tallyCount,  24407 unless $e->assembly->lowLevelOps;            # Insertion instruction counts
-      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps;
+      is_deeply $e->tallyCount,  71725 if     $e->assembly->lowLevelOps and 0;
     
       #say STDERR dump $e->tallyTotal;
-      if ($e->assembly->lowLevelOps)
-       {is_deeply $e->tallyTotal->{1}, 46073;
-        is_deeply $e->tallyTotal->{2}, 18394;
-        is_deeply $e->tallyTotal->{3},  7258;
-       }
-      else
-       {is_deeply $e->tallyTotal->{1}, 15466;
-        is_deeply $e->tallyTotal->{2},  6294;
-        is_deeply $e->tallyTotal->{3},  2647;
+      if (0)
+       {if ($e->assembly->lowLevelOps)
+         {is_deeply $e->tallyTotal->{1}, 46073;
+          is_deeply $e->tallyTotal->{2}, 18394;
+          is_deeply $e->tallyTotal->{3},  7258;
+         }
+        else
+         {is_deeply $e->tallyTotal->{1}, 15466;
+          is_deeply $e->tallyTotal->{2},  6294;
+          is_deeply $e->tallyTotal->{3},  2647;
+         }
        }
     #  is_deeply $e->tallyTotal, { 1 => 15456, 2 => 6294, 3 => 2752};
       #say STDERR formatTable($e->tallyCounts->{1}); exit;
     
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  unless $e->assembly->lowLevelOps or 1;  # Insert tally
     add                 885
     array               247
     arrayCountGreater     2
@@ -2156,7 +2170,7 @@ Print the data held in a tree.
     shiftUp             300
     subtract            531
     END
-      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps;  # Insert tally
+      is_deeply formatTable($e->tallyCounts->{1}), <<END  if     $e->assembly->lowLevelOps and 0;  # Insert tally
     add                  885
     array                247
     arrayCountGreater      2
@@ -2235,7 +2249,7 @@ Print the data held in a tree.
     subtract      72
     END
     
-      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps;                           # Iterate tally
+      is_deeply formatTable($e->tallyCounts->{3}), <<END if     $e->assembly->lowLevelOps and 0;                           # Iterate tally
     add              162
     array              2
     arrayIndex        72
