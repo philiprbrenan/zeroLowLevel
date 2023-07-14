@@ -450,38 +450,45 @@ module fpga                                                                     
       case(ip)
 
           0 :
-        begin                                                                   // start
-          //$display("AAAA %4d %4d start", steps, ip);
-              heapClock = 0;                                                    // Ready for next operation
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 1;
         end
 
           1 :
-        begin                                                                   // start2
-          //$display("AAAA %4d %4d start2", steps, ip);
-              heapAction = `Reset;                                          // Ready for next operation
+        begin                                                                   // start
+          //$display("AAAA %4d %4d start", steps, ip);
+              heapAction = `Reset;                                              // Reset heap memory
               ip = 2;
-              heapClock = ~ heapClock;
+              heapClock = 1;
         end
 
           2 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[0] = 3 + 2;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 3;
         end
 
           3 :
+        begin                                                                   // add
+          //$display("AAAA %4d %4d add", steps, ip);
+              localMem[0] = 3 + 2;
+              ip = 4;
+        end
+
+          4 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[0];
               outMemPos = outMemPos + 1;
-              ip = 4;
+              ip = 5;
         end
       endcase
       success = outMem[0] == 5;
       steps = steps + 1;
-      finished = steps >      5;
+      finished = steps >      6;
     end
   end
 
