@@ -1389,6 +1389,7 @@ if (1)
   my $e = Execute(suppressOutput=>1, in=>[1,8,5,6,3,4,7,2,9,0]);
   is_deeply $e->outLines, [0..9];
   $e->compileToVerilog("BTree/in/1");
+#exit;
  }
 
 #latest:;
