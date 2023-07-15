@@ -290,6 +290,7 @@ sub fpgaLowLevelTestsYosys                                                      
         gowin_pack -d GW1N-9C -o $P $p
 
     - uses: actions/upload-artifact\@v3
+      if: \${{ always() }}
       with:
         path: $q
 
