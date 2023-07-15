@@ -427,7 +427,7 @@ module fpga                                                                     
   );
   parameter integer NIn =        3;                                           // Size of input area
   reg [      12-1:0] localMem[       2-1:0];                       // Local memory
-  reg [      12-1:0]   outMem[       9  -1:0];                       // Out channel
+  reg [      12-1:0]   outMem[       6  -1:0];                       // Out channel
   reg [      12-1:0]    inMem[       3   -1:0];                       // In channel
 
   integer inMemPos;                                                             // Current position in input channel
@@ -446,9 +446,9 @@ module fpga                                                                     
       finished       = 0;
       success        = 0;
 
-      inMem[0] = 33;
+      inMem[0] = 333;
       inMem[1] = 22;
-      inMem[2] = 11;
+      inMem[2] = 1;
     end
     else begin
       case(ip)
@@ -476,95 +476,71 @@ module fpga                                                                     
         end
 
           3 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = 1;
-              outMemPos = outMemPos + 1;
+        begin                                                                   // label
+          //$display("AAAA %4d %4d label", steps, ip);
               ip = 4;
         end
 
           4 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = 2;
-              outMemPos = outMemPos + 1;
+        begin                                                                   // inSize
+          //$display("AAAA %4d %4d inSize", steps, ip);
+              localMem[0] = 3 - inMemPos;
               ip = 5;
         end
 
           5 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = 3;
-              outMemPos = outMemPos + 1;
-              ip = 6;
+        begin                                                                   // jFalse
+          //$display("AAAA %4d %4d jFalse", steps, ip);
+              ip = localMem[0] == 0 ? 11 : 6;
         end
 
           6 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
-              ip = 7;
-        end
-
-          7 :
-        begin                                                                   // inSize
-          //$display("AAAA %4d %4d inSize", steps, ip);
-              localMem[0] = 3 - inMemPos;
-              ip = 8;
-        end
-
-          8 :
-        begin                                                                   // jFalse
-          //$display("AAAA %4d %4d jFalse", steps, ip);
-              ip = localMem[0] == 0 ? 14 : 9;
-        end
-
-          9 :
         begin                                                                   // in
           //$display("AAAA %4d %4d in", steps, ip);
               if (inMemPos < 3) begin
                 localMem[1] = inMem[inMemPos];
                 inMemPos = inMemPos + 1;
               end
-              ip = 10;
+              ip = 7;
         end
 
-         10 :
+          7 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[0];
               outMemPos = outMemPos + 1;
-              ip = 11;
+              ip = 8;
         end
 
-         11 :
+          8 :
         begin                                                                   // out
           //$display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[1];
               outMemPos = outMemPos + 1;
-              ip = 12;
+              ip = 9;
         end
 
-         12 :
+          9 :
         begin                                                                   // label
           //$display("AAAA %4d %4d label", steps, ip);
-              ip = 13;
+              ip = 10;
         end
 
-         13 :
+         10 :
         begin                                                                   // jmp
           //$display("AAAA %4d %4d jmp", steps, ip);
-              ip = 6;
+              ip = 3;
         end
 
-         14 :
+         11 :
         begin                                                                   // label
           //$display("AAAA %4d %4d label", steps, ip);
-              ip = 15;
+              ip = 12;
         end
       endcase
-      success = outMem[0] == 1 && outMem[1] == 2 && outMem[2] == 3 && outMem[3] == 3 && outMem[4] == 33 && outMem[5] == 2 && outMem[6] == 22 && outMem[7] == 1 && outMem[8] == 11;
+      success = outMem[0] == 3 && outMem[1] == 333 && outMem[2] == 2 && outMem[3] == 22 && outMem[4] == 1 && outMem[5] == 1;
       steps = steps + 1;
-      finished = steps >     35;
+      finished = steps >     32;
     end
   end
 
