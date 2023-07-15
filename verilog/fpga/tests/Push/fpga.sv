@@ -425,7 +425,7 @@ module fpga                                                                     
     .out    (heapOut),
     .error  (heapError)
   );
-  reg [      12-1:0] localMem[       5-1:0];                       // Local memory
+  reg [      12-1:0] localMem[       3-1:0];                       // Local memory
   reg [      12-1:0]   outMem[       2  -1:0];                       // Out channel
   reg [      12-1:0]    inMem[       1   -1:0];                       // In channel
 
@@ -472,74 +472,69 @@ module fpga                                                                     
         end
 
           3 :
-        begin                                                                   // array
-          //$display("AAAA %4d %4d array", steps, ip);
-              heapAction = `Alloc;
-              ip = 4;
-              heapClock = 1;
-        end
-
-          4 :
         begin                                                                   // resetHeapClock
           //$display("AAAA %4d %4d resetHeapClock", steps, ip);
               heapClock = 0;
+              ip = 4;
+        end
+
+          4 :
+        begin                                                                   // array
+          //$display("AAAA %4d %4d array", steps, ip);
+              heapAction = `Alloc;
               ip = 5;
+              heapClock = 1;
         end
 
           5 :
-        begin                                                                   // movHeapOut
-          //$display("AAAA %4d %4d movHeapOut", steps, ip);
-              localMem[0] = heapOut;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 6;
         end
 
           6 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
+        begin                                                                   // movHeapOut
+          //$display("AAAA %4d %4d movHeapOut", steps, ip);
+              localMem[0] = heapOut;
               ip = 7;
         end
 
           7 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 8;
+        end
+
+          8 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 9;
+        end
+
+          9 :
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
+              ip = 10;
+        end
+
+         10 :
         begin                                                                   // push
           //$display("AAAA %4d %4d push", steps, ip);
               heapAction = `Push;
               heapIn     = 1;
               heapArray  = localMem[0];
-              ip = 8;
-              heapClock = 1;
-        end
-
-          8 :
-        begin                                                                   // push
-          //$display("AAAA %4d %4d push", steps, ip);
-              heapAction = `Push;
-              heapIn     = 2;
-              heapArray  = localMem[0];
-              ip = 9;
-              heapClock = 1;
-        end
-
-          9 :
-        begin                                                                   // arraySize
-          //$display("AAAA %4d %4d arraySize", steps, ip);
-              heapAction = `Size;
-              heapArray  = localMem[0];
-              ip = 10;
-              heapClock = 1;
-        end
-
-         10 :
-        begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
-              heapClock = 0;
               ip = 11;
+              heapClock = 1;
         end
 
          11 :
-        begin                                                                   // movHeapOut
-          //$display("AAAA %4d %4d movHeapOut", steps, ip);
-              localMem[1] = heapOut;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 12;
         end
 
@@ -551,28 +546,37 @@ module fpga                                                                     
         end
 
          13 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
+        begin                                                                   // push
+          //$display("AAAA %4d %4d push", steps, ip);
+              heapAction = `Push;
+              heapIn     = 2;
+              heapArray  = localMem[0];
               ip = 14;
+              heapClock = 1;
         end
 
          14 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[2] = 0;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 15;
         end
 
          15 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 16;
         end
 
          16 :
-        begin                                                                   // jGe
-          //$display("AAAA %4d %4d jGe", steps, ip);
-              ip = localMem[2] >= localMem[1] ? 27 : 17;
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 0;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                               // Request a read, not a write
+              ip = 17;
+              heapClock = 1;
         end
 
          17 :
@@ -583,11 +587,9 @@ module fpga                                                                     
         end
 
          18 :
-        begin                                                                   // movRead1
-          //$display("AAAA %4d %4d movRead1", steps, ip);
-              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
-              heapIndex  = localMem[2];                                                  // Address of the item we wish to read from heap memory
-              heapAction = `Read;                                               // Request a read, not a write
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[1] = heapOut;                                                     // Data retrieved from heap memory
               ip = 19;
               heapClock = 1;
         end
@@ -600,11 +602,11 @@ module fpga                                                                     
         end
 
          20 :
-        begin                                                                   // movRead2
-          //$display("AAAA %4d %4d movRead2", steps, ip);
-              localMem[4] = heapOut;                                                     // Data retrieved from heap memory
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[1];
+              outMemPos = outMemPos + 1;
               ip = 21;
-              heapClock = 1;
         end
 
          21 :
@@ -615,48 +617,48 @@ module fpga                                                                     
         end
 
          22 :
-        begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
-              localMem[3] = localMem[4];
+        begin                                                                   // movRead1
+          //$display("AAAA %4d %4d movRead1", steps, ip);
+              heapArray  = localMem[0];                                                  // Address of the item we wish to read from heap memory
+              heapIndex  = 1;                                                  // Address of the item we wish to read from heap memory
+              heapAction = `Read;                                               // Request a read, not a write
               ip = 23;
+              heapClock = 1;
         end
 
          23 :
-        begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
-              outMem[outMemPos] = localMem[3];
-              outMemPos = outMemPos + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 24;
         end
 
          24 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
+        begin                                                                   // movRead2
+          //$display("AAAA %4d %4d movRead2", steps, ip);
+              localMem[2] = heapOut;                                                     // Data retrieved from heap memory
               ip = 25;
+              heapClock = 1;
         end
 
          25 :
-        begin                                                                   // add
-          //$display("AAAA %4d %4d add", steps, ip);
-              localMem[2] = localMem[2] + 1;
+        begin                                                                   // resetHeapClock
+          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+              heapClock = 0;
               ip = 26;
         end
 
          26 :
-        begin                                                                   // jmp
-          //$display("AAAA %4d %4d jmp", steps, ip);
-              ip = 15;
-        end
-
-         27 :
-        begin                                                                   // label
-          //$display("AAAA %4d %4d label", steps, ip);
-              ip = 28;
+        begin                                                                   // out
+          //$display("AAAA %4d %4d out", steps, ip);
+              outMem[outMemPos] = localMem[2];
+              outMemPos = outMemPos + 1;
+              ip = 27;
         end
       endcase
       success = outMem[0] == 1 && outMem[1] == 2;
       steps = steps + 1;
-      finished = steps >     43;
+      finished = steps >     28;
     end
   end
 
