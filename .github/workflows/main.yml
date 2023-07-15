@@ -1,4 +1,4 @@
-# Test 2023-07-15 at 01:55:42
+# Test 2023-07-15 at 02:27:24
 
 name: Test
 
@@ -298,6 +298,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Add/fpga.fs verilog/fpga/tests/Add/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Add/
+
 
   Yosys_Array_:
     runs-on: ubuntu-latest
@@ -340,6 +344,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Array/fpga.fs verilog/fpga/tests/Array/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Array/
 
 
   Yosys_ArrayAdd_:
@@ -384,6 +392,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ArrayAdd/fpga.fs verilog/fpga/tests/ArrayAdd/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ArrayAdd/
+
 
   Yosys_ArrayCountGreaterIndex_:
     runs-on: ubuntu-latest
@@ -426,6 +438,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ArrayCountGreaterIndex/fpga.fs verilog/fpga/tests/ArrayCountGreaterIndex/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ArrayCountGreaterIndex/
 
 
   Yosys_ArrayCountLess_:
@@ -470,6 +486,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ArrayCountLess/fpga.fs verilog/fpga/tests/ArrayCountLess/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ArrayCountLess/
+
 
   Yosys_ArrayIndex_:
     runs-on: ubuntu-latest
@@ -512,6 +532,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ArrayIndex/fpga.fs verilog/fpga/tests/ArrayIndex/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ArrayIndex/
 
 
   Yosys_Array_scans_:
@@ -556,6 +580,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Array_scans/fpga.fs verilog/fpga/tests/Array_scans/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Array_scans/
+
 
   Yosys_BTree_basic_1_:
     runs-on: ubuntu-latest
@@ -598,6 +626,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/basic/1/fpga.fs verilog/fpga/tests/BTree/basic/1/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/basic/1/
 
 
   Yosys_BTree_basic_2_:
@@ -642,6 +674,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/basic/2/fpga.fs verilog/fpga/tests/BTree/basic/2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/basic/2/
+
 
   Yosys_BTree_in_1_:
     runs-on: ubuntu-latest
@@ -684,6 +720,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/in/1/fpga.fs verilog/fpga/tests/BTree/in/1/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/in/1/
 
 
   Yosys_BTree_in_2_:
@@ -728,6 +768,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/in/2/fpga.fs verilog/fpga/tests/BTree/in/2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/in/2/
+
 
   Yosys_BTree_in_3_:
     runs-on: ubuntu-latest
@@ -770,6 +814,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/in/3/fpga.fs verilog/fpga/tests/BTree/in/3/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/in/3/
 
 
   Yosys_BTree_in_4_:
@@ -814,6 +862,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/in/4/fpga.fs verilog/fpga/tests/BTree/in/4/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/in/4/
+
 
   Yosys_BTree_insert_66_:
     runs-on: ubuntu-latest
@@ -856,6 +908,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/BTree/insert/66/fpga.fs verilog/fpga/tests/BTree/insert/66/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/BTree/insert/66/
 
 
   Yosys_ForIn_:
@@ -900,6 +956,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ForIn/fpga.fs verilog/fpga/tests/ForIn/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ForIn/
+
 
   Yosys_Free_:
     runs-on: ubuntu-latest
@@ -942,6 +1002,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Free/fpga.fs verilog/fpga/tests/Free/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Free/
 
 
   Yosys_In_:
@@ -986,6 +1050,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/In/fpga.fs verilog/fpga/tests/In/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/In/
+
 
   Yosys_InSize_:
     runs-on: ubuntu-latest
@@ -1028,6 +1096,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/InSize/fpga.fs verilog/fpga/tests/InSize/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/InSize/
 
 
   Yosys_JFalse_:
@@ -1072,6 +1144,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/JFalse/fpga.fs verilog/fpga/tests/JFalse/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/JFalse/
+
 
   Yosys_Jeq_:
     runs-on: ubuntu-latest
@@ -1114,6 +1190,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Jeq/fpga.fs verilog/fpga/tests/Jeq/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Jeq/
 
 
   Yosys_Jmp_:
@@ -1158,6 +1238,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Jmp/fpga.fs verilog/fpga/tests/Jmp/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Jmp/
+
 
   Yosys_Mov_:
     runs-on: ubuntu-latest
@@ -1200,6 +1284,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Mov/fpga.fs verilog/fpga/tests/Mov/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Mov/
 
 
   Yosys_Mov2_:
@@ -1244,6 +1332,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Mov2/fpga.fs verilog/fpga/tests/Mov2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Mov2/
+
 
   Yosys_MoveLong_1_:
     runs-on: ubuntu-latest
@@ -1286,6 +1378,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/MoveLong_1/fpga.fs verilog/fpga/tests/MoveLong_1/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/MoveLong_1/
 
 
   Yosys_MoveLong_2_:
@@ -1330,6 +1426,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/MoveLong_2/fpga.fs verilog/fpga/tests/MoveLong_2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/MoveLong_2/
+
 
   Yosys_Not_:
     runs-on: ubuntu-latest
@@ -1372,6 +1472,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Not/fpga.fs verilog/fpga/tests/Not/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Not/
 
 
   Yosys_Pop_:
@@ -1416,6 +1520,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Pop/fpga.fs verilog/fpga/tests/Pop/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Pop/
+
 
   Yosys_Push_:
     runs-on: ubuntu-latest
@@ -1458,6 +1566,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Push/fpga.fs verilog/fpga/tests/Push/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Push/
 
 
   Yosys_Push2_:
@@ -1502,6 +1614,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Push2/fpga.fs verilog/fpga/tests/Push2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Push2/
+
 
   Yosys_ShiftLeft_:
     runs-on: ubuntu-latest
@@ -1544,6 +1660,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ShiftLeft/fpga.fs verilog/fpga/tests/ShiftLeft/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ShiftLeft/
 
 
   Yosys_ShiftRight_:
@@ -1588,6 +1708,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/ShiftRight/fpga.fs verilog/fpga/tests/ShiftRight/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/ShiftRight/
+
 
   Yosys_Shift_up_:
     runs-on: ubuntu-latest
@@ -1630,6 +1754,10 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Shift_up/fpga.fs verilog/fpga/tests/Shift_up/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Shift_up/
 
 
   Yosys_Shift_up_2_:
@@ -1674,6 +1802,10 @@ jobs:
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Shift_up_2/fpga.fs verilog/fpga/tests/Shift_up_2/fpga.pnr
 
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Shift_up_2/
+
 
   Yosys_Subtract_:
     runs-on: ubuntu-latest
@@ -1716,4 +1848,8 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Subtract/fpga.fs verilog/fpga/tests/Subtract/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      with:
+        path: verilog/fpga/tests/Subtract/
 
