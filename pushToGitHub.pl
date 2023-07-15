@@ -266,7 +266,8 @@ sub fpgaLowLevelTestsYosys                                                      
     my $j = setFileExtension $s, q(json);                                       # Json description
     my $p = setFileExtension $s, q(pnr);                                        # Place and route
     my $P = setFileExtension $s, q(fs);                                         # Bit stream
-    my $b = fpe fp($s), qw(tangnano9k cst);                                     # Device description
+    my $q = fpe fp($s);                                                         # Path
+    my $b = fpe $q, qw(tangnano9k cst);                                         # Device description
 
     $y .= job("Yosys_$t").yosys(). <<END;
 
@@ -288,51 +289,14 @@ sub fpgaLowLevelTestsYosys                                                      
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o $P $p
 
-END
-   }
-  $y
- }
-
-sub fpgaLowLevelTestsYosys22                                                    # Low level tests
- {my @tests = lowLevelTests;
-  my $y = '';
-  my $d = q(GW1NR-LV9QN88PC6/I5);                                               # Device
-  my $f = q(GW1N-9C);                                                           # Device family
-
-  for my $s(@tests)                                                             # Tests
-   {my $t = fp($s) =~ s(/) (_)gsr =~ s(verilog_fpga_tests_) ()gsr;              # Test name in a form suitable for github
-
-    my $v = setFileExtension $s, q(sv);                                         # Source file
-    my $j = setFileExtension $s, q(json);                                       # Json description
-    my $p = setFileExtension $s, q(pnr);                                        # Place and route
-    my $P = setFileExtension $s, q(fs);                                         # Bit stream
-    my $b = fpe fp($s), qw(tangnano9k cst);                                     # Device description
-
-    $y .= job("Yosys_$t").yosys(). <<END;
-
-    - name: Yosys_$t
-      if: \${{ always() }}
-      run: |
-        export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -q -d -p "read_verilog $v; synth_gowin -top fpga -json $j"
-
-    - name: NextPnr_$t
-      if: \${{ always() }}
-      run: |
-        export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        nextpnr-gowin --json $j --write $p --device "$d" --family $f --cst $b
-
-    - name: Pack_$t
-      if: \${{ always() }}
-      run: |
-        export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        gowin_pack -d GW1N-9C -o $P $p
+    - uses: actions/upload-artifact\@v3
+      with:
+        path: $q
 
 END
    }
   $y
  }
-#yosys -q -d -p "read_verilog -nomem2reg $v; synth_gowin -top fpga -json $j"    # nomem2reg
 
 sub fpgaLowLevelArtefacts                                                       # The resulting bitstreams used to progrma the fpga
  {my $h = fpd qw(verilog fpga tests);                                           # Low level bit streams created by this run
