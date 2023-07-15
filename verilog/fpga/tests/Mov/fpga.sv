@@ -66,11 +66,11 @@ module Memory
     begin
        error = 0;
        if (array >= allocatedArrays) begin
-         //$display("Array has not been allocated, array %d", array);
+         $display("Array has not been allocated, array %d", array);
          error = err;
        end
        if (!allocations[array]) begin
-         //$display("Array has been freed, array %d", array);
+         $display("Array has been freed, array %d", array);
          error = err + 1;
        end
     end
@@ -80,7 +80,7 @@ module Memory
     begin
        checkWriteable(err);
        if (index >= arraySizes[array]) begin
-         //$display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
+         $display("Access outside array bounds, array %d, size: %d, access: %d", array, arraySizes[array], index);
          error = err + 2;
        end
     end
@@ -88,11 +88,11 @@ module Memory
 
   task dump;                                                                    // Dump some memory
     begin
-      //$display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
+      $display("    %2d %2d %2d", arraySizes[0], arraySizes[1], arraySizes[2]);
       for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-        //$display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
+        $display("%2d  %2d %2d %2d", i, memory[0][i], memory[1][i], memory[2][i]);
       end
-      //$display("    %2d %2d %2d", allocations[0], allocations[1], allocations[2]);
+      $display("    %2d %2d %2d", allocations[0], allocations[1], allocations[2]);
     end
   endtask
 
@@ -133,7 +133,7 @@ module Memory
         if (!error) begin
           if (arraySizes[array] > 0) arraySizes[array] = arraySizes[array] - 1;
           else begin
-            //$display("Attempt to decrement empty array, array %d", array); error = 10000044;
+            $display("Attempt to decrement empty array, array %d", array); error = 10000044;
           end
         end
       end
@@ -143,7 +143,7 @@ module Memory
         if (!error) begin
           if (arraySizes[array] < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;
           else begin
-            //$display("Attempt to decrement full array, array %d", array);  error = 10000054;
+            $display("Attempt to decrement full array, array %d", array);  error = 10000054;
           end
         end
       end
@@ -155,7 +155,7 @@ module Memory
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] == in) result = i + 1;
-////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
@@ -168,7 +168,7 @@ module Memory
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] < in) result = result + 1;
-////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
@@ -181,7 +181,7 @@ module Memory
           size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
             if (i < size && memory[array][i] > in) result = result + 1;
-////$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
+//$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
         end
@@ -248,7 +248,7 @@ module Memory
             arraySizes[array] = arraySizes[array] + 1;
           end
           else begin
-            //$display("Attempt to push to full array, array %d, value %d", array, in);  error = 10000124;
+            $display("Attempt to push to full array, array %d, value %d", array, in);  error = 10000124;
           end
         end
       end
@@ -261,7 +261,7 @@ module Memory
             out = memory[array][arraySizes[array]];
           end
           else begin
-            //$display("Attempt to pop empty array, array %d", array); error = 10000134;
+            $display("Attempt to pop empty array, array %d", array); error = 10000134;
           end
         end
       end
@@ -275,7 +275,7 @@ module Memory
         if (!error) begin
           if (in <= ARRAY_LENGTH) arraySizes[array] = in;
           else begin
-            //$display("Attempt to make an array too large, array %d, max %d, size %d", array, ARRAY_LENGTH, in); error = 10000144;
+            $display("Attempt to make an array too large, array %d, max %d, size %d", array, ARRAY_LENGTH, in); error = 10000144;
           end
         end
       end
@@ -290,7 +290,7 @@ module Memory
           allocatedArrays = allocatedArrays + 1;
         end
         else begin
-          //$display("Out of memory, cannot allocate a new array"); error = 10000270;
+          $display("Out of memory, cannot allocate a new array"); error = 10000270;
         end
         allocations[result] = 1;                                                // Allocated
         arraySizes[result] = 0;                                                 // Empty array
@@ -451,14 +451,14 @@ module fpga                                                                     
 
           0 :
         begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+          $display("AAAA %4d %4d resetHeapClock", steps, ip);
               heapClock = 0;
               ip = 1;
         end
 
           1 :
         begin                                                                   // start
-          //$display("AAAA %4d %4d start", steps, ip);
+          $display("AAAA %4d %4d start", steps, ip);
               heapAction = `Reset;                                              // Reset heap memory
               ip = 2;
               heapClock = 1;
@@ -466,35 +466,35 @@ module fpga                                                                     
 
           2 :
         begin                                                                   // resetHeapClock
-          //$display("AAAA %4d %4d resetHeapClock", steps, ip);
+          $display("AAAA %4d %4d resetHeapClock", steps, ip);
               heapClock = 0;
               ip = 3;
         end
 
           3 :
         begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
+          $display("AAAA %4d %4d mov", steps, ip);
               localMem[0] = 1;
               ip = 4;
         end
 
           4 :
         begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
+          $display("AAAA %4d %4d mov", steps, ip);
               localMem[1] = 2;
               ip = 5;
         end
 
           5 :
         begin                                                                   // mov
-          //$display("AAAA %4d %4d mov", steps, ip);
+          $display("AAAA %4d %4d mov", steps, ip);
               localMem[2] = 3;
               ip = 6;
         end
 
           6 :
         begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
+          $display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[0];
               outMemPos = outMemPos + 1;
               ip = 7;
@@ -502,7 +502,7 @@ module fpga                                                                     
 
           7 :
         begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
+          $display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[1];
               outMemPos = outMemPos + 1;
               ip = 8;
@@ -510,7 +510,7 @@ module fpga                                                                     
 
           8 :
         begin                                                                   // out
-          //$display("AAAA %4d %4d out", steps, ip);
+          $display("AAAA %4d %4d out", steps, ip);
               outMem[outMemPos] = localMem[2];
               outMemPos = outMemPos + 1;
               ip = 9;
