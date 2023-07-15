@@ -1,4 +1,4 @@
-# Test 2023-07-15 at 02:27:24
+# Test 2023-07-15 at 02:33:23
 
 name: Test
 
@@ -89,11 +89,6 @@ jobs:
       if: ${{ always() }}
       run: |
         rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Add/fpga.tb verilog/fpga/tests/Add/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
-
-    - name: verilog/fpga/tests/Array/fpga.sv
-      if: ${{ always() }}
-      run: |
-        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Array/fpga.tb verilog/fpga/tests/Array/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ArrayAdd/fpga.sv
       if: ${{ always() }}
@@ -301,53 +296,6 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         path: verilog/fpga/tests/Add/
-
-
-  Yosys_Array_:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: 'main'
-
-    - uses: actions/checkout@v3
-      with:
-        repository: philiprbrenan/DataTableText
-        path: dtt
-
-    - name: Cpan
-      run:  sudo cpan install -T Data::Dump
-    - name: Yosys
-      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
-
-    - name: Yosys unzip
-      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
-
-    - name: Yosys untar
-      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
-
-    - name: Yosys_Array_
-      if: ${{ always() }}
-      run: |
-        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Array/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Array/fpga.json"
-
-    - name: NextPnr_Array_
-      if: ${{ always() }}
-      run: |
-        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        nextpnr-gowin --json verilog/fpga/tests/Array/fpga.json --write verilog/fpga/tests/Array/fpga.pnr --device "GW1NR-LV9QN88PC6/I5" --family GW1N-9C --cst verilog/fpga/tests/Array/tangnano9k.cst
-
-    - name: Pack_Array_
-      if: ${{ always() }}
-      run: |
-        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        gowin_pack -d GW1N-9C -o verilog/fpga/tests/Array/fpga.fs verilog/fpga/tests/Array/fpga.pnr
-
-    - uses: actions/upload-artifact@v3
-      with:
-        path: verilog/fpga/tests/Array/
 
 
   Yosys_ArrayAdd_:
