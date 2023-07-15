@@ -1,4 +1,4 @@
-# Test 2023-07-14 at 08:34:04
+# Test 2023-07-15 at 01:55:42
 
 name: Test
 
@@ -224,6 +224,11 @@ jobs:
       if: ${{ always() }}
       run: |
         rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Push/fpga.tb verilog/fpga/tests/Push/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
+
+    - name: verilog/fpga/tests/Push2/fpga.sv
+      if: ${{ always() }}
+      run: |
+        rm -f fpga z1.txt; iverilog -Iverilog/includes -g2012 -o fpga verilog/fpga/tests/Push2/fpga.tb verilog/fpga/tests/Push2/fpga.sv && timeout 1m ./fpga | tee z1.txt; grep -qv "FAILED" z1.txt
 
     - name: verilog/fpga/tests/ShiftLeft/fpga.sv
       if: ${{ always() }}
@@ -1453,6 +1458,49 @@ jobs:
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
         gowin_pack -d GW1N-9C -o verilog/fpga/tests/Push/fpga.fs verilog/fpga/tests/Push/fpga.pnr
+
+
+  Yosys_Push2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Push2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push2/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Push2/fpga.json"
+
+    - name: NextPnr_Push2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        nextpnr-gowin --json verilog/fpga/tests/Push2/fpga.json --write verilog/fpga/tests/Push2/fpga.pnr --device "GW1NR-LV9QN88PC6/I5" --family GW1N-9C --cst verilog/fpga/tests/Push2/tangnano9k.cst
+
+    - name: Pack_Push2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        gowin_pack -d GW1N-9C -o verilog/fpga/tests/Push2/fpga.fs verilog/fpga/tests/Push2/fpga.pnr
 
 
   Yosys_ShiftLeft_:
