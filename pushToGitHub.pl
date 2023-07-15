@@ -266,7 +266,7 @@ sub fpgaLowLevelTestsYosys                                                      
     my $j = setFileExtension $s, q(json);                                       # Json description
     my $p = setFileExtension $s, q(pnr);                                        # Place and route
     my $P = setFileExtension $s, q(fs);                                         # Bit stream
-    my $q = fpe fp($s);                                                         # Path
+    my $q = fp $s;                                                              # Path
     my $b = fpe $q, qw(tangnano9k cst);                                         # Device description
 
     $y .= job("Yosys_$t").yosys(). <<END;
