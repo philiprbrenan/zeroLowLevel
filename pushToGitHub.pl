@@ -275,7 +275,7 @@ sub fpgaLowLevelTestsYosys                                                      
       if: \${{ always() }}
       run: |
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog $v; synth_gowin -top fpga -json $j"
+        yosys -d -Q -p "read_verilog -nomem2reg $v; synth_gowin -top fpga -json $j"
 
     - name: NextPnr_$t
       if: \${{ always() }}
@@ -298,6 +298,8 @@ END
    }
   $y
  }
+# Removing -nomem2reg
+# Error: Process completed with exit code 143.
 # yosys -d -Q -p "read_verilog -nomem2reg $v; synth_gowin -noflatten -nodffe -top fpga -json $j"
 
 sub fpgaLowLevelArtefacts                                                       # The resulting bitstreams used to progrma the fpga
