@@ -27,25 +27,27 @@ module MemoryTB();                                                              
     .error(error)
    );
 
-  task step();
+  task step();                                                                  // Drive clock.  The Yosys people say that you cannot drive on bioth positive and negative edges simultaneously but iverilog permits this. Using only one edge makes for a lot of clock steps.
     begin
-       #1 clock = ~ clock;
+       #1 clock = 0;
+       #1 clock = 1;
+       #1 clock = 0;
     end
   endtask
 
-  task allocateArray();
+  task allocateArray();                                                         // Allocate an array
     begin
        action = `Alloc; step(); array = out;
     end
   endtask
 
-  task dump();
+  task dump();                                                                  // Dump the contents of memory
     begin
        action = `Dump; step();
     end
   endtask
 
-  initial begin                                                                 // Test the circular buffer
+  initial begin                                                                 // Test memory implementation
     clock = 0;                     action = `Reset; step();
 
     allocateArray();
