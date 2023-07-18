@@ -45,8 +45,8 @@ module Memory
   output reg [DATA_BITS   -1:0] out,                                            // Output data
   output reg [31:0]             error);                                         // Error
 
-  parameter integer unsigned ARRAY_LENGTH = 2**INDEX_BITS;                      // Maximum index
-  parameter integer unsigned ARRAYS       = 2**ADDRESS_BITS;                    // Number of memory elements for both arrays and elements
+  parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
+  parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
 
   reg [DATA_BITS   -1:0] memory     [ARRAYS-1:0][ARRAY_LENGTH-1:0];             // Memory containing arrays in fixed blocks
   reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
