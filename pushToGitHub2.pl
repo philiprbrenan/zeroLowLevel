@@ -4,12 +4,6 @@
 # Philip R Brenan at gmail dot com, Appa Apps Ltd Inc., 2023
 #-------------------------------------------------------------------------------
 
-=pod
-No posedge/negedge
-The checks at the front of memory appear to be required inline.
-2.13 - Dlatch
-=cut
-
 use warnings FATAL => qw(all);
 use strict;
 use Carp;
@@ -81,11 +75,52 @@ jobs:
     - name: Yosys untar
       run: tar -xf oss-cad-suite-linux-x64-20230614.tar
 
-    - name: Yosys_Add_
+  Yosys_Push2_:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - uses: actions/checkout@v3
+      with:
+        repository: philiprbrenan/DataTableText
+        path: dtt
+
+    - name: Cpan
+      run:  sudo cpan install -T Data::Dump
+    - name: Yosys
+      run:  wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2023-06-14/oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys unzip
+      run: gunzip  oss-cad-suite-linux-x64-20230614.tgz
+
+    - name: Yosys untar
+      run: tar -xf oss-cad-suite-linux-x64-20230614.tar
+
+    - name: Yosys_Push2_
       if: ${{ always() }}
       run: |
         export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Add/fpga.sv; synth_gowin -noflatten -nodffe -top fpga -json verilog/fpga/tests/Add/fpga.json"
+        yosys -d -Q -p "read_verilog -nomem2reg verilog/fpga/tests/Push2/fpga.sv; synth_gowin -top fpga -json verilog/fpga/tests/Push2/fpga.json"
+
+    - name: NextPnr_Push2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        nextpnr-gowin --json verilog/fpga/tests/Push2/fpga.json --write verilog/fpga/tests/Push2/fpga.pnr --device "GW1NR-LV9QN88PC6/I5" --family GW1N-9C --cst verilog/fpga/tests/Push2/tangnano9k.cst
+
+    - name: Pack_Push2_
+      if: ${{ always() }}
+      run: |
+        export PATH="$PATH:$GITHUB_WORKSPACE/oss-cad-suite/bin/"
+        gowin_pack -d GW1N-9C -o verilog/fpga/tests/Push2/fpga.fs verilog/fpga/tests/Push2/fpga.pnr
+
+    - uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        path: verilog/fpga/tests/Push2/
 END
 
 my $f = writeFileUsingSavedToken $user, $repo, $wf, $y;                         # Upload workflow
