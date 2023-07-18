@@ -281,13 +281,13 @@ sub fpgaLowLevelTestsYosys                                                      
       if: \${{ always() }}
       run: |
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        nextpnr-gowin --json $j --write $p --device "$d" --family $f --cst $b
+        #nextpnr-gowin --json $j --write $p --device "$d" --family $f --cst $b
 
     - name: Pack_$t
       if: \${{ always() }}
       run: |
         export PATH="\$PATH:\$GITHUB_WORKSPACE/oss-cad-suite/bin/"
-        gowin_pack -d GW1N-9C -o $P $p
+        #gowin_pack -d GW1N-9C -o $P $p
 
     - uses: actions/upload-artifact\@v3
       if: \${{ always() }}
@@ -302,7 +302,7 @@ END
 # Error: Process completed with exit code 143.
 # yosys -d -Q -p "read_verilog -nomem2reg $v; synth_gowin -noflatten -nodffe -top fpga -json $j"
 
-sub fpgaLowLevelArtefacts                                                       # The resulting bitstreams used to progrma the fpga
+sub fpgaLowLevelArtefacts                                                       # The resulting bitstreams used to program the fpga
  {my $h = fpd qw(verilog fpga tests);                                           # Low level bit streams created by this run
 
   <<END
