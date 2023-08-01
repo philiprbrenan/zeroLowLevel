@@ -1,0 +1,11 @@
+module MyModule (
+  // Module ports and signals
+  input wire clk,
+  input wire [7:0] data_in,
+  output wire [7:0] data_out
+);
+
+  // Module implementation
+  // ...
+
+endmodule
