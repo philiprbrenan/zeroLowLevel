@@ -4,10 +4,16 @@
 //------------------------------------------------------------------------------
 module countUp
  (input  wire     clk,
-  output reg[7:0] out = 0);
+  input  wire     reset,
+  output reg[7:0] out);
 
   always @(posedge clk) begin
-    out <= out + 1;
-    $display("Set  %d", out);
+    if (reset) begin
+      out <=  0;
+    end
+    else begin
+      out <= out + 1;
+    end
+    $display("Count=  %d", out);
   end
 endmodule
