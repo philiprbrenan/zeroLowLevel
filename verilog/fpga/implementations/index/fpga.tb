@@ -1,0 +1,61 @@
+//-----------------------------------------------------------------------------
+// Test fpga
+// Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
+//------------------------------------------------------------------------------
+module Index_tb();                                                              // Test fpga
+  reg[  3:0] key;                                                               // Key to look for
+  reg[128:0] block;                                                             // Node to index
+  reg        found;                                                             // Key has been found, data output is valid
+  reg[  3:0] data;                                                              // Data - valid if found is high
+  reg[  7:0] node;                                                              // Address of next node to search - valid if next is high
+
+  `include "tests.sv"                                                           // Test routines
+
+  Index f                                                                       // Fpga
+   (.key        (key),                                                          // Key to look for
+    .block      (block),                                                        // Node to index
+    .found      (found),                                                        // Key has been found, data output is valid
+    .data       (data),                                                         // Data - valid if found is high
+    .node       (node)                                                          // Address of next node to search - valid if next is high
+   );
+
+
+  task print();
+    begin
+      $display("key         %d", key);
+      //$display("key1_equals %d", f.key1_equals);
+      //$display("key2_equals %d", f.key2_equals);
+      //$display("key3_equals %d", f.key3_equals);
+      $display("found       %d", found);
+      //$display("data        %d", data);
+      $display("node        %d", node);
+      //$display("node0       %d", f.node0);
+      //$display("node1       %d", f.node1);
+      //$display("node2       %d", f.node2);
+      //$display("node3       %d", f.node3);
+      $display("gt_key1 =   %d", f.gt_key1);
+      $display("gt_key2 =   %d", f.gt_key2);
+      $display("gt_key3 =   %d", f.gt_key3);
+      $display("gt1_4 =       %d", f.gt1_4);
+      $display("gt2_4 =       %d", f.gt2_4);
+      $display("gt3_4 =       %d", f.gt3_4);
+    end
+  endtask
+
+
+  initial begin                                                                 // Test the fpga
+    //$dumpfile("test.vcd"); $dumpvars(0, f);
+    block = 'b00000100_00000011_00000010_00000001__0111_0101_0011__0110_0100_0010;
+    key = 2; #1        ok(found == 1, "f2"); ok(data  == 3, "d2"); ok(f.key1_equals == 1, "k1e2"); ok(f.key2_equals == 0, "k2e2"); ok(f.key3_equals == 0, "k3e2"); ok(f.gt_key1 == 0, "g1e2"); ok(f.gt_key2 == 0, "g2e2"); ok(f.gt_key3 == 0, "g3e2");
+    key = 4; #1        ok(found == 1, "f4"); ok(data  == 5, "d4"); ok(f.key1_equals == 0, "k1e4"); ok(f.key2_equals == 1, "k2e4"); ok(f.key3_equals == 0, "k3e4"); ok(f.gt_key1 == 1, "g1e4"); ok(f.gt_key2 == 0, "g2e4"); ok(f.gt_key3 == 0, "g3e4");
+    key = 6; #1        ok(found == 1, "f6"); ok(data  == 7, "d6"); ok(f.key1_equals == 0, "k1e6"); ok(f.key2_equals == 0, "k2e6"); ok(f.key3_equals == 1, "k3e6"); ok(f.gt_key1 == 1, "g1e6"); ok(f.gt_key2 == 1, "g2e6"); ok(f.gt_key3 == 0, "g3e6");
+
+    key = 1; #1        ok(found == 0, "f1"); ok(node == 1, "n1"); ok(f.key1_equals == 0, "k1e1"); ok(f.key2_equals == 0, "k2e1"); ok(f.key3_equals == 0, "k3e1"); ok(f.gt_key1 == 0, "g1e1"); ok(f.gt_key2 == 0, "g2e1"); ok(f.gt_key3 == 0, "g3e1");
+    key = 3; #1        ok(found == 0, "f3"); ok(node == 2, "n3"); ok(f.key1_equals == 0, "k1e3"); ok(f.key2_equals == 0, "k2e3"); ok(f.key3_equals == 0, "k3e3"); ok(f.gt_key1 == 1, "g1e3"); ok(f.gt_key2 == 0, "g2e3"); ok(f.gt_key3 == 0, "g3e3");
+    key = 5; #1        ok(found == 0, "f5"); ok(node == 3, "n5"); ok(f.key1_equals == 0, "k1e5"); ok(f.key2_equals == 0, "k2e5"); ok(f.key3_equals == 0, "k3e5"); ok(f.gt_key1 == 1, "g1e5"); ok(f.gt_key2 == 1, "g2e5"); ok(f.gt_key3 == 0, "g3e5");
+    key = 7; #1        ok(found == 0, "f7"); ok(node == 4, "n7"); ok(f.key1_equals == 0, "k1e7"); ok(f.key2_equals == 0, "k2e7"); ok(f.key3_equals == 0, "k3e7"); ok(f.gt_key1 == 1, "g1e7"); ok(f.gt_key2 == 1, "g2e7"); ok(f.gt_key3 == 1, "g3e7");
+
+    checkAllTestsPassed(56);
+  end
+
+endmodule
