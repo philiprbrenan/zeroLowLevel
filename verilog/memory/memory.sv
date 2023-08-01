@@ -45,8 +45,8 @@ module Memory
   output reg [DATA_BITS   -1:0] out,                                            // Output data
   output reg [31:0]             error);                                         // Error
 
-  parameter integer ARRAY_LENGTH = 2**INDEX_BITS;                               // Maximum index
-  parameter integer ARRAYS       = 2**ADDRESS_BITS;                             // Number of memory elements for both arrays and elements
+  localparam integer ARRAY_LENGTH = 2**INDEX_BITS;                              // Maximum index
+  localparam integer ARRAYS       = 2**ADDRESS_BITS;                            // Number of memory elements for both arrays and elements
 
   reg [DATA_BITS   -1:0] memory     [ARRAYS-1:0][ARRAY_LENGTH-1:0];             // Memory containing arrays in fixed blocks
   reg [DATA_BITS   -1:0] copy                   [ARRAY_LENGTH-1:0];             // Copy of one array
@@ -57,7 +57,6 @@ module Memory
   integer allocatedArrays;                                                      // Arrays allocated
   integer freedArraysTop;                                                       // Top of the freed arrays stack
   integer result;                                                               // Result of each array operation
-  integer size;                                                                 // Size of current array
   integer moveLongStartArray;                                                   // Source array of move long
   integer moveLongStartIndex;                                                   // Source index of move long
   integer i, a, b;                                                              // Index
@@ -152,9 +151,8 @@ module Memory
         checkWriteable(10000060);
         if (!error) begin
           result = 0;
-          size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-            if (i < size && memory[array][i] == in) result = i + 1;
+            if (i < arraySizes[array] && memory[array][i] == in) result = i + 1;
 //$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
@@ -165,9 +163,8 @@ module Memory
         checkWriteable(10000070);
         if (!error) begin
           result = 0;
-          size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-            if (i < size && memory[array][i] < in) result = result + 1;
+            if (i < arraySizes[array] && memory[array][i] < in) result = result + 1;
 //$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
@@ -178,9 +175,8 @@ module Memory
         checkWriteable(10000080);
         if (!error) begin
           result = 0;
-          size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin
-            if (i < size && memory[array][i] > in) result = result + 1;
+            if (i < arraySizes[array] && memory[array][i] > in) result = result + 1;
 //$display("AAAA %d %d %d %d %d", i, size, memory[array][i], in, result);
           end
           out = result;
@@ -190,11 +186,10 @@ module Memory
       `Down: begin                                                              // Down
         checkWriteable(10000270);
         if (!error) begin
-          size   = arraySizes[array];
-          if (size > 0) begin
+          if (arraySizes[array] > 0) begin
             for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i]; // Copy source array
             for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                       // Move original array up
-              if (i > index && i <= size) begin
+              if (i > index && i <= arraySizes[array]) begin
                 memory[array][i-1] = copy[i];
               end
             end
@@ -208,15 +203,14 @@ module Memory
       `Up: begin                                                                // Up
         checkWriteable(10000090);
         if (!error) begin
-          size   = arraySizes[array];
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) copy[i] = memory[array][i];   // Copy source array
           for(i = 0; i < ARRAY_LENGTH; i = i + 1) begin                         // Move original array up
-            if (i > index && i <= size) begin
+            if (i > index && i <= arraySizes[array]) begin
               memory[array][i] = copy[i-1];
             end
           end
           memory[array][index] = in;                                            // Insert new value
-          if (size < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;   // Increase array size
+          if (arraySizes[array] < ARRAY_LENGTH) arraySizes[array] = arraySizes[array] + 1;   // Increase array size
         end
       end
 
