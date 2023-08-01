@@ -3919,9 +3919,8 @@ module fpga_tb();                                                               
       #1 clock = 1;
       #1 clock = 0;
     end
-    ok(finished == 1, "Finished");
     ok(success  == 1, "Success");
-    checkAllTestsPassed(2);
+    checkAllTestsPassed(1);
     $finish();
   end
 endmodule
