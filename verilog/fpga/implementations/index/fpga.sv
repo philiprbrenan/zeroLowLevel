@@ -3,26 +3,37 @@
 // Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
 //------------------------------------------------------------------------------
 module Index                                                                    // Find index of a key on a node
- #(parameter blockAddressActual)                                                // The block address we want for this node
+ #(parameter pAddressActual,                                                    // The block address we want for this node
+   parameter pKey1,                                                             // Key 1 in this block
+   parameter pKey2,                                                             // Key 2 in this block
+   parameter pKey3,                                                             // Key 3 in this block
+   parameter pData1,                                                            // Data 1 in this block
+   parameter pData2,                                                            // Data 2 in this block
+   parameter pData3,                                                            // Data 3 in this block
+   parameter pNode0,                                                            // Node 0 in this block
+   parameter pNode1,                                                            // Node 1 in this block
+   parameter pNode2,                                                            // Node 2 in this block
+   parameter pNode3)                                                            // Node 3 in this block
  (input  wire[  3:0] key,                                                       // Key to look for
-  input  wire [15:0] blockAddress,                                              // Address of block to search
-  input  wire[127:0] block,                                                     // Node to index
+  input  wire [15:0] address,                                                   // Address of block to search
   output reg         found,                                                     // Key has been found, data output is valid
   output reg[   3:0] data,                                                      // Data - valid if found is high
   output reg[   7:0] node);                                                     // Address of next node to search - valid if next is high
 
-  reg[3:0]key1;  assign key1  = block[ 3: 0];
-  reg[3:0]key2;  assign key2  = block[ 7: 4];
-  reg[3:0]key3;  assign key3  = block[11: 8];
+  reg[7:0]addressActual; assign addressActual = pAddressActual;
 
-  reg[3:0]data1; assign data1 = block[15:12];
-  reg[3:0]data2; assign data2 = block[19:16];
-  reg[3:0]data3; assign data3 = block[23:20];
+  reg[3:0]key1;  assign key1  = pKey1;
+  reg[3:0]key2;  assign key2  = pKey2;
+  reg[3:0]key3;  assign key3  = pKey3;
 
-  reg[7:0]node0; assign node0 = block[31:24];
-  reg[7:0]node1; assign node1 = block[39:32];
-  reg[7:0]node2; assign node2 = block[47:40];
-  reg[7:0]node3; assign node3 = block[55:48];
+  reg[3:0]data1; assign data1 = pData1;
+  reg[3:0]data2; assign data2 = pData2;
+  reg[3:0]data3; assign data3 = pData3;
+
+  reg[7:0]node0; assign node0 = pNode0;
+  reg[7:0]node1; assign node1 = pNode1;
+  reg[7:0]node2; assign node2 = pNode2;
+  reg[7:0]node3; assign node3 = pNode3;
 
   assign key1_xor_key_0 = key[0] ^ key1[0];
   assign key1_xor_key_1 = key[1] ^ key1[1];
@@ -64,7 +75,7 @@ module Index                                                                    
   reg[3:0] gt2_4; assign gt2_4 = {4{gt_key2}};
   reg[3:0] gt3_4; assign gt3_4 = {4{gt_key3}};
 
-  assign node  = {8{blockAddress == blockAddressActual}} &                      // Confirm that this is the block we want
+  assign node  = {8{address == addressActual}} &                                // Confirm that this is the block we want
                 ((node0 & ~ gt1_4 &  ~gt2_4 &  ~gt3_4) |                        // Pick next node
                  (node1 &   gt1_4 &  ~gt2_4 &  ~gt3_4) |
                  (node2 &   gt1_4 &   gt2_4 &  ~gt3_4) |
