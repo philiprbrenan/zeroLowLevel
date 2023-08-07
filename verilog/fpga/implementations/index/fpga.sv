@@ -3,8 +3,10 @@
 // Philip R Brenan at appaapps dot com, Appa Apps Ltd Inc., 2023
 //------------------------------------------------------------------------------
 module Index                                                                    // Find index of a key on a node
+ #(parameter blockAddressActual)                                                // The block address we want for this node
  (input  wire[  3:0] key,                                                       // Key to look for
-  input  wire[128:0] block,                                                     // Node to index
+  input  wire [15:0] blockAddress,                                              // Address of block to search
+  input  wire[127:0] block,                                                     // Node to index
   output reg         found,                                                     // Key has been found, data output is valid
   output reg[   3:0] data,                                                      // Data - valid if found is high
   output reg[   7:0] node);                                                     // Address of next node to search - valid if next is high
@@ -62,8 +64,9 @@ module Index                                                                    
   reg[3:0] gt2_4; assign gt2_4 = {4{gt_key2}};
   reg[3:0] gt3_4; assign gt3_4 = {4{gt_key3}};
 
-  assign node  = (node0 & ~ gt1_4 &  ~gt2_4 &  ~gt3_4) |                        // Pick next node
+  assign node  = {8{blockAddress == blockAddressActual}} &                      // Confirm that this is the block we want
+                ((node0 & ~ gt1_4 &  ~gt2_4 &  ~gt3_4) |                        // Pick next node
                  (node1 &   gt1_4 &  ~gt2_4 &  ~gt3_4) |
                  (node2 &   gt1_4 &   gt2_4 &  ~gt3_4) |
-                 (node3 &   gt1_4 &   gt2_4 &   gt3_4);
+                 (node3 &   gt1_4 &   gt2_4 &   gt3_4));
 endmodule
