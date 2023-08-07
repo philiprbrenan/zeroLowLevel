@@ -4,21 +4,22 @@
 //------------------------------------------------------------------------------
 module Index_tb();                                                              // Test fpga
   reg[  3:0] key;                                                               // Key to look for
-  reg[128:0] block;                                                             // Node to index
+  reg[ 15:0] blockAddress;                                                      // The address of the block to be indexed
+  reg[127:0] block;                                                             // Node to index
   reg        found;                                                             // Key has been found, data output is valid
   reg[  3:0] data;                                                              // Data - valid if found is high
   reg[  7:0] node;                                                              // Address of next node to search - valid if next is high
 
   `include "tests.sv"                                                           // Test routines
 
-  Index f                                                                       // Fpga
+  Index#(1) f                                                                   // Fpga - address of the block we are instantiating
    (.key        (key),                                                          // Key to look for
+    .blockAddress(blockAddress),                                                // Address of node to index
     .block      (block),                                                        // Node to index
     .found      (found),                                                        // Key has been found, data output is valid
     .data       (data),                                                         // Data - valid if found is high
     .node       (node)                                                          // Address of next node to search - valid if next is high
    );
-
 
   task print();
     begin
@@ -45,6 +46,7 @@ module Index_tb();                                                              
 
   initial begin                                                                 // Test the fpga
     //$dumpfile("test.vcd"); $dumpvars(0, f);
+    blockAddress = 1;
     block = 'b00000100_00000011_00000010_00000001__0111_0101_0011__0110_0100_0010;
     key = 2; #1        ok(found == 1, "f2"); ok(data  == 3, "d2"); ok(f.key1_equals == 1, "k1e2"); ok(f.key2_equals == 0, "k2e2"); ok(f.key3_equals == 0, "k3e2"); ok(f.gt_key1 == 0, "g1e2"); ok(f.gt_key2 == 0, "g2e2"); ok(f.gt_key3 == 0, "g3e2");
     key = 4; #1        ok(found == 1, "f4"); ok(data  == 5, "d4"); ok(f.key1_equals == 0, "k1e4"); ok(f.key2_equals == 1, "k2e4"); ok(f.key3_equals == 0, "k3e4"); ok(f.gt_key1 == 1, "g1e4"); ok(f.gt_key2 == 0, "g2e4"); ok(f.gt_key3 == 0, "g3e4");
