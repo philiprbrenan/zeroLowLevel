@@ -4,10 +4,10 @@
 //------------------------------------------------------------------------------
 module Index_tb();                                                              // Test fpga
   reg[  3:0] key;                                                               // Key to look for
-  reg[ 15:0] address;                                                           // The address of the block to be indexed
-  reg        found;                                                             // Key has been found, data output is valid
-  reg[  3:0] data;                                                              // Data - valid if found is high
-  reg[  7:0] node;                                                              // Address of next node to search - valid if next is high
+  reg[  7:0] address, A[9];                                                     // The address of the block to be indexed
+  reg        found,   F[9];                                                     // Key has been found, data output is valid
+  reg[  3:0] data,    D[9];                                                     // Data - valid if found is high
+  reg[  7:0] next,    N[9];                                                     // Address of next node to search - valid if next is high
 
   `include "tests.sv"                                                           // Test routines
 
@@ -16,8 +16,34 @@ module Index_tb();                                                              
     .address(address),                                                          // Address of node to index
     .found  (found),                                                            // Key has been found, data output is valid
     .data   (data),                                                             // Data - valid if found is high
-    .node   (node)                                                              // Address of next node to search - valid if next is high
+    .next   (next)                                                              // Address of next node to search - valid if next is high
    );
+
+/*                                                                              // A sample tree we wish to query
+1|              4
+2|      2               6
+3|  1       3       5       7   8
+*/
+
+  wire   bF[8];
+  assign bF[1] =  F[4];
+  assign bF[2] = !F[4] &  F[2];
+  assign bF[6] = !F[4] &  F[6];
+  assign bF[1] = !F[4] & !F[2] & F[1];
+  assign bF[3] = !F[4] & !F[2] & F[3];
+  assign bF[5] = !F[4] & !F[6] & F[3];
+  assign bF[7] = !F[4] & !F[6] & F[3];
+
+  wire[3:0] bD[8]; assign bD[1] = D[4]; assign bD[2] = D[2] & D[6]; assign bD[3] = N[1] & N[3] & N[5] & N[7];  // Data buses
+  wire[7:0] bN[8]; assign bN[1] = N[4]; assign bN[2] = N[2] & N[6];                                            // Node bus
+
+  Index#(4, 4,-1,-1, 5,-1,-1,  2,6,0,0) f4 (.key(key), .address(bN[1]), .found(F[4]), .data(D[4]), .next(N[4])); // 1
+  Index#(2, 2,-1,-1, 3,-1,-1,  1,3,0,0) f2 (.key(key), .address(bN[2]), .found(F[2]), .data(D[2]), .next(N[2])); // 2
+  Index#(1, 1,-1,-1, 2,-1,-1,  0,0,0,0) f1 (.key(key), .address(bN[3]), .found(F[1]), .data(D[1]), .next(N[1])); // 3
+  Index#(3, 3,-1,-1, 4,-1,-1,  0,0,0,0) f3 (.key(key), .address(bN[3]), .found(F[3]), .data(D[3]), .next(N[3])); // 3
+  Index#(5, 5,-1,-1, 6,-1,-1,  0,0,0,0) f5 (.key(key), .address(bN[3]), .found(F[5]), .data(D[5]), .next(N[5])); // 3
+  Index#(6, 6,-1,-1, 7,-1,-1,  5,7,0,0) f6 (.key(key), .address(bN[2]), .found(F[6]), .data(D[6]), .next(N[6])); // 2
+  Index#(7, 7, 8,-1, 8, 9,-1,  0,0,0,0) f7 (.key(key), .address(bN[3]), .found(F[7]), .data(D[7]), .next(N[7])); // 3
 
   task print();
     begin
@@ -27,7 +53,7 @@ module Index_tb();                                                              
       //$display("key3_equals %d", f.key3_equals);
       $display("found       %d", found);
       //$display("data        %d", data);
-      $display("node        %d", node);
+      $display("next          %d", next);
       //$display("node0       %d", f.node0);
       //$display("node1       %d", f.node1);
       //$display("node2       %d", f.node2);
@@ -41,20 +67,22 @@ module Index_tb();                                                              
     end
   endtask
 
+  integer i;
 
-  initial begin                                                                 // Test the fpga
+  initial begin                                                                 // Test a single block
     //$dumpfile("test.vcd"); $dumpvars(0, f);
+    for(i = 0; i < 9; ++i) A[i] = i;
     address = 1;
-    key = 2; #1        ok(found == 1, "f2"); ok(data  == 3, "d2"); ok(f.key1_equals == 1, "k1e2"); ok(f.key2_equals == 0, "k2e2"); ok(f.key3_equals == 0, "k3e2"); ok(f.gt_key1 == 0, "g1e2"); ok(f.gt_key2 == 0, "g2e2"); ok(f.gt_key3 == 0, "g3e2");
-    key = 4; #1        ok(found == 1, "f4"); ok(data  == 5, "d4"); ok(f.key1_equals == 0, "k1e4"); ok(f.key2_equals == 1, "k2e4"); ok(f.key3_equals == 0, "k3e4"); ok(f.gt_key1 == 1, "g1e4"); ok(f.gt_key2 == 0, "g2e4"); ok(f.gt_key3 == 0, "g3e4");
-    key = 6; #1        ok(found == 1, "f6"); ok(data  == 7, "d6"); ok(f.key1_equals == 0, "k1e6"); ok(f.key2_equals == 0, "k2e6"); ok(f.key3_equals == 1, "k3e6"); ok(f.gt_key1 == 1, "g1e6"); ok(f.gt_key2 == 1, "g2e6"); ok(f.gt_key3 == 0, "g3e6");
+    key = 2; #1        ok(found == 1, "f2"); ok(next == 0, "n2"); ok(data  == 3, "d2"); ok(f.key1_equals == 1, "k1e2"); ok(f.key2_equals == 0, "k2e2"); ok(f.key3_equals == 0, "k3e2"); ok(f.gt_key1 == 0, "g1e2"); ok(f.gt_key2 == 0, "g2e2"); ok(f.gt_key3 == 0, "g3e2");
+    key = 4; #1        ok(found == 1, "f4"); ok(next == 0, "n4"); ok(data  == 5, "d4"); ok(f.key1_equals == 0, "k1e4"); ok(f.key2_equals == 1, "k2e4"); ok(f.key3_equals == 0, "k3e4"); ok(f.gt_key1 == 1, "g1e4"); ok(f.gt_key2 == 0, "g2e4"); ok(f.gt_key3 == 0, "g3e4");
+    key = 6; #1        ok(found == 1, "f6"); ok(next == 0, "n6"); ok(data  == 7, "d6"); ok(f.key1_equals == 0, "k1e6"); ok(f.key2_equals == 0, "k2e6"); ok(f.key3_equals == 1, "k3e6"); ok(f.gt_key1 == 1, "g1e6"); ok(f.gt_key2 == 1, "g2e6"); ok(f.gt_key3 == 0, "g3e6");
 
-    key = 1; #1        ok(found == 0, "f1"); ok(node == 1, "n1"); ok(f.key1_equals == 0, "k1e1"); ok(f.key2_equals == 0, "k2e1"); ok(f.key3_equals == 0, "k3e1"); ok(f.gt_key1 == 0, "g1e1"); ok(f.gt_key2 == 0, "g2e1"); ok(f.gt_key3 == 0, "g3e1");
-    key = 3; #1        ok(found == 0, "f3"); ok(node == 2, "n3"); ok(f.key1_equals == 0, "k1e3"); ok(f.key2_equals == 0, "k2e3"); ok(f.key3_equals == 0, "k3e3"); ok(f.gt_key1 == 1, "g1e3"); ok(f.gt_key2 == 0, "g2e3"); ok(f.gt_key3 == 0, "g3e3");
-    key = 5; #1        ok(found == 0, "f5"); ok(node == 3, "n5"); ok(f.key1_equals == 0, "k1e5"); ok(f.key2_equals == 0, "k2e5"); ok(f.key3_equals == 0, "k3e5"); ok(f.gt_key1 == 1, "g1e5"); ok(f.gt_key2 == 1, "g2e5"); ok(f.gt_key3 == 0, "g3e5");
-    key = 7; #1        ok(found == 0, "f7"); ok(node == 4, "n7"); ok(f.key1_equals == 0, "k1e7"); ok(f.key2_equals == 0, "k2e7"); ok(f.key3_equals == 0, "k3e7"); ok(f.gt_key1 == 1, "g1e7"); ok(f.gt_key2 == 1, "g2e7"); ok(f.gt_key3 == 1, "g3e7");
+    key = 1; #1        ok(found == 0, "f1"); ok(next == 1, "n1"); ok(f.key1_equals == 0, "k1e1"); ok(f.key2_equals == 0, "k2e1"); ok(f.key3_equals == 0, "k3e1"); ok(f.gt_key1 == 0, "g1e1"); ok(f.gt_key2 == 0, "g2e1"); ok(f.gt_key3 == 0, "g3e1");
+    key = 3; #1        ok(found == 0, "f3"); ok(next == 2, "n3"); ok(f.key1_equals == 0, "k1e3"); ok(f.key2_equals == 0, "k2e3"); ok(f.key3_equals == 0, "k3e3"); ok(f.gt_key1 == 1, "g1e3"); ok(f.gt_key2 == 0, "g2e3"); ok(f.gt_key3 == 0, "g3e3");
+    key = 5; #1        ok(found == 0, "f5"); ok(next == 3, "n5"); ok(f.key1_equals == 0, "k1e5"); ok(f.key2_equals == 0, "k2e5"); ok(f.key3_equals == 0, "k3e5"); ok(f.gt_key1 == 1, "g1e5"); ok(f.gt_key2 == 1, "g2e5"); ok(f.gt_key3 == 0, "g3e5");
+    key = 7; #1        ok(found == 0, "f7"); ok(next == 4, "n7"); ok(f.key1_equals == 0, "k1e7"); ok(f.key2_equals == 0, "k2e7"); ok(f.key3_equals == 0, "k3e7"); ok(f.gt_key1 == 1, "g1e7"); ok(f.gt_key2 == 1, "g2e7"); ok(f.gt_key3 == 1, "g3e7");
 
-    checkAllTestsPassed(56);
+    checkAllTestsPassed(59);
   end
 
 endmodule
