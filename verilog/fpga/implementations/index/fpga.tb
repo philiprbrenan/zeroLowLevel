@@ -101,23 +101,23 @@ module Index_tb();                                                              
     #1 key = 80; #1 ok(bF == 1, "f80"); ok(bD == 81, "d81");
 
     address = 4;                                                                // Missing keys
-    #1 key =  1; #1 ok(bF == 0, "f01");
-    #1 key =  2; #1 ok(bF == 0, "f02");
-    #1 key =  3; #1 ok(bF == 0, "f03");
-    #1 key =  4; #1 ok(bF == 0, "f04");
-    #1 key =  5; #1 ok(bF == 0, "f05");
-    #1 key =  6; #1 ok(bF == 0, "f06");
-    #1 key =  7; #1 ok(bF == 0, "f07");
-    #1 key =  8; #1 ok(bF == 0, "f08");
-    #1 key =  9; #1 ok(bF == 0, "f09");
-    #1 key = 11; #1 ok(bF == 0, "f11");
-    #1 key = 21; #1 ok(bF == 0, "f21");
-    #1 key = 31; #1 ok(bF == 0, "f31");
-    #1 key = 41; #1 ok(bF == 0, "f41");
-    #1 key = 51; #1 ok(bF == 0, "f51");
-    #1 key = 61; #1 ok(bF == 0, "f61");
-    #1 key = 71; #1 ok(bF == 0, "f71");
-    #1 key = 81; #1 ok(bF == 0, "f81");
-    checkAllTestsPassed(92);
+    #1 key =  1; #1 ok(bF == 0, "f01");  ok(bD == 0, "d 1");
+    #1 key =  2; #1 ok(bF == 0, "f02");  ok(bD == 0, "d 2");
+    #1 key =  3; #1 ok(bF == 0, "f03");  ok(bD == 0, "d 3");
+    #1 key =  4; #1 ok(bF == 0, "f04");  ok(bD == 0, "d 4");
+    #1 key =  5; #1 ok(bF == 0, "f05");  ok(bD == 0, "d 5");
+    #1 key =  6; #1 ok(bF == 0, "f06");  ok(bD == 0, "d 6");
+    #1 key =  7; #1 ok(bF == 0, "f07");  ok(bD == 0, "d 7");
+    #1 key =  8; #1 ok(bF == 0, "f08");  ok(bD == 0, "d 8");
+    #1 key =  9; #1 ok(bF == 0, "f09");  ok(bD == 0, "d 9");
+    #1 key = 11; #1 ok(bF == 0, "f11");  ok(bD == 0, "d11");
+    #1 key = 21; #1 ok(bF == 0, "f21");  ok(bD == 0, "d21");
+    #1 key = 31; #1 ok(bF == 0, "f31");  ok(bD == 0, "d31");
+    #1 key = 41; #1 ok(bF == 0, "f41");  ok(bD == 0, "d41");
+    #1 key = 51; #1 ok(bF == 0, "f51");  ok(bD == 0, "d51");
+    #1 key = 61; #1 ok(bF == 0, "f61");  ok(bD == 0, "d61");
+    #1 key = 71; #1 ok(bF == 0, "f71");  ok(bD == 0, "d71");
+    #1 key = 81; #1 ok(bF == 0, "f81");  ok(bD == 0, "d81");
+    checkAllTestsPassed(109);
   end
 endmodule
