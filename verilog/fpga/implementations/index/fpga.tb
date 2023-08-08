@@ -35,7 +35,7 @@ module Index_tb();                                                              
   Index#(3, 30,-1,-1,  31, -1,-1,  0,0,0,0) f3 (.key(key), .address(bA[3]), .found(F[3]), .data(D[3]), .next(N[3])); // 3
   Index#(5, 50,-1,-1,  51, -1,-1,  0,0,0,0) f5 (.key(key), .address(bA[3]), .found(F[5]), .data(D[5]), .next(N[5])); // 3
   Index#(6, 60,-1,-1,  61, -1,-1,  5,7,0,0) f6 (.key(key), .address(bA[2]), .found(F[6]), .data(D[6]), .next(N[6])); // 2
-  Index#(7, 70, 80,-1, 71, 72,-1,  0,0,0,0) f7 (.key(key), .address(bA[3]), .found(F[7]), .data(D[7]), .next(N[7])); // 3
+  Index#(7, 70, 80,-1, 71, 81,-1,  0,0,0,0) f7 (.key(key), .address(bA[3]), .found(F[7]), .data(D[7]), .next(N[7])); // 3
 
   task p1();
     begin
@@ -90,8 +90,15 @@ module Index_tb();                                                              
     key = 7; #1        ok(found == 0, "f7"); ok(next == 4, "n7"); ok(f.key1_equals == 0, "k1e7"); ok(f.key2_equals == 0, "k2e7"); ok(f.key3_equals == 0, "k3e7"); ok(f.gt_key1 == 1, "g1e7"); ok(f.gt_key2 == 1, "g2e7"); ok(f.gt_key3 == 1, "g3e7");
 
 
-    key = 50; address = 4; #1 p2();
-    checkAllTestsPassed(59);
+    address = 4;
+    #1 key = 10; #1 ok(bF == 1, "f10"); ok(bD == 11, "d11");
+    #1 key = 20; #1 ok(bF == 1, "f20"); ok(bD == 21, "d21");
+    #1 key = 30; #1 ok(bF == 1, "f30"); ok(bD == 31, "d31");
+    #1 key = 40; #1 ok(bF == 1, "f40"); ok(bD == 41, "d41");
+    #1 key = 50; #1 ok(bF == 1, "f50"); ok(bD == 51, "d51");
+    #1 key = 60; #1 ok(bF == 1, "f60"); ok(bD == 61, "d61");
+    #1 key = 70; #1 ok(bF == 1, "f70"); ok(bD == 71, "d71");
+    #1 key = 80; #1 ok(bF == 1, "f80"); ok(bD == 81, "d81");
+    checkAllTestsPassed(75);
   end
-
 endmodule
