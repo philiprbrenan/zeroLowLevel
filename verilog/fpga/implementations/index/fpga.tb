@@ -40,12 +40,12 @@ module Index_tb();                                                              
   task p1();
     begin
       $display("key         %d", key);
-      //$display("key1_equals %d", f.key1_equals);
-      //$display("key2_equals %d", f.key2_equals);
-      //$display("key3_equals %d", f.key3_equals);
+      $display("key1_equals %d", f.key1_equals);
+      $display("key2_equals %d", f.key2_equals);
+      $display("key3_equals %d", f.key3_equals);
       $display("found       %d", found);
-      //$display("data        %d", data);
-      $display("next          %d", next);
+      $display("data        %d", data);
+      $display("next        %d", next);
       //$display("node0       %d", f.node0);
       //$display("node1       %d", f.node1);
       //$display("node2       %d", f.node2);
@@ -53,25 +53,25 @@ module Index_tb();                                                              
       $display("gt_key1 =   %d", f.gt_key1);
       $display("gt_key2 =   %d", f.gt_key2);
       $display("gt_key3 =   %d", f.gt_key3);
-      $display("gt1_4 =       %d", f.gt1_8);
-      $display("gt2_4 =       %d", f.gt2_8);
-      $display("gt3_4 =       %d", f.gt3_8);
+      $display("gt1_4 =     %d", f.gt1_8);
+      $display("gt2_4 =     %d", f.gt2_8);
+      $display("gt3_4 =     %d", f.gt3_8);
     end
   endtask
 
   task p2();
     begin
-      $display("key         %d", key);
-      $display("f*.found    1=%2d 2=%2d 3=%2d 4=%2d 5=%2d 6=%2d 7=%2d", F[1], F[2], F[3], F[4], F[5], F[6], F[7]);
-      $display("found       %d", bF);
-      $display("data        %d", bD);
-      $display("f1.data     %d %d", F[1], D[1]);
-      $display("f2.data     %d %d", F[2], D[2]);
-      $display("f3.data     %d %d", F[3], D[3]);
-      $display("f4.data     %d %d", F[4], D[4]);
-      $display("f5.data     %d %d", F[5], D[5]);
-      $display("f6.data     %d %d", F[6], D[6]);
-      $display("f7.data     %d %d", F[7], D[7]);
+      $display("key       %d", key);
+      $display("f*.found  1=%2d 2=%2d 3=%2d 4=%2d 5=%2d 6=%2d 7=%2d", F[1], F[2], F[3], F[4], F[5], F[6], F[7]);
+      $display("found     %d", bF);
+      $display("data      %d", bD);
+      //$display("f1        %d %d e%d %d %d", F[1], D[1], f1.key1_equals, f1.key2_equals, f1.key3_equals);
+      //$display("f2        %d %d e%d %d %d", F[2], D[2], f2.key1_equals, f2.key2_equals, f2.key3_equals);
+      //$display("f3        %d %d e%d %d %d", F[3], D[3], f3.key1_equals, f3.key2_equals, f3.key3_equals);
+      //$display("f4        %d %d e%d %d %d", F[4], D[4], f4.key1_equals, f4.key2_equals, f4.key3_equals);
+      //$display("f5        %d %d e%d %d %d k %d %d %d", F[5], D[5], f5.key1_equals, f5.key2_equals, f5.key3_equals, f5.key1_eq_key_1, f5.key1_eq_key_1, f5.key3);
+      //$display("f6        %d %d e%d %d %d", F[6], D[6], f6.key1_equals, f6.key2_equals, f6.key3_equals);
+      //$display("f7        %d %d e%d %d %d", F[7], D[7], f7.key1_equals, f7.key2_equals, f7.key3_equals);
     end
   endtask
 
@@ -90,7 +90,7 @@ module Index_tb();                                                              
     key = 7; #1        ok(found == 0, "f7"); ok(next == 4, "n7"); ok(f.key1_equals == 0, "k1e7"); ok(f.key2_equals == 0, "k2e7"); ok(f.key3_equals == 0, "k3e7"); ok(f.gt_key1 == 1, "g1e7"); ok(f.gt_key2 == 1, "g2e7"); ok(f.gt_key3 == 1, "g3e7");
 
 
-    address = 4;
+    address = 4;                                                                // Find keys in tree
     #1 key = 10; #1 ok(bF == 1, "f10"); ok(bD == 11, "d11");
     #1 key = 20; #1 ok(bF == 1, "f20"); ok(bD == 21, "d21");
     #1 key = 30; #1 ok(bF == 1, "f30"); ok(bD == 31, "d31");
@@ -99,6 +99,25 @@ module Index_tb();                                                              
     #1 key = 60; #1 ok(bF == 1, "f60"); ok(bD == 61, "d61");
     #1 key = 70; #1 ok(bF == 1, "f70"); ok(bD == 71, "d71");
     #1 key = 80; #1 ok(bF == 1, "f80"); ok(bD == 81, "d81");
-    checkAllTestsPassed(75);
+
+    address = 4;                                                                // Missing keys
+    #1 key =  1; #1 ok(bF == 0, "f01");
+    #1 key =  2; #1 ok(bF == 0, "f02");
+    #1 key =  3; #1 ok(bF == 0, "f03");
+    #1 key =  4; #1 ok(bF == 0, "f04");
+    #1 key =  5; #1 ok(bF == 0, "f05");
+    #1 key =  6; #1 ok(bF == 0, "f06");
+    #1 key =  7; #1 ok(bF == 0, "f07");
+    #1 key =  8; #1 ok(bF == 0, "f08");
+    #1 key =  9; #1 ok(bF == 0, "f09");
+    #1 key = 11; #1 ok(bF == 0, "f11");
+    #1 key = 21; #1 ok(bF == 0, "f21");
+    #1 key = 31; #1 ok(bF == 0, "f31");
+    #1 key = 41; #1 ok(bF == 0, "f41");
+    #1 key = 51; #1 ok(bF == 0, "f51");
+    #1 key = 61; #1 ok(bF == 0, "f61");
+    #1 key = 71; #1 ok(bF == 0, "f71");
+    #1 key = 81; #1 ok(bF == 0, "f81");
+    checkAllTestsPassed(92);
   end
 endmodule
